@@ -78,7 +78,7 @@
   </build>
 
   <dependencies>
-    <dependency>
+<!--    <dependency>
       <groupId>stsc</groupId>
       <artifactId>stsc.common</artifactId>
       <version>${project.version}</version>
@@ -92,7 +92,7 @@
       <groupId>stsc</groupId>
       <artifactId>stsc.algorithms.common</artifactId>
       <version>${project.version}</version>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>stsc</groupId>
       <artifactId>stsc.storage</artifactId>
