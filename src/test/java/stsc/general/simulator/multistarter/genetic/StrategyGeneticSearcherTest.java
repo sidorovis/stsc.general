@@ -61,7 +61,7 @@ public class StrategyGeneticSearcherTest {
 
 		final StrategySelector selector = new StatisticsByCostSelector(112, costFunction);
 
-		final SimulatorSettingsGeneticList geneticList = TestGeneticSimulatorSettings.getBigGeneticList();
+		final SimulatorSettingsGeneticList geneticList = TestGeneticSimulatorSettings.getGeneticList();
 		final int maxGeneticStepsAmount = 104;
 		final int populationSize = 124;
 		return new StrategyGeneticSearcher(geneticList, selector, 4, costFunction, maxGeneticStepsAmount, populationSize, 0.94, 0.86);
