@@ -1,38 +1,39 @@
 package stsc.general.strategy;
 
 import stsc.general.simulator.SimulatorSettings;
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 
-public class TradingStrategy {
+public final class TradingStrategy {
+
 	private final SimulatorSettings simulatorSettings;
-	private final Statistics statistics;
+	private final Metrics metrics;
 
-	public static TradingStrategy createTest(final Statistics statistics) {
-		return new TradingStrategy(null, statistics);
+	public static TradingStrategy createTest(final Metrics metrics) {
+		return new TradingStrategy(null, metrics);
 	}
 
-	public TradingStrategy(final SimulatorSettings simulatorSettings, final Statistics statistics) {
+	public TradingStrategy(final SimulatorSettings simulatorSettings, final Metrics metrics) {
 		this.simulatorSettings = simulatorSettings;
-		this.statistics = statistics;
+		this.metrics = metrics;
 	}
 
 	public SimulatorSettings getSettings() {
 		return simulatorSettings;
 	}
 
-	public Statistics getStatistics() {
-		return statistics;
+	public Metrics getMetrics() {
+		return metrics;
 	}
 
 	public double getAvGain() {
-		return statistics.getAvGain();
+		return metrics.getDoubleMetric("avGain");
 	}
 
 	@Override
 	public String toString() {
 		if (simulatorSettings == null) {
-			return "TEST: " + statistics.getAvGain();
+			return "TEST: " + getAvGain();
 		}
-		return simulatorSettings.toString() + "\n" + statistics.toString();
+		return simulatorSettings.toString() + "\n" + metrics.toString();
 	}
 }

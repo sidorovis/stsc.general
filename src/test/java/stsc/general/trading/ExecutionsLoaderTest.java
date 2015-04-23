@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.storage.StockStorage;
-import stsc.general.testhelper.TestStatisticsHelper;
+import stsc.general.testhelper.TestMetricsHelper;
 import stsc.storage.ExecutionStarter;
 import stsc.storage.ExecutionsStorage;
 import stsc.storage.mocks.StockStorageMock;
@@ -16,7 +16,7 @@ public class ExecutionsLoaderTest {
 
 	private ExecutionsStorage helperForSuccessLoadTests(File filename) throws Exception {
 		final StockStorage ss = new StockStorageMock();
-		final ExecutionsLoader el = new ExecutionsLoader(filename, TestStatisticsHelper.getPeriod());
+		final ExecutionsLoader el = new ExecutionsLoader(filename, TestMetricsHelper.getPeriod());
 		Assert.assertNotNull(el.getExecutionsStorage());
 		final ExecutionsStorage executions = el.getExecutionsStorage();
 		executions.initialize(new BrokerImpl(ss));
@@ -43,7 +43,7 @@ public class ExecutionsLoaderTest {
 	public void testAlgorithmLoaderWithSubExecutions() throws BadAlgorithmException {
 		final String config = "StockExecutions = smcTest, ssmm\n" + "smcTest.loadLine = .StockMarketCycle()\n"
 				+ "ssmm.loadLine = .Sma(N=50i, .StockMarketCycle() )\n";
-		final ExecutionsLoader el = new ExecutionsLoader(TestStatisticsHelper.getPeriod(), config);
+		final ExecutionsLoader el = new ExecutionsLoader(TestMetricsHelper.getPeriod(), config);
 		Assert.assertEquals(2, el.getExecutionsStorage().getStockExecutions().size());
 		Assert.assertEquals("smcTest", el.getExecutionsStorage().getStockExecutions().get(0).getExecutionName());
 		Assert.assertEquals("ssmm", el.getExecutionsStorage().getStockExecutions().get(1).getExecutionName());
@@ -54,7 +54,7 @@ public class ExecutionsLoaderTest {
 	private void throwTesthelper(File file, String message) throws Exception {
 		boolean throwed = false;
 		try {
-			ExecutionsLoader loader = new ExecutionsLoader(file, TestStatisticsHelper.getPeriod());
+			ExecutionsLoader loader = new ExecutionsLoader(file, TestMetricsHelper.getPeriod());
 			loader.getExecutionsStorage().initialize(new BrokerImpl(new StockStorageMock()));
 		} catch (BadAlgorithmException e) {
 			Assert.assertEquals(message, e.getMessage());

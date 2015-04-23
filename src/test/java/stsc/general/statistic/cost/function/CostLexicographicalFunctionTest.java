@@ -6,45 +6,45 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.common.Settings;
-import stsc.general.statistic.Statistics;
-import stsc.general.testhelper.TestStatisticsHelper;
+import stsc.general.statistic.Metrics;
+import stsc.general.testhelper.TestMetricsHelper;
 
 public class CostLexicographicalFunctionTest {
 
 	@Test
 	public void testLexicographicalCostFunction() throws ParseException {
-		final Statistics statistics = TestStatisticsHelper.getStatistics();
+		final Metrics metrics = TestMetricsHelper.getMetrics();
 
 		final CostLexicographicalFunction c10 = new CostLexicographicalFunction();
-		c10.addNextValue("getPeriod");
-		c10.addNextValue("getAvGain");
-		final Double expectedResult = statistics.getPeriod() * 10 + statistics.getAvGain();
-		final Double c10result = c10.calculate(statistics);
+		c10.addNextValue("period");
+		c10.addNextValue("avGain");
+		final Double expectedResult = metrics.getIntegerMetric("period") * 10 + metrics.getDoubleMetric("avGain");
+		final Double c10result = c10.calculate(metrics);
 		Assert.assertEquals(expectedResult, c10result, Settings.doubleEpsilon);
 	}
 
 	@Test
 	public void testLexicographicalCostFunction100() throws ParseException {
-		final Statistics statistics = TestStatisticsHelper.getStatistics();
+		final Metrics metrics = TestMetricsHelper.getMetrics();
 
 		final CostLexicographicalFunction c100 = new CostLexicographicalFunction(100);
-		c100.addNextValue("getPeriod");
-		c100.addNextValue("getAvGain");
-		c100.addNextValue("getAvGain");
-		final Double expectedResult = (statistics.getPeriod() * 100 + statistics.getAvGain()) * 100 + statistics.getAvGain();
-		final Double c100result = c100.calculate(statistics);
+		c100.addNextValue("period");
+		c100.addNextValue("avGain");
+		c100.addNextValue("avGain");
+		final Double expectedResult = (metrics.getIntegerMetric("period") * 100 + metrics.getDoubleMetric("avGain")) * 100 + metrics.getDoubleMetric("avGain");
+		final Double c100result = c100.calculate(metrics);
 		Assert.assertEquals(expectedResult, c100result, Settings.doubleEpsilon);
 	}
 
 	@Test
 	public void testLexicographicalCostFunctionAnotherOrder() throws ParseException {
-		final Statistics statistics = TestStatisticsHelper.getStatistics();
+		final Metrics metrics = TestMetricsHelper.getMetrics();
 
 		final CostLexicographicalFunction c10 = new CostLexicographicalFunction();
-		c10.addNextValue("getAvGain");
-		c10.addNextValue("getPeriod");
-		final Double expectedResult = statistics.getAvGain() * 10 + statistics.getPeriod();
-		final Double c10result = c10.calculate(statistics);
+		c10.addNextValue("avGain");
+		c10.addNextValue("period");
+		final Double expectedResult = metrics.getDoubleMetric("avGain") * 10 + metrics.getIntegerMetric("period");
+		final Double c10result = c10.calculate(metrics);
 		Assert.assertEquals(expectedResult, c10result, Settings.doubleEpsilon);
 	}
 }

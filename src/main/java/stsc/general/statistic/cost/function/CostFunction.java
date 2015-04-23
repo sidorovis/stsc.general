@@ -1,7 +1,7 @@
 package stsc.general.statistic.cost.function;
 
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 
 public interface CostFunction {
-	public Double calculate(Statistics statistics);
+	public Double calculate(Metrics metrics);
 }

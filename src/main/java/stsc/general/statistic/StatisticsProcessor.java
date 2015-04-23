@@ -32,10 +32,10 @@ public final class StatisticsProcessor {
 		return processEod(false);
 	}
 
-	public Statistics calculate() {
-		Statistics statisticsData = equityProcessor.calculate();
+	public Metrics calculate() {
+		final Metrics metrics = equityProcessor.calculate();
 		equityProcessor = null;
-		return statisticsData;
+		return metrics;
 	}
 
 	public double getCommision() {

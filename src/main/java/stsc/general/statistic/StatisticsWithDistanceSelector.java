@@ -36,12 +36,12 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 		public boolean equals(Object other) {
 			if (!ClusterKey.class.isInstance(other))
 				return false;
-			final Statistics ls = this.getStrategy().getStatistics();
-			final Statistics rs = ((ClusterKey) other).getStrategy().getStatistics();
+			final Metrics ls = this.getStrategy().getMetrics();
+			final Metrics rs = ((ClusterKey) other).getStrategy().getMetrics();
 			Double resDiff = 0.0;
 			for (Entry<String, Double> e : distanceParameters.entrySet()) {
-				final Double lv = Statistics.invokeMethod(ls, e.getKey()) * e.getValue();
-				final Double rv = Statistics.invokeMethod(rs, e.getKey()) * e.getValue();
+				final Double lv = ls.getDoubleMetric(e.getKey()) * e.getValue();
+				final Double rv = rs.getDoubleMetric(e.getKey()) * e.getValue();
 				resDiff += Math.abs(lv - rv);
 			}
 			return resDiff < Settings.doubleEpsilon;
@@ -52,18 +52,18 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 
 		@Override
 		public int compare(ClusterKey left, ClusterKey right) {
-			final Statistics ls = left.getStrategy().getStatistics();
-			final Statistics rs = right.getStrategy().getStatistics();
+			final Metrics ls = left.getStrategy().getMetrics();
+			final Metrics rs = right.getStrategy().getMetrics();
 			Double resDiff = 0.0;
 			for (Entry<String, Double> e : distanceParameters.entrySet()) {
-				final Double lv = Statistics.invokeMethod(ls, e.getKey()) * e.getValue();
-				final Double rv = Statistics.invokeMethod(rs, e.getKey()) * e.getValue();
+				final Double lv = ls.getDoubleMetric(e.getKey()) * e.getValue();
+				final Double rv = rs.getDoubleMetric(e.getKey()) * e.getValue();
 				resDiff += Math.abs(lv - rv);
 			}
 			if (resDiff <= 1.0) {
 				return 0;
 			}
-			return (int) (rs.getAvGain() - ls.getAvGain());
+			return (int) (rs.getDoubleMetric("avGain") - ls.getDoubleMetric("avGain"));
 		}
 	}
 
@@ -92,7 +92,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	}
 
 	private Double rating(final TradingStrategy strategy) {
-		return costFunction.calculate(strategy.getStatistics());
+		return costFunction.calculate(strategy.getMetrics());
 	}
 
 	@Override

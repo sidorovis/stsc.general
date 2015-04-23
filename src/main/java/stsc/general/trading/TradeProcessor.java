@@ -17,7 +17,7 @@ import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.stocks.Stock;
 import stsc.common.storage.StockStorage;
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 import stsc.general.statistic.StatisticsProcessor;
 import stsc.storage.ExecutionStarter;
 
@@ -40,12 +40,12 @@ public class TradeProcessor {
 		this.executionsStarter = settings.getExecutionsStorage().initialize(broker);
 	}
 
-	public Statistics simulate(final FromToPeriod period, Set<String> stockNames) throws BadSignalException {
+	public Metrics simulate(final FromToPeriod period, Set<String> stockNames) throws BadSignalException {
 		collectStocksFromStorage(stockNames);
 		return startSimulationProcess(period).calculate();
 	}
 
-	public Statistics simulate(final FromToPeriod period) throws BadSignalException {
+	public Metrics simulate(final FromToPeriod period) throws BadSignalException {
 		collectStocksFromStorage();
 		return startSimulationProcess(period).calculate();
 	}

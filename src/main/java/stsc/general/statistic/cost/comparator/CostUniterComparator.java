@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 
 public class CostUniterComparator implements CostStatisticsComparator {
 
@@ -18,7 +18,7 @@ public class CostUniterComparator implements CostStatisticsComparator {
 		return this;
 	}
 
-	public int compare(Statistics o1, Statistics o2) {
+	public int compare(Metrics o1, Metrics o2) {
 		Double sumResult = 0.0;
 		for (Entry<CostStatisticsComparator, Double> v : parameters.entrySet()) {
 			final Double value = Double.valueOf(v.getKey().compare(o1, o2));

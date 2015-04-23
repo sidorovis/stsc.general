@@ -6,23 +6,23 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.common.Settings;
-import stsc.general.statistic.Statistics;
-import stsc.general.testhelper.TestStatisticsHelper;
+import stsc.general.statistic.Metrics;
+import stsc.general.testhelper.TestMetricsHelper;
 
 public class CostBayesianProbabilityFunctionTest {
 
-	private Double calculateTestValue(Statistics statistics) {
-		return Math.min(statistics.getPeriod() * 6.0, statistics.getAvGain() * 11.0);
+	private Double calculateTestValue(Metrics metrics) {
+		return Math.min(metrics.getIntegerMetric("period") * 6.0, metrics.getDoubleMetric("avGain") * 11.0);
 	}
 
 	@Test
 	public void testBayesianProbabilityCostFunction() throws ParseException {
-		final Statistics statistics = TestStatisticsHelper.getStatistics();
+		final Metrics metrics = TestMetricsHelper.getMetrics();
 
 		final CostBayesianProbabilityFunction bayesian = new CostBayesianProbabilityFunction();
-		bayesian.addLayer().put("getPeriod", 6.0);
-		bayesian.addLayer().put("getAvGain", 11.0);
-		final Double bayesianResult = bayesian.calculate(statistics);
-		Assert.assertEquals(calculateTestValue(statistics), bayesianResult, Settings.doubleEpsilon);
+		bayesian.addLayer().put("period", 6.0);
+		bayesian.addLayer().put("avGain", 11.0);
+		final Double bayesianResult = bayesian.calculate(metrics);
+		Assert.assertEquals(calculateTestValue(metrics), bayesianResult, Settings.doubleEpsilon);
 	}
 }

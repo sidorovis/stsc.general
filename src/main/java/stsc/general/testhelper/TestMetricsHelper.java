@@ -10,13 +10,13 @@ import stsc.common.Day;
 import stsc.common.FromToPeriod;
 import stsc.common.Side;
 import stsc.common.stocks.Stock;
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 import stsc.general.statistic.StatisticsProcessor;
 import stsc.general.trading.BrokerImpl;
 import stsc.general.trading.TradingLog;
 import stsc.storage.mocks.StockStorageMock;
 
-public class TestStatisticsHelper {
+public final class TestMetricsHelper {
 
 	static {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
@@ -30,28 +30,28 @@ public class TestStatisticsHelper {
 		}
 	}
 
-	public static Statistics getStatistics() throws ParseException {
-		return getStatistics(100, 200);
+	public static Metrics getMetrics() throws ParseException {
+		return getMetrics(100, 200);
 	}
 
-	public static Statistics getStatistics(int applSize, int admSize) throws ParseException {
-		return getStatistics(applSize, admSize, Day.createDate("04-09-2013"), false);
+	public static Metrics getMetrics(int applSize, int admSize) throws ParseException {
+		return getMetrics(applSize, admSize, Day.createDate("04-09-2013"), false);
 	}
 
-	public static Statistics getStatistics(int applSize, int admSize, LocalDate date) {
-		return getStatistics(applSize, admSize, date, false);
+	public static Metrics getMetrics(int applSize, int admSize, LocalDate date) {
+		return getMetrics(applSize, admSize, date, false);
 	}
 
-	public static Statistics getStatistics(int applSize, int admSize, LocalDate date, boolean debug) {
-		return getStatistics(applSize, admSize, date.toDate(), debug);
+	public static Metrics getMetrics(int applSize, int admSize, LocalDate date, boolean debug) {
+		return getMetrics(applSize, admSize, date.toDate(), debug);
 	}
 
-	public static Statistics getStatistics(int applSize, int admSize, Date date) {
-		return getStatistics(applSize, admSize, date, false);
+	public static Metrics getMetrics(int applSize, int admSize, Date date) {
+		return getMetrics(applSize, admSize, date, false);
 	}
 
-	public static Statistics getStatistics(int applSize, int admSize, Date date, boolean debug) {
-		Statistics statisticsData = null;
+	public static Metrics getMetrics(int applSize, int admSize, Date date, boolean debug) {
+		Metrics metrics = null;
 		try {
 			Stock aapl = StockStorageMock.getStockStorage().getStock("aapl").get();
 			Stock adm = StockStorageMock.getStockStorage().getStock("adm").get();
@@ -60,26 +60,26 @@ public class TestStatisticsHelper {
 			int admIndex = adm.findDayIndex(date);
 
 			TradingLog tradingLog = new BrokerImpl(StockStorageMock.getStockStorage()).getTradingLog();
-			StatisticsProcessor statistics = new StatisticsProcessor(tradingLog);
+			StatisticsProcessor metricProcessor = new StatisticsProcessor(tradingLog);
 
-			statistics.setStockDay("aapl", aapl.getDays().get(aaplIndex++));
-			statistics.setStockDay("adm", adm.getDays().get(admIndex++));
+			metricProcessor.setStockDay("aapl", aapl.getDays().get(aaplIndex++));
+			metricProcessor.setStockDay("adm", adm.getDays().get(admIndex++));
 			tradingLog.addBuyRecord(Day.createDate(), "aapl", Side.LONG, applSize);
 			tradingLog.addBuyRecord(Day.createDate(), "adm", Side.SHORT, admSize);
 
-			statistics.processEod();
+			metricProcessor.processEod();
 
-			statistics.setStockDay("aapl", aapl.getDays().get(aaplIndex++));
-			statistics.setStockDay("adm", adm.getDays().get(admIndex++));
+			metricProcessor.setStockDay("aapl", aapl.getDays().get(aaplIndex++));
+			metricProcessor.setStockDay("adm", adm.getDays().get(admIndex++));
 			tradingLog.addSellRecord(Day.createDate(), "aapl", Side.LONG, applSize);
 			tradingLog.addSellRecord(Day.createDate(), "adm", Side.SHORT, admSize);
 
-			statistics.processEod();
-			statisticsData = statistics.calculate();
+			metricProcessor.processEod();
+			metrics = metricProcessor.calculate();
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		return statisticsData;
+		return metrics;
 	}
 
 }

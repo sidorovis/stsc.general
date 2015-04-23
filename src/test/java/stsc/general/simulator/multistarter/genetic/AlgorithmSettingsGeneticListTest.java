@@ -17,12 +17,12 @@ import stsc.general.simulator.multistarter.MpDouble;
 import stsc.general.simulator.multistarter.MpInteger;
 import stsc.general.simulator.multistarter.MpString;
 import stsc.general.simulator.multistarter.MpSubExecution;
-import stsc.general.testhelper.TestStatisticsHelper;
+import stsc.general.testhelper.TestMetricsHelper;
 
 public class AlgorithmSettingsGeneticListTest {
 
 	private AlgorithmSettingsGeneticList getList() throws BadParameterException {
-		final FromToPeriod period = TestStatisticsHelper.getPeriod();
+		final FromToPeriod period = TestMetricsHelper.getPeriod();
 		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(period);
 		factory.add(new MpInteger("q", -20, 100, 1));
 		factory.add(new MpInteger("w", -40, 15, 1));

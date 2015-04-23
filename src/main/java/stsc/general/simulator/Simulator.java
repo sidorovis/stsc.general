@@ -8,16 +8,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
 
-import com.google.common.base.Joiner;
-
 import stsc.common.BadSignalException;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 import stsc.general.trading.TradeProcessor;
 import stsc.general.trading.TradeProcessorInit;
+
+import com.google.common.base.Joiner;
 
 public class Simulator {
 
@@ -28,13 +28,13 @@ public class Simulator {
 
 	private static Logger logger = LogManager.getLogger("Simulator");
 
-	private final Statistics statistics;
+	private final Metrics metrics;
 	private final SignalsStorage signalsStorage;
 
 	public Simulator(final SimulatorSettings settings, Set<String> stockNames) throws BadAlgorithmException, BadSignalException {
 		logger.info("Simulator starting on " + Joiner.on(",").join(stockNames));
 		final TradeProcessor tradeProcessor = new TradeProcessor(settings.getInit());
-		statistics = tradeProcessor.simulate(settings.getInit().getPeriod(), stockNames);
+		metrics = tradeProcessor.simulate(settings.getInit().getPeriod(), stockNames);
 		signalsStorage = tradeProcessor.getExecutionStorage().getSignalsStorage();
 		logger.info("Simulated finished");
 	}
@@ -42,13 +42,13 @@ public class Simulator {
 	public Simulator(final SimulatorSettings settings) throws BadAlgorithmException, BadSignalException {
 		logger.info("Simulator starting");
 		final TradeProcessor tradeProcessor = new TradeProcessor(settings.getInit());
-		statistics = tradeProcessor.simulate(settings.getInit().getPeriod());
+		this.metrics = tradeProcessor.simulate(settings.getInit().getPeriod());
 		signalsStorage = tradeProcessor.getExecutionStorage().getSignalsStorage();
 		logger.info("Simulated finished");
 	}
 
-	public static Simulator fromConfig(final StockStorage stockStorage, final FromToPeriod period, final String config)
-			throws BadAlgorithmException, BadSignalException, Exception {
+	public static Simulator fromConfig(final StockStorage stockStorage, final FromToPeriod period, final String config) throws BadAlgorithmException,
+			BadSignalException, Exception {
 		return new Simulator(new SimulatorSettings(0, new TradeProcessorInit(stockStorage, period, config)));
 	}
 
@@ -56,8 +56,8 @@ public class Simulator {
 		return new Simulator(new SimulatorSettings(0, new TradeProcessorInit(filePath)));
 	}
 
-	public Statistics getStatistics() {
-		return statistics;
+	public Metrics getMetrics() {
+		return metrics;
 	}
 
 	public SignalsStorage getSignalsStorage() {

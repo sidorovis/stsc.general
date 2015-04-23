@@ -22,7 +22,7 @@ public class StatisticsByCostSelector extends BorderedStrategySelector {
 
 	@Override
 	public synchronized Optional<TradingStrategy> addStrategy(final TradingStrategy strategy) {
-		final Statistics statistics = strategy.getStatistics();
+		final Metrics statistics = strategy.getMetrics();
 		final Double compareValue = costFunction.calculate(statistics);
 		select.addStrategy(compareValue, strategy);
 		if (select.size() > size()) {
@@ -33,7 +33,7 @@ public class StatisticsByCostSelector extends BorderedStrategySelector {
 
 	@Override
 	public synchronized void removeStrategy(final TradingStrategy strategy) {
-		select.removeStrategy(costFunction.calculate(strategy.getStatistics()), strategy);
+		select.removeStrategy(costFunction.calculate(strategy.getMetrics()), strategy);
 	}
 
 	@Override

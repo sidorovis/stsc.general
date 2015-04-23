@@ -21,7 +21,7 @@ public class StatisticsCompareSelector extends BorderedStrategySelector {
 
 		@Override
 		public int compare(TradingStrategy o1, TradingStrategy o2) {
-			return comparator.compare(o1.getStatistics(), o2.getStatistics());
+			return comparator.compare(o1.getMetrics(), o2.getMetrics());
 		}
 
 	}

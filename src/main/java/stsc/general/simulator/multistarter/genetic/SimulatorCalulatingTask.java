@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 
 import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorSettings;
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
 
 final class SimulatorCalulatingTask implements Callable<Boolean> {
@@ -24,9 +24,9 @@ final class SimulatorCalulatingTask implements Callable<Boolean> {
 	public Boolean call() throws Exception {
 		boolean result = false;
 		try {
-			final Optional<Statistics> statistics = simulate();
-			if (statistics.isPresent()) {
-				final TradingStrategy strategy = new TradingStrategy(settings, statistics.get());
+			final Optional<Metrics> metrics = simulate();
+			if (metrics.isPresent()) {
+				final TradingStrategy strategy = new TradingStrategy(settings, metrics.get());
 				final Optional<TradingStrategy> addedToStatistics = searcher.selector.addStrategy(strategy);
 				if (addedToStatistics.isPresent()) {
 					searcher.population.add(strategy);
@@ -40,7 +40,7 @@ final class SimulatorCalulatingTask implements Callable<Boolean> {
 		return result;
 	}
 
-	private Optional<Statistics> simulate() {
+	private Optional<Metrics> simulate() {
 		Simulator simulator = null;
 		try {
 			simulator = new Simulator(settings);
@@ -48,7 +48,7 @@ final class SimulatorCalulatingTask implements Callable<Boolean> {
 			StrategyGeneticSearcher.logger.error("Error while calculating statistics: " + e.getMessage());
 			return Optional.empty();
 		}
-		return Optional.of(simulator.getStatistics());
+		return Optional.of(simulator.getMetrics());
 	}
 
 }

@@ -1,6 +1,6 @@
 package stsc.general.statistic.cost.comparator;
 
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.function.CostFunction;
 
 public class CostFunctionToComparator implements CostStatisticsComparator {
@@ -11,7 +11,7 @@ public class CostFunctionToComparator implements CostStatisticsComparator {
 		this.costFunction = costFunction;
 	}
 
-	public int compare(Statistics o1, Statistics o2) {
+	public int compare(Metrics o1, Metrics o2) {
 		return costFunction.calculate(o1).compareTo(costFunction.calculate(o2));
 	}
 

@@ -12,15 +12,16 @@ import stsc.general.strategy.TradingStrategy;
 public class StatisticsWithDistanceSelectorTest {
 
 	TradingStrategy getStrategy(Double avGain) {
-		final Map<String, Double> list = new HashMap<>();
-		list.put("getAvGain", avGain);
-		return new TradingStrategy(null, new Statistics(list));
+		final Map<String, Double> doubleList = new HashMap<>();
+		doubleList.put("avGain", avGain);
+		final Map<String, Integer> integerList = new HashMap<>();
+		return new TradingStrategy(null, new Metrics(doubleList, integerList));
 	}
 
 	@Test
 	public void testStatisticsWithDistanceSelector() {
 		final StatisticsWithDistanceSelector selector = new StatisticsWithDistanceSelector(3, 3, new CostWeightedSumFunction());
-		selector.addDistanceParameter("getAvGain", 0.8);
+		selector.addDistanceParameter("avGain", 0.8);
 		selector.addStrategy(getStrategy(1.0));
 		selector.addStrategy(getStrategy(2.0));
 		selector.addStrategy(getStrategy(3.1));

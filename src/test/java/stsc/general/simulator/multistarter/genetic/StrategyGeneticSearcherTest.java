@@ -21,8 +21,8 @@ public class StrategyGeneticSearcherTest {
 		final StrategyGeneticSearcher sgs = createSearcher();
 		final StrategySelector selector = sgs.getSelector();
 		Assert.assertEquals(112, selector.getStrategies().size());
-		Assert.assertEquals(100.0, selector.getStrategies().get(0).getStatistics().getAvGain(), Settings.doubleEpsilon);
-		Assert.assertEquals(0.666666, selector.getStrategies().get(0).getStatistics().getWinProb(), Settings.doubleEpsilon);
+		Assert.assertEquals(100.0, selector.getStrategies().get(0).getMetrics().getDoubleMetric("avGain"), Settings.doubleEpsilon);
+		Assert.assertEquals(0.666666, selector.getStrategies().get(0).getMetrics().getDoubleMetric("winProb"), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -51,13 +51,13 @@ public class StrategyGeneticSearcherTest {
 
 	private StrategyGeneticSearcher createSearcher() throws InterruptedException {
 		final CostWeightedSumFunction costFunction = new CostWeightedSumFunction();
-		costFunction.addParameter("getWinProb", 1.2);
-		costFunction.addParameter("getKelly", 0.6);
-		costFunction.addParameter("getDdDurationAvGain", 0.4);
-		costFunction.addParameter("getFreq", 0.3);
-		costFunction.addParameter("getSharpeRatio", 0.2);
-		costFunction.addParameter("getMaxLoss", -0.3);
-		costFunction.addParameter("getAvLoss", -0.5);
+		costFunction.addParameter("winProb", 1.2);
+		costFunction.addParameter("kelly", 0.6);
+		costFunction.addParameter("ddDurationAvGain", 0.4);
+		costFunction.addParameter("freq", 0.3);
+		costFunction.addParameter("sharpeRatio", 0.2);
+		costFunction.addParameter("maxLoss", -0.3);
+		costFunction.addParameter("avLoss", -0.5);
 
 		final StrategySelector selector = new StatisticsByCostSelector(112, costFunction);
 

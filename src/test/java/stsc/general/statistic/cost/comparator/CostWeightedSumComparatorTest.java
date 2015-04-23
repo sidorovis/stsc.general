@@ -6,21 +6,21 @@ import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import stsc.general.statistic.Statistics;
-import stsc.general.testhelper.TestStatisticsHelper;
+import stsc.general.statistic.Metrics;
+import stsc.general.testhelper.TestMetricsHelper;
 
 public class CostWeightedSumComparatorTest {
 
 	@Test
 	public void testCostWeightedSumComparator() throws ParseException {
-		final Statistics stat = TestStatisticsHelper.getStatistics();
+		final Metrics stat = TestMetricsHelper.getMetrics();
 
 		final CostWeightedSumComparator comparator = new CostWeightedSumComparator();
-		comparator.addParameter("getKelly", 0.8);
+		comparator.addParameter("kelly", 0.8);
 
 		Assert.assertEquals(0, comparator.compare(stat, stat));
 
-		final Statistics newStat = TestStatisticsHelper.getStatistics(50, 150, new LocalDate(2013, 5, 1));
+		final Metrics newStat = TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 1));
 		Assert.assertEquals(0, comparator.compare(newStat, newStat));
 
 		Assert.assertEquals(-1, comparator.compare(stat, newStat));
@@ -30,14 +30,14 @@ public class CostWeightedSumComparatorTest {
 	@Test
 	public void testCostWeightedSumComparatorOnSeveralStatistics() {
 		final CostWeightedSumComparator comparator = new CostWeightedSumComparator();
-		comparator.addParameter("getKelly", 0.8);
-		comparator.addParameter("getWinProb", 0.4);
-		comparator.addParameter("getMaxWin", 0.9);
+		comparator.addParameter("kelly", 0.8);
+		comparator.addParameter("winProb", 0.4);
+		comparator.addParameter("maxWin", 0.9);
 		for (int i = 1; i < 6; ++i) {
-			final Statistics leftStat = TestStatisticsHelper.getStatistics(50, 150, new LocalDate(2013, 5, i));
+			final Metrics leftStat = TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, i));
 			for (int u = i + 20; u < 25; ++u) {
 				if (i != u) {
-					final Statistics rightStat = TestStatisticsHelper.getStatistics(50, 150, new LocalDate(2013, 5, u));
+					final Metrics rightStat = TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, u));
 					final int r = comparator.compare(leftStat, rightStat) * comparator.compare(rightStat, leftStat);
 					if (r != 0)
 						Assert.assertEquals(-1, r);

@@ -1,27 +1,23 @@
 package stsc.general.statistic.cost.function;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import stsc.general.statistic.PublicMethod;
-import stsc.general.statistic.Statistics;
+import stsc.general.statistic.Metrics;
 
 // @formatter:off
 /**
- * {@link CostWeightedSumFunction} is a cost function for {@link Statistics}.
- * Require set of parameters: P[1]...P[N];
- * Result = V[1] * P[1] + V[2] * P[2] ... V[N] * P[N].
+ * {@link CostWeightedSumFunction} is a cost function for {@link Metrics}.
+ * Require set of parameters: P[1]...P[N]; Result = V[1] * P[1] + V[2] * P[2]
+ * ... V[N] * P[N].
  */
-//@formatter:on
+// @formatter:on
 public class CostWeightedSumFunction implements CostFunction {
 
 	private final Map<String, Double> parameters = new HashMap<>();
-	private final Object[] emptyValues = {};
 
 	public CostWeightedSumFunction() {
-		parameters.put("getAvGain", 1.0);
+		parameters.put("avGain", 1.0);
 	}
 
 	public void addParameter(String name, Double value) {
@@ -29,20 +25,12 @@ public class CostWeightedSumFunction implements CostFunction {
 	}
 
 	@Override
-	public Double calculate(final Statistics statistics) {
+	public Double calculate(final Metrics metrics) {
 		Double result = 0.0;
-		final Method[] methods = statistics.getClass().getMethods();
-		for (Method method : methods) {
-			if (method.isAnnotationPresent(PublicMethod.class)) {
-				if (parameters.containsKey(method.getName())) {
-					final Double value = parameters.get(method.getName());
-					try {
-						result += value * (Double) method.invoke(statistics, emptyValues);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					}
-				}
-			}
+		for (Map.Entry<String, Double> e : parameters.entrySet()) {
+			result += e.getValue() * metrics.getMetric(e.getKey());
 		}
+
 		return result;
 	}
 }

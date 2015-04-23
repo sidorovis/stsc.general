@@ -88,7 +88,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 				Simulator simulator;
 				try {
 					simulator = new Simulator(settings.get());
-					final TradingStrategy strategy = new TradingStrategy(settings.get(), simulator.getStatistics());
+					final TradingStrategy strategy = new TradingStrategy(settings.get(), simulator.getMetrics());
 					selector.addStrategy(strategy);
 					settings = getNextSimulatorSettings();
 				} catch (BadAlgorithmException | BadSignalException e) {

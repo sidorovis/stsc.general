@@ -222,7 +222,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	private double calculateCostSum() {
 		double lastCostSum = 0.0;
 		for (TradingStrategy e : population) {
-			lastCostSum += costFunction.calculate(e.getStatistics());
+			lastCostSum += costFunction.calculate(e.getMetrics());
 		}
 		return lastCostSum;
 	}
