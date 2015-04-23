@@ -10,7 +10,6 @@ import org.joda.time.LocalDate;
 import stsc.common.Day;
 import stsc.common.Settings;
 import stsc.general.statistic.EquityCurve.Element;
-import stsc.general.statistic.Statistics.StatisticsInit;
 import stsc.general.trading.TradingLog;
 import stsc.general.trading.TradingRecord;
 
@@ -39,7 +38,7 @@ final class EquityProcessor {
 	private ArrayList<Double> elementsInStartMonths = new ArrayList<>();
 	private ArrayList<Integer> startMonthsIndexes = new ArrayList<>();
 
-	StatisticsInit statisticsInit = Statistics.createInit();
+	Metrics.StatisticsInit statisticsInit = Metrics.createInit();
 
 	EquityProcessor(StatisticsProcessor statisticsProcessor, TradingLog tradingLog) {
 		this.commision = statisticsProcessor.getCommision();
@@ -211,7 +210,7 @@ final class EquityProcessor {
 	}
 
 	private void calculateDrawDownStatistics() {
-		final StatisticsInit init = statisticsInit;
+		final Metrics.StatisticsInit init = statisticsInit;
 		final int equityCurveSize = init.equityCurve.size();
 
 		Element ddStart = init.equityCurve.get(0);
@@ -279,7 +278,7 @@ final class EquityProcessor {
 	}
 
 	private void collectElementsInStartMonths() {
-		final StatisticsInit init = statisticsInit;
+		final Metrics.StatisticsInit init = statisticsInit;
 
 		LocalDate nextMonthBegin = new LocalDate(init.equityCurve.get(0).date).plusMonths(1).withDayOfMonth(1);
 		final int firstMonthIndex = init.equityCurve.find(nextMonthBegin.toDate());
@@ -303,7 +302,7 @@ final class EquityProcessor {
 	}
 
 	private void calculate12MonthsStatistics() {
-		final StatisticsInit init = statisticsInit;
+		final Metrics.StatisticsInit init = statisticsInit;
 		final int MONTHS_PER_YEAR = 12;
 		final int startMonthsIndexesSize = startMonthsIndexes.size() - MONTHS_PER_YEAR;
 
@@ -326,7 +325,7 @@ final class EquityProcessor {
 	}
 
 	private void calculateStartMonthsStatistics() {
-		final StatisticsInit init = statisticsInit;
+		final Metrics.StatisticsInit init = statisticsInit;
 		final int startMonthsIndexesSize = startMonthsIndexes.size();
 
 		double lastValue = init.equityCurve.get(0).value;
@@ -350,7 +349,7 @@ final class EquityProcessor {
 	}
 
 	private void calculateMonthsStatistics() {
-		final StatisticsInit init = statisticsInit;
+		final Metrics.StatisticsInit init = statisticsInit;
 
 		int index = 0;
 
