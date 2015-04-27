@@ -22,8 +22,8 @@ public class StatisticsByCostSelector extends BorderedStrategySelector {
 
 	@Override
 	public synchronized Optional<TradingStrategy> addStrategy(final TradingStrategy strategy) {
-		final Metrics statistics = strategy.getMetrics();
-		final Double compareValue = costFunction.calculate(statistics);
+		final Metrics metrics = strategy.getMetrics();
+		final Double compareValue = costFunction.calculate(metrics);
 		select.addStrategy(compareValue, strategy);
 		if (select.size() > size()) {
 			return select.deleteLast();
