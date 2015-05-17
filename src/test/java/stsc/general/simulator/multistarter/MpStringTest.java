@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class MpStringTest {
-	
+
 	@Test
 	public void testMpStringGetIndexByValue() throws BadParameterException {
 		final MpString md = new MpString("a", Arrays.asList(new String[] { "a", "b", "c", "d", "e" }));
@@ -39,7 +39,7 @@ public class MpStringTest {
 	@Test
 	public void testMpStringClone() throws BadParameterException {
 		final MpString v = new MpString("a", Arrays.asList(new String[] { "a", "b", "c" }));
-		final MpIterator<String> copy = v.clone();
+		final MpIterator<String, ?> copy = v.clone();
 		v.next();
 		Assert.assertFalse(copy.next().equals(v.next()));
 	}

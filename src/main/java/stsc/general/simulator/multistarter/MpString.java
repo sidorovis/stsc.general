@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class MpString extends MpIterator<String> {
+public class MpString extends MpTextIterator<String> {
 
 	private final List<String> domen;
 
@@ -28,7 +28,7 @@ public class MpString extends MpIterator<String> {
 	}
 
 	@Override
-	public MpIterator<String> clone() {
+	public MpString clone() {
 		return new MpString(getName(), domen, true);
 	}
 
@@ -94,21 +94,6 @@ public class MpString extends MpIterator<String> {
 	@Override
 	public int getIndexByValue(String value) {
 		return Collections.binarySearch(domen, value);
-	}
-
-	@Override
-	public String getFrom() {
-		return domen.get(0);
-	}
-
-	@Override
-	public String getTo() {
-		return domen.get(domen.size() - 1);
-	}
-
-	@Override
-	public String getStep() {
-		return "";
 	}
 
 	@Override

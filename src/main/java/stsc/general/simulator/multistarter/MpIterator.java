@@ -1,8 +1,6 @@
 package stsc.general.simulator.multistarter;
 
-import java.util.List;
-
-public abstract class MpIterator<T> implements ResetableIterator<T>, Cloneable {
+public abstract class MpIterator<T, E extends MpIterator<T, E>> implements ResetableIterator<T>, Cloneable {
 
 	private final String name;
 
@@ -28,7 +26,7 @@ public abstract class MpIterator<T> implements ResetableIterator<T>, Cloneable {
 
 	public abstract T parameter(int index);
 
-	public abstract MpIterator<T> clone();
+	public abstract E clone();
 
 	public final T getRangom() {
 		return parameter((int) (Math.random() * size()));
@@ -86,11 +84,4 @@ public abstract class MpIterator<T> implements ResetableIterator<T>, Cloneable {
 		return newIndex;
 	}
 
-	public abstract T getFrom();
-
-	public abstract T getTo();
-
-	public abstract T getStep();
-
-	public abstract List<T> getDomen();
 }

@@ -4,7 +4,7 @@
 
   <groupId>stsc</groupId>
   <artifactId>stsc.general</artifactId>
-  <version>0.0.17-PROSEP</version>
+  <version>0.0.18-WEBINTERFACE</version>
   <packaging>jar</packaging>
 
   <name>stsc.general</name>
@@ -100,7 +100,7 @@
     <dependency>
       <groupId>stsc</groupId>
       <artifactId>stsc.storage</artifactId>
-      <version>${project.version}</version>
+      <version>0.0.17-PROSEP</version>
     </dependency>
   
 	<dependency>

@@ -1,8 +1,7 @@
 package stsc.general.simulator.multistarter;
 
-import java.util.List;
 
-public class MpInteger extends MpIterator<Integer> {
+public class MpInteger extends MpNumberIterator<Integer> {
 
 	private final int from;
 	private final int to;
@@ -20,7 +19,7 @@ public class MpInteger extends MpIterator<Integer> {
 	}
 
 	@Override
-	public MpIterator<Integer> clone() {
+	public MpInteger clone() {
 		return new MpInteger(getName(), from, to, step, true);
 	}
 
@@ -34,14 +33,13 @@ public class MpInteger extends MpIterator<Integer> {
 
 	@Override
 	public long size() {
-		long result = (long) Math.ceil(((double)to - from) / step);
+		long result = (long) Math.ceil(((double) to - from) / step);
 		return (result == 0) ? 1 : result;
 	}
 
 	@Override
 	public String toString() {
-		return getName() + ":" + String.valueOf(current()) + " from (" + String.valueOf(step) + "|" + String.valueOf(from) + ":"
-				+ String.valueOf(to) + ")";
+		return getName() + ":" + String.valueOf(current()) + " from (" + String.valueOf(step) + "|" + String.valueOf(from) + ":" + String.valueOf(to) + ")";
 	}
 
 	@Override
@@ -109,8 +107,4 @@ public class MpInteger extends MpIterator<Integer> {
 		return step;
 	}
 
-	@Override
-	public List<Integer> getDomen() {
-		return null;
-	}
 }

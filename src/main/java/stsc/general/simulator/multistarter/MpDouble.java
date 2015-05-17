@@ -1,12 +1,10 @@
 package stsc.general.simulator.multistarter;
 
-import java.util.List;
-
 import stsc.common.Settings;
 
 import com.google.common.math.DoubleMath;
 
-public class MpDouble extends MpIterator<Double> {
+public class MpDouble extends MpNumberIterator<Double> {
 
 	private final double from;
 	private final double to;
@@ -26,7 +24,7 @@ public class MpDouble extends MpIterator<Double> {
 	}
 
 	@Override
-	public MpIterator<Double> clone() {
+	public MpDouble clone() {
 		return new MpDouble(getName(), from, to, step, true);
 	}
 
@@ -46,8 +44,7 @@ public class MpDouble extends MpIterator<Double> {
 
 	@Override
 	public String toString() {
-		return getName() + ":" + String.valueOf(current()) + " from (" + String.valueOf(step) + "|" + String.valueOf(from) + ":"
-				+ String.valueOf(to) + ")";
+		return getName() + ":" + String.valueOf(current()) + " from (" + String.valueOf(step) + "|" + String.valueOf(from) + ":" + String.valueOf(to) + ")";
 	}
 
 	@Override
@@ -113,8 +110,4 @@ public class MpDouble extends MpIterator<Double> {
 		return step;
 	}
 
-	@Override
-	public List<Double> getDomen() {
-		return null;
-	}
 }

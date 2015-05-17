@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class MpIntegerTest {
-	
+
 	@Test
 	public void testMpIntegerGetIndexByValue() throws BadParameterException {
 		final MpInteger md = new MpInteger("a", -10, 40, 5);
@@ -46,7 +46,7 @@ public class MpIntegerTest {
 	@Test
 	public void testMpIntegerClone() throws BadParameterException {
 		final MpInteger from = new MpInteger("a", 0, 10, 3);
-		final MpIterator<Integer> to = from.clone();
+		final MpIterator<Integer, ?> to = from.clone();
 		to.next();
 		Assert.assertFalse(from.next().intValue() == to.next().intValue());
 	}

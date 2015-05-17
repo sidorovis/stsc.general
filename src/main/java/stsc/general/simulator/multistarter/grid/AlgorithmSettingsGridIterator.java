@@ -69,12 +69,12 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Algorith
 			return;
 		}
 
-		private <T> boolean getNext(ParameterList<T> list) {
+		private <T> boolean getNext(ParameterList<T, ?> list) {
 			while (true) {
 				if (list.empty()) {
 					return false;
 				}
-				final MpIterator<T> iterator = list.getCurrentParam();
+				final MpIterator<T, ?> iterator = list.getCurrentParam();
 				iterator.increment();
 				if (iterator.hasNext()) {
 					list.reset();
@@ -93,29 +93,29 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Algorith
 		protected AlgorithmSettingsImpl generateSettings() {
 			final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl(period);
 
-			final ParameterList<Integer> integers = parameters.getIntegers();
-			for (MpIterator<Integer> p : integers.getParams()) {
+			final ParameterList<Integer, ?> integers = parameters.getIntegers();
+			for (MpIterator<Integer, ?> p : integers.getParams()) {
 				final String name = p.currentParameter().getName();
 				final Integer value = p.currentParameter().getValue();
 				algoSettings.setInteger(name, value);
 			}
 
-			final ParameterList<Double> doubles = parameters.getDoubles();
-			for (MpIterator<Double> p : doubles.getParams()) {
+			final ParameterList<Double, ?> doubles = parameters.getDoubles();
+			for (MpIterator<Double, ?> p : doubles.getParams()) {
 				final String name = p.currentParameter().getName();
 				final Double value = p.currentParameter().getValue();
 				algoSettings.setDouble(name, value);
 			}
 
-			final ParameterList<String> strings = parameters.getStrings();
-			for (MpIterator<String> p : strings.getParams()) {
+			final ParameterList<String, ?> strings = parameters.getStrings();
+			for (MpIterator<String, ?> p : strings.getParams()) {
 				final String name = p.currentParameter().getName();
 				final String value = p.currentParameter().getValue();
 				algoSettings.setString(name, value);
 			}
 
-			final ParameterList<String> list = parameters.getSubExecutions();
-			for (MpIterator<String> p : list.getParams()) {
+			final ParameterList<String, ?> list = parameters.getSubExecutions();
+			for (MpIterator<String, ?> p : list.getParams()) {
 				final String subExecutionName = p.currentParameter().getValue();
 				algoSettings.addSubExecutionName(subExecutionName);
 			}

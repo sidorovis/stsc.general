@@ -3,29 +3,29 @@ package stsc.general.simulator.multistarter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParameterList<Type> implements Cloneable {
+public class ParameterList<Type, MpIteratorType extends MpIterator<Type, MpIteratorType>> implements Cloneable {
 
-	private final List<MpIterator<Type>> params;
+	private final List<MpIteratorType> params;
 	private int index;
 
 	public ParameterList() {
-		this.params = new ArrayList<MpIterator<Type>>();
+		this.params = new ArrayList<MpIteratorType>();
 		this.index = 0;
 	}
 
-	public ParameterList<Type> clone() {
-		return new ParameterList<Type>(this.params);
+	public ParameterList<Type, MpIteratorType> clone() {
+		return new ParameterList<Type, MpIteratorType>(this.params);
 	}
 
-	private ParameterList(final List<MpIterator<Type>> params) {
-		this.params = new ArrayList<MpIterator<Type>>(params.size());
-		for (MpIterator<Type> mpIterator : params) {
+	private ParameterList(final List<MpIteratorType> params) {
+		this.params = new ArrayList<MpIteratorType>(params.size());
+		for (MpIteratorType mpIterator : params) {
 			this.params.add(mpIterator.clone());
 		}
 		this.index = 0;
 	}
 
-	public void add(final MpIterator<Type> mpIterator) {
+	public void add(final MpIteratorType mpIterator) {
 		params.add(mpIterator);
 	}
 
@@ -49,11 +49,11 @@ public class ParameterList<Type> implements Cloneable {
 		return index < params.size();
 	}
 
-	public MpIterator<Type> getCurrentParam() {
+	public MpIteratorType getCurrentParam() {
 		return params.get(index);
 	}
 
-	public List<MpIterator<Type>> getParams() {
+	public List<MpIteratorType> getParams() {
 		return params;
 	}
 
@@ -64,7 +64,7 @@ public class ParameterList<Type> implements Cloneable {
 
 	public long size() {
 		long result = 1;
-		for (MpIterator<?> i : params) {
+		for (MpIteratorType i : params) {
 			result *= i.size();
 		}
 		return result;

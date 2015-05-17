@@ -38,7 +38,7 @@ public class MpDoubleTest {
 	@Test
 	public void testMpDoubleClone() throws BadParameterException {
 		final MpDouble value = new MpDouble("a", -0.29, 0.63, 0.21);
-		final MpIterator<Double> copy = value.clone();
+		final MpIterator<Double, ?> copy = value.clone();
 		value.next();
 		Assert.assertFalse(Settings.doubleEpsilon < copy.next().doubleValue() - value.next().doubleValue());
 	}
