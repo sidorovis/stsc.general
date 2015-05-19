@@ -11,6 +11,16 @@ import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MpTextIterator;
 import stsc.general.simulator.multistarter.ParameterList;
 
+/**
+ * This class implement list of algorithm settings for genetic search. So we
+ * can:<br/>
+ * 1. Generate new population of algorithm setting
+ * {@link AlgorithmSettingsGeneticList#generateRandom()};<br/>
+ * 2. Mutate {@link AlgorithmSettings};<br/>
+ * 3. Merge {@link AlgorithmSettings} (left with right);<br/>
+ * We need {@link AlgorithmSettingsGeneticList} for mutate / merge operations
+ * because we require algorithm setting domens.
+ */
 public class AlgorithmSettingsGeneticList {
 
 	private static final int MUTATING_FINISHED = -1;

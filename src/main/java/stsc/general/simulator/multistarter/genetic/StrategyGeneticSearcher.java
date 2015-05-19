@@ -10,6 +10,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
@@ -74,15 +75,16 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		this(algorithmSettings, selector, threadAmount, selector.size(), POPULATION_DEFAULT_SIZE);
 	}
 
-	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount,
-			int maxSelectionIndex, int populationSize) throws InterruptedException {
-		this(algorithmSettings, selector, threadAmount, new CostWeightedSumFunction(), maxSelectionIndex, populationSize,
-				BEST_DEFAULT_PART, CROSSOVER_DEFAULT_PART);
+	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount, int maxSelectionIndex,
+			int populationSize) throws InterruptedException {
+		this(algorithmSettings, selector, threadAmount, new CostWeightedSumFunction(), maxSelectionIndex, populationSize, BEST_DEFAULT_PART,
+				CROSSOVER_DEFAULT_PART);
 	}
 
 	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount,
-			CostFunction costFunction, int maxSelectionIndex, int populationSize, double bestPart, double crossoverPart)
-			throws InterruptedException {
+			CostFunction costFunction, int maxSelectionIndex, int populationSize, double bestPart, double crossoverPart) throws InterruptedException {
+		Validate.isTrue(threadAmount > 0, "threadAmount (%s) should be bigger then 0", threadAmount);
+
 		this.selector = selector;
 		this.settingsGeneticList = algorithmSettings;
 		this.population = Collections.synchronizedList(new ArrayList<TradingStrategy>());

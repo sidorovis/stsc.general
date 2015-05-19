@@ -30,8 +30,7 @@ public class AlgorithmSettingsGeneticListTest {
 		factory.add(new MpDouble("s", -100.0, 101.0, 2.0));
 		factory.add(new MpString("z", Arrays.asList(new String[] { "asd", "ibm", "yhoo" })));
 		factory.add(new MpString("z", Arrays.asList(new String[] { "vokrug", "fileName" })));
-		factory.add(new MpSubExecution("p", Arrays.asList(new String[] { "12313-432423", "234535-23424", "35345-234234135",
-				"24454-65462245" })));
+		factory.add(new MpSubExecution("p", Arrays.asList(new String[] { "12313-432423", "234535-23424", "35345-234234135", "24454-65462245" })));
 		final AlgorithmSettingsGeneticList mas = factory.getGeneticList();
 		return mas;
 	}
@@ -60,10 +59,18 @@ public class AlgorithmSettingsGeneticListTest {
 
 	@Test
 	public void testAlgorithmSettingsGeneticListMutate() throws ParseException, BadParameterException, BadAlgorithmException {
+		for (int i = 0; i < 10; ++i) {
+			if (!amountOfMutations()) {
+				return;
+			}
+		}
+		Assert.fail("mutation test failed, there were no mutation");
+	}
+
+	private boolean amountOfMutations() throws BadParameterException {
 		final AlgorithmSettingsGeneticList mas = getList();
 		final AlgorithmSettings original = mas.generateRandom();
 		final AlgorithmSettings copy = original.clone();
-
 		int i = 0;
 		while (true) {
 			final StringBuilder originalSb = new StringBuilder();
@@ -75,11 +82,7 @@ public class AlgorithmSettingsGeneticListTest {
 			if (!originalSb.toString().equals(copySb.toString()))
 				break;
 		}
-		if (i > 2) { // it is highly impossible that two times we will have the
-						// same mutation result
-			System.out.println(i);
-			Assert.fail("mutation test failed, there were no mutation");
-		}
+		return (i > 2);
 	}
 
 	@Test

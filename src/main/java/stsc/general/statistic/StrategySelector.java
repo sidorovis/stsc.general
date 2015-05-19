@@ -13,5 +13,5 @@ public interface StrategySelector {
 
 	public List<TradingStrategy> getStrategies();
 
-	public int size();
+	int size();
 }
