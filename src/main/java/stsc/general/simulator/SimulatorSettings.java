@@ -2,8 +2,15 @@ package stsc.general.simulator;
 
 import org.apache.commons.lang3.Validate;
 
+import stsc.general.statistic.Metrics;
+import stsc.general.trading.TradeProcessor;
 import stsc.general.trading.TradeProcessorInit;
 
+/**
+ * All necessary values to simulate one trading strategy.<br/>
+ * If we will think about {@link TradeProcessor} as about function f, then
+ * {@link Metrics} => f( {@link SimulatorSettings} ).
+ */
 public class SimulatorSettings implements Cloneable {
 
 	private long id;

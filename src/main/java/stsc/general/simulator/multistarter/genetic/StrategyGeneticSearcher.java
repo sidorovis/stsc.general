@@ -27,6 +27,47 @@ import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
 
+/**
+ * {@link StrategyGeneticSearcher} is a class. ;)<br/>
+ * Implementation details: <br/>
+ * a. multi-threaded (constructor argument control this setting);<br/>
+ * b. store empirical default parameter value for genetic search (best percent
+ * of population that should continue live after genetic cycle;<br/>
+ * c. store empirical crossover default parameter value for genetic search
+ * (percent of population that will be created in the result of merging);<br/>
+ * <hr/>
+ * Class Usage:<br/>
+ * 1. Construct it: {@link StrategyGeneticSearcher#StrategyGeneticSearcher}; <br/>
+ * 2. Call {@link StrategyGeneticSearcher#getSelector()} to wait and receive
+ * results;<br/>
+ * 3*. Optional you can add listener (
+ * {@link StrategyGeneticSearcher#addIndicatorProgress()} ) to receive progress
+ * statuses; <br/>
+ * 4*. You can also stop search process (it will not stop immediately!).<br/>
+ * <b> If you will not do 2nd step - it's highly possible that process will
+ * never finish.</b>
+ * <hr/>
+ * Algorithm details:<br/>
+ * 1. Setups {@link CountDownLatch} for amount of tasks that we will resolve per
+ * population cycle; <br/>
+ * 2. Creates and starts for execution {@link GenerateInitialPopulationsTask};<br/>
+ * 3. {@link GenerateInitialPopulationsTask} creates amount of
+ * {@link SimulatorCalulatingTask} (equal to amount of population);<br/>
+ * 4. Each {@link SimulatorCalulatingTask} decrease CountDownLatch amount and
+ * when all tasks will be resolved we could continue; <br/>
+ * 5. Executes genetic algorithm iteration:<br/>
+ * 5.a. Creates new population by next rules:<br/>
+ * 5.a.1 Copies amount of old population that we consider as 'best' and should
+ * be used as stable population;<br/>
+ * 5.a.2 Crossover stage: we merge random elements from old population and add
+ * them to new population;<br/>
+ * 5.a.3 Mutation stage: we mutate random elements from old population and add
+ * them to new population;<br/>
+ * 5.b. Create additional special check that population actually changed (we
+ * compare sum of cost function for Metrics from old population and new
+ * population). 6. Also check amount of already processed populations (we have
+ * restriction in there).
+ */
 public class StrategyGeneticSearcher implements StrategySearcher {
 
 	static {

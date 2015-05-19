@@ -2,7 +2,13 @@ package stsc.general.simulator.multistarter.genetic;
 
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.SimulatorSettings;
+import stsc.general.statistic.Metrics;
 
+/**
+ * This class generate initial genetic population of {@link SimulatorSettings}
+ * Also it creates and starts {@link SimulatorCalulatingTask} (Trading
+ * Strategies {@link Metrics} calculation procedures).
+ */
 final class GenerateInitialPopulationsTask implements Runnable {
 
 	private final StrategyGeneticSearcher strategyGeneticSearcher;
