@@ -3,7 +3,10 @@ package stsc.general.statistic.cost.comparator;
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.function.CostFunction;
 
-public class CostFunctionToComparator implements CostStatisticsComparator {
+/**
+ * This comparator use one {@link CostFunction} to compare metrics.
+ */
+public class CostFunctionToComparator implements MetricsComparator {
 
 	private final CostFunction costFunction;
 
@@ -11,6 +14,7 @@ public class CostFunctionToComparator implements CostStatisticsComparator {
 		this.costFunction = costFunction;
 	}
 
+	@Override
 	public int compare(Metrics o1, Metrics o2) {
 		return costFunction.calculate(o1).compareTo(costFunction.calculate(o2));
 	}

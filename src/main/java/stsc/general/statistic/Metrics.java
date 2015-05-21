@@ -9,7 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import stsc.general.statistic.EquityCurve.Element;
+import stsc.general.strategy.TradingStrategy;
 
+/**
+ * {@link Metrics} is a class that store comparable (double like) values that
+ * describe {@link TradingStrategy}.
+ */
 public final class Metrics {
 
 	static class StatisticsInit {

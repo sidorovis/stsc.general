@@ -16,7 +16,7 @@ public class CostWeightedSumComparatorTest {
 		final Metrics stat = TestMetricsHelper.getMetrics();
 
 		final CostWeightedSumComparator comparator = new CostWeightedSumComparator();
-		comparator.addParameter("kelly", 0.8);
+		comparator.withParameter("kelly", 0.8);
 
 		Assert.assertEquals(0, comparator.compare(stat, stat));
 
@@ -30,9 +30,9 @@ public class CostWeightedSumComparatorTest {
 	@Test
 	public void testCostWeightedSumComparatorOnSeveralStatistics() {
 		final CostWeightedSumComparator comparator = new CostWeightedSumComparator();
-		comparator.addParameter("kelly", 0.8);
-		comparator.addParameter("winProb", 0.4);
-		comparator.addParameter("maxWin", 0.9);
+		comparator.withParameter("kelly", 0.8);
+		comparator.withParameter("winProb", 0.4);
+		comparator.withParameter("maxWin", 0.9);
 		for (int i = 1; i < 6; ++i) {
 			final Metrics leftStat = TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, i));
 			for (int u = i + 20; u < 25; ++u) {

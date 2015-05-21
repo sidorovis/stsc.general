@@ -14,11 +14,28 @@ import stsc.general.strategy.TradingStrategy;
  */
 public interface StrategySelector {
 
-	public Optional<TradingStrategy> addStrategy(final TradingStrategy strategy);
+	/**
+	 * If max possible size was reached then we will delete one of the stored
+	 * {@link TradingStrategy} and
+	 * 
+	 * @return {@link Optional} value in case when one of
+	 *         {@link TradingStrategy} was deleted.
+	 */
+	Optional<TradingStrategy> addStrategy(final TradingStrategy strategy);
 
-	public void removeStrategy(final TradingStrategy strategy);
+	/**
+	 * @return true if {@link TradingStrategy} was deleted from
+	 *         {@link StrategySelector}.
+	 */
+	boolean removeStrategy(final TradingStrategy strategy);
 
-	public List<TradingStrategy> getStrategies();
+	/**
+	 * @return list of {@link TradingStrategy} s.
+	 */
+	List<TradingStrategy> getStrategies();
 
-	int size();
+	/**
+	 * @return current size of stored {@link TradingStrategy} s.
+	 */
+	int currentStrategiesAmount();
 }

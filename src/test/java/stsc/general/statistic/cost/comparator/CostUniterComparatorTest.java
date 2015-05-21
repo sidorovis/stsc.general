@@ -12,8 +12,8 @@ public class CostUniterComparatorTest {
 	@Test
 	public void testCostUniterComparator() {
 		final CostUniterComparator cu = new CostUniterComparator();
-		cu.addComparator(new CostWeightedSumComparator(), 0.5);
-		cu.addComparator(new CostWeightedSumComparator().addParameter("winProb", 0.6), 0.8);
+		cu.withComparator(new CostWeightedSumComparator(), 0.5);
+		cu.withComparator(new CostWeightedSumComparator().withParameter("winProb", 0.6), 0.8);
 
 		for (int i = 1; i < 6; ++i) {
 			final Metrics leftStat = TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, i));

@@ -5,14 +5,13 @@ import java.util.List;
 
 import stsc.general.statistic.Metrics;
 
-//@formatter:off
 /**
- * CostLexicographicalFunction is a cost function that calculated by next rules:
+ * CostLexicographicalFunction is a cost function that calculated by next rules:<br/>
  * there is a multiplikator and ordered set of statistics parameters M for
- * multiplikator; P[x] - for N parameters; CF = (((P[1] * M) + P[2]) * M + P[3])
- * * M + ... P[N];
+ * multiplikator; <br/>
+ * P[x] - for N parameters; <br/>
+ * <b>CF = (((P[1] * M) + P[2]) * M + P[3]) * M + ... P[N]</b>;
  */
-// @formatter:on
 
 public class CostLexicographicalFunction implements CostFunction {
 

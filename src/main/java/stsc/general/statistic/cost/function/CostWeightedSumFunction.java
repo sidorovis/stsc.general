@@ -5,13 +5,12 @@ import java.util.Map;
 
 import stsc.general.statistic.Metrics;
 
-// @formatter:off
 /**
- * {@link CostWeightedSumFunction} is a cost function for {@link Metrics}.
- * Require set of parameters: P[1]...P[N]; Result = V[1] * P[1] + V[2] * P[2]
- * ... V[N] * P[N].
+ * {@link CostWeightedSumFunction} is a cost function for {@link Metrics} that
+ * could be described as linear combination function.<br/>
+ * Require set of parameters: P[1]...P[N]; <br/>
+ * <b>Result = V[1] * P[1] + V[2] * P[2] ... V[N] * P[N] </b>.
  */
-// @formatter:on
 public class CostWeightedSumFunction implements CostFunction {
 
 	private final Map<String, Double> parameters = new HashMap<>();

@@ -9,7 +9,11 @@ import java.util.Map.Entry;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 
-public class StatisticsByCostSelector extends BorderedStrategySelector {
+/**
+ * This {@link StrategySelector} store best strategies by {@link CostFunction}.
+ * Also it has border restrictions (max possible elements amounts).
+ */
+public final class StatisticsByCostSelector extends BorderedStrategySelector {
 
 	private final CostFunction costFunction;
 	private final SortedByRatingStrategies select;
@@ -25,15 +29,15 @@ public class StatisticsByCostSelector extends BorderedStrategySelector {
 		final Metrics metrics = strategy.getMetrics();
 		final Double compareValue = costFunction.calculate(metrics);
 		select.addStrategy(compareValue, strategy);
-		if (select.size() > size()) {
+		if (select.size() > maxPossibleSize) {
 			return select.deleteLast();
 		}
 		return Optional.empty();
 	}
 
 	@Override
-	public synchronized void removeStrategy(final TradingStrategy strategy) {
-		select.removeStrategy(costFunction.calculate(strategy.getMetrics()), strategy);
+	public synchronized boolean removeStrategy(final TradingStrategy strategy) {
+		return select.removeStrategy(costFunction.calculate(strategy.getMetrics()), strategy);
 	}
 
 	@Override
@@ -47,8 +51,10 @@ public class StatisticsByCostSelector extends BorderedStrategySelector {
 		return Collections.unmodifiableList(result);
 	}
 
-	protected SortedByRatingStrategies getSortedStrategies() {
-		return select;
+	@Override
+	public synchronized int currentStrategiesAmount() {
+		return select.size();
+
 	}
 
 	@Override

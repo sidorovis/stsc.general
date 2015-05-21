@@ -113,7 +113,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 
 	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount)
 			throws InterruptedException {
-		this(algorithmSettings, selector, threadAmount, selector.size(), POPULATION_DEFAULT_SIZE);
+		this(algorithmSettings, selector, threadAmount, selector.currentStrategiesAmount(), POPULATION_DEFAULT_SIZE);
 	}
 
 	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount, int maxSelectionIndex,
@@ -136,7 +136,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		this.countDownLatch = new CountDownLatch(populationSize);
 		this.simulatorCalculatingTasks = new ArrayList<>();
 
-		this.settings = new GeneticSearchSettings(maxSelectionIndex, populationSize, bestPart, crossoverPart, selector.size());
+		this.settings = new GeneticSearchSettings(maxSelectionIndex, populationSize, bestPart, crossoverPart, selector.currentStrategiesAmount());
 		this.lastSelectionIndex = maxSelectionIndex;
 
 		startSearcher();

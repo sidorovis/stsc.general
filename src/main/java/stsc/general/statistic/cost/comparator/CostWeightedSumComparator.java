@@ -6,7 +6,17 @@ import java.util.Map.Entry;
 
 import stsc.general.statistic.Metrics;
 
-public class CostWeightedSumComparator implements CostStatisticsComparator {
+/**
+ * Compare({@link Metrics} left, {@link Metrics} right) method algorithm: <br/>
+ * 1. accumulate associative pairs "Metric" -> Double value (Weight) using
+ * {@link #withParameter(String, Double)} method.<br/>
+ * 2. calculate sum of Weights from associative pairs;<br/>
+ * 3. accumulate result for all associative pairs:<br/>
+ * 3.a. <b>R += {@link Math#signum(double)}(leftMetricValue - rightMetricValue)
+ * * {@link Math#abs(double)}(leftMetricValue - rightMetricValue) ^ Weight; 4.
+ * Result of compare -> {@link Double#compare(Double, Double)} (R, 0.0).
+ */
+public class CostWeightedSumComparator implements MetricsComparator {
 
 	private final Map<String, Double> parameters = new HashMap<>();
 
@@ -14,7 +24,7 @@ public class CostWeightedSumComparator implements CostStatisticsComparator {
 		parameters.put("avGain", 1.0);
 	}
 
-	public CostWeightedSumComparator addParameter(String name, Double value) {
+	public CostWeightedSumComparator withParameter(String name, Double value) {
 		parameters.put(name, value);
 		return this;
 	}

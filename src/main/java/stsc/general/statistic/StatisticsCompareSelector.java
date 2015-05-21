@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
 
-import stsc.general.statistic.cost.comparator.CostStatisticsComparator;
+import stsc.general.statistic.cost.comparator.MetricsComparator;
 import stsc.general.strategy.TradingStrategy;
 
 public class StatisticsCompareSelector extends BorderedStrategySelector {
 
 	private final class StrategyComparator implements Comparator<TradingStrategy> {
-		private CostStatisticsComparator comparator;
+		private MetricsComparator comparator;
 
-		StrategyComparator(CostStatisticsComparator comparator) {
+		StrategyComparator(MetricsComparator comparator) {
 			this.comparator = comparator;
 		}
 
@@ -29,7 +29,7 @@ public class StatisticsCompareSelector extends BorderedStrategySelector {
 	private final StrategyComparator strategyComparator;
 	private final TreeSet<TradingStrategy> select;
 
-	public StatisticsCompareSelector(int selectLastElements, CostStatisticsComparator comparator) {
+	public StatisticsCompareSelector(int selectLastElements, MetricsComparator comparator) {
 		super(selectLastElements);
 		this.strategyComparator = new StrategyComparator(comparator);
 		this.select = new TreeSet<TradingStrategy>(strategyComparator);
@@ -38,15 +38,15 @@ public class StatisticsCompareSelector extends BorderedStrategySelector {
 	@Override
 	public synchronized Optional<TradingStrategy> addStrategy(final TradingStrategy strategy) {
 		select.add(strategy);
-		if (select.size() > size()) {
+		if (select.size() > maxPossibleSize) {
 			return Optional.of(select.pollLast());
 		}
 		return Optional.empty();
 	}
 
 	@Override
-	public synchronized void removeStrategy(final TradingStrategy strategy) {
-		select.remove(strategy);
+	public synchronized boolean removeStrategy(final TradingStrategy strategy) {
+		return select.remove(strategy);
 	}
 
 	@Override
@@ -58,4 +58,8 @@ public class StatisticsCompareSelector extends BorderedStrategySelector {
 		return Collections.unmodifiableList(result);
 	}
 
+	@Override
+	public synchronized int currentStrategiesAmount() {
+		return select.size();
+	}
 }

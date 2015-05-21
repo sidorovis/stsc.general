@@ -5,15 +5,17 @@ import java.util.Map;
 
 import stsc.general.statistic.Metrics;
 
-// @formatter:off
 /**
- * CostWeightedProductFunction is a cost function for {@link Metrics}. Store
- * amount of parameters and double weights for each: (P[X] -> W[X] CostFunction
- * Calculation algorithm is next: 1) calculate sum = W[1] + W[2] + ... W[N]; 2)
- * calculate elements E[1] = W[1] / sum; 3) get S[X] = signum(P[X]) 4) get V[X]
- * = power(abs(P[X]),E[X]); 5) get ResultSum = S[X] * V[X] (for X in 1..N).
+ * CostWeightedProductFunction is a cost function for {@link Metrics}. <br/>
+ * Store amount of parameters and double weights for each: <br/>
+ * <b>(P[X] -> W[X]).</b> <br/>
+ * CostFunction Calculation algorithm is next: <br/>
+ * 1) calculate sum = W[1] + W[2] + ... W[N]; <br/>
+ * 2) calculate elements E[1] = W[1] / sum; <br/>
+ * 3) get S[X] = signum(P[X]) <br/>
+ * 4) get V[X] = power(abs(P[X]),E[X]); <br/>
+ * 5) get ResultSum = S[X] * V[X] (for X in 1..N).
  */
-// @formatter:on
 
 public class CostWeightedProductFunction implements CostFunction {
 

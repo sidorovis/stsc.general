@@ -8,17 +8,18 @@ import java.util.Map.Entry;
 
 import stsc.general.statistic.Metrics;
 
-// @formatter:off
 /**
  * Calculate Cost Function for {@link Metrics} using Bayesian Probability
- * methodology. Parameters are divided by layers with different coefficients for
- * example: we could have layer with next coefficients (getPeriod -> 2.0,
- * getAvGain -> 4.0) which provide us with information that cost function for
- * such layer will be: max(Period * 2.0 and AvGain * 4.0); Result of function is
- * minimum between all layers. If there is no layers result is Double.MAX_VALUE
- * layer with no fields lead to get -Double.MAX_VALUE as layer value.
+ * methodology. <br/>
+ * Parameters are divided by layers with different coefficients for example: <br/>
+ * we could have layer with next coefficients: <br/>
+ * (getPeriod -> 2.0, getAvGain -> 4.0) <br/>
+ * which provide us with information that cost function for such layer will be:
+ * <b>max(Period * 2.0 and AvGain * 4.0)</b>; <br/>
+ * Result of function is minimum between all layers. <br/>
+ * If there is no layers result is Double.MAX_VALUE layer with no fields lead to
+ * get -Double.MAX_VALUE as layer value.
  */
-// @formatter:on
 public class CostBayesianProbabilityFunction implements CostFunction {
 
 	private final List<Map<String, Double>> parameters = new ArrayList<Map<String, Double>>();

@@ -14,6 +14,11 @@ import stsc.common.collections.SortedByRating;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 
+/**
+ * This class implement complex {@link StrategySelector} storage that was
+ * created for {@link TradingStrategy} Genetic Search.<br/>
+ * Synopsis :
+ */
 public class StatisticsWithDistanceSelector implements StrategySelector {
 
 	private final class ClusterKey {
@@ -83,7 +88,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	}
 
 	@Override
-	public int size() {
+	public int currentStrategiesAmount() {
 		return clustersAmount * elementsInCluster;
 	}
 
@@ -115,12 +120,13 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	}
 
 	@Override
-	public void removeStrategy(TradingStrategy strategy) {
+	public boolean removeStrategy(TradingStrategy strategy) {
 		final ClusterKey clusterKey = new ClusterKey(strategy);
 		final StatisticsByCostSelector sc = clusters.get(clusterKey);
 		if (sc != null) {
-			sc.removeStrategy(strategy);
+			return sc.removeStrategy(strategy);
 		}
+		return false;
 	}
 
 	private void checkAndRemoveCluster() {
