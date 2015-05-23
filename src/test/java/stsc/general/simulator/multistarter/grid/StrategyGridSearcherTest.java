@@ -26,7 +26,7 @@ public class StrategyGridSearcherTest {
 				Arrays.asList(new String[] { "open" }), "31-01-2000");
 		final StrategySelector selector = new StatisticsCompareSelector(6500, new MetricsSameComparator());
 		final StrategyGridSearcher searcher = new StrategyGridSearcher(list, selector, 20);
-		Assert.assertEquals(6144, searcher.getSelector().getStrategies().size());
+		Assert.assertEquals(6144, searcher.waitAndGetSelector().getStrategies().size());
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class StrategyGridSearcherTest {
 		final StrategySelector selector = new StatisticsByCostSelector(6500, new CostWeightedSumFunction());
 		final StrategyGridSearcher searcher = new StrategyGridSearcher(list, selector, 20);
 		searcher.stopSearch();
-		Assert.assertTrue(6144 > searcher.getSelector().getStrategies().size());
+		Assert.assertTrue(6144 > searcher.waitAndGetSelector().getStrategies().size());
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class StrategyGridSearcherTest {
 				elements.add(percent);
 			}
 		});
-		Assert.assertEquals(6144, searcher.getSelector().getStrategies().size());
+		Assert.assertEquals(6144, searcher.waitAndGetSelector().getStrategies().size());
 		Assert.assertEquals(1.0, elements.get(elements.size() - 1), Settings.doubleEpsilon);
 	}
 }

@@ -16,10 +16,16 @@ import stsc.common.algorithms.EodExecution;
 import stsc.common.algorithms.StockExecution;
 import stsc.common.storage.StockStorage;
 import stsc.general.simulator.SimulatorSettings;
+import stsc.general.strategy.TradingStrategy;
 import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionsStorage;
 
-public class SimulatorSettingsGeneticList {
+/**
+ * Stores all possible values from {@link SimulatorSettings} for Genetic
+ * {@link TradingStrategy} Search.<br/>
+ * 
+ */
+public final class SimulatorSettingsGeneticList {
 
 	static {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/simulator_settings_genetic_list_log4j2.xml");
@@ -36,8 +42,8 @@ public class SimulatorSettingsGeneticList {
 	private final List<GeneticExecutionInitializer> stockInitializers;
 	private final List<GeneticExecutionInitializer> eodInitializers;
 
-	public SimulatorSettingsGeneticList(StockStorage stockStorage, FromToPeriod period,
-			List<GeneticExecutionInitializer> stockInitializers, List<GeneticExecutionInitializer> eodInitializers) {
+	public SimulatorSettingsGeneticList(StockStorage stockStorage, FromToPeriod period, List<GeneticExecutionInitializer> stockInitializers,
+			List<GeneticExecutionInitializer> eodInitializers) {
 		super();
 		this.id = new AtomicLong(0);
 		this.stockStorage = stockStorage;

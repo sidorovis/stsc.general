@@ -4,13 +4,13 @@ import stsc.general.statistic.StrategySelector;
 
 public interface StrategySearcher {
 
-	static abstract public class IndicatorProgressListener {
-		public abstract void processed(double percent);
+	static public interface IndicatorProgressListener {
+		void processed(double percent);
 	}
 
-	public StrategySelector getSelector() throws StrategySearcherException;
+	StrategySelector waitAndGetSelector() throws StrategySearcherException;
 
-	public void stopSearch();
+	void stopSearch();
 
-	public void addIndicatorProgress(final IndicatorProgressListener listener);
+	void addIndicatorProgress(final IndicatorProgressListener listener);
 }

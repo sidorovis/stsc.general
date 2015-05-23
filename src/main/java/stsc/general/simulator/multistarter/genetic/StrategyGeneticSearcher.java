@@ -5,17 +5,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
-
-import com.google.common.math.DoubleMath;
 
 import stsc.common.Settings;
 import stsc.common.algorithms.BadAlgorithmException;
@@ -24,8 +22,9 @@ import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.statistic.StrategySelector;
 import stsc.general.statistic.cost.function.CostFunction;
-import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
+
+import com.google.common.math.DoubleMath;
 
 /**
  * {@link StrategyGeneticSearcher} is a class. ;)<br/>
@@ -38,8 +37,8 @@ import stsc.general.strategy.TradingStrategy;
  * <hr/>
  * Class Usage:<br/>
  * 1. Construct it: {@link StrategyGeneticSearcher#StrategyGeneticSearcher}; <br/>
- * 2. Call {@link StrategyGeneticSearcher#getSelector()} to wait and receive
- * results;<br/>
+ * 2. Call {@link StrategyGeneticSearcher#waitAndGetSelector()} to wait and
+ * receive results;<br/>
  * 3*. Optional you can add listener (
  * {@link StrategyGeneticSearcher#addIndicatorProgress()} ) to receive progress
  * statuses; <br/>
@@ -78,94 +77,77 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 
 	private final static int MINIMUM_STEPS_AMOUNT = 10;
 
-	// empirical by StrategyGeneticSearcherTest
-	// (see commit # a43c64c01d765f266b8bfae5bb3c3a1a58e4bf24)
-	public final static double BEST_DEFAULT_PART = 0.94;
-
-	// empirical by StrategyGeneticSearcherTest
-	// (see commit # a43c64c01d765f266b8bfae5bb3c3a1a58e4bf24)
-	public final static double CROSSOVER_DEFAULT_PART = 0.86;
-	public final static int POPULATION_DEFAULT_SIZE = 100;
-
-	private int currentSelectionIndex = 0;
-	private int lastSelectionIndex;
-
-	private double maxCostSum = -Double.MAX_VALUE;
-
-	private final SimulatorSettingsGeneticList settingsGeneticList;
-
-	private final CostFunction costFunction;
-
-	private final List<SimulatorCalulatingTask> simulatorCalculatingTasks;
 	private final Random indexRandomizator = new Random();
+	private int currentSelectionIndex = 0;
+	// maximum found population cost: we reset it each time when we found
+	private double maxPopulationCost = -Double.MAX_VALUE;
+	// we reset it after each genetic search iteration
+	private CountDownLatch populationCalculationTasksLatch;
 
-	// should be visible to package for tasks
-	final StrategySelector selector;
-	List<TradingStrategy> population;
-	final ExecutorService executor;
-	CountDownLatch countDownLatch;
-	final GeneticSearchSettings settings;
+	private final SimulatorSettingsGeneticList simulatorSettingsGeneticList;
+	private final StrategySelector strategySelector;
+	private final ExecutorService executor;
+	private final CostFunction costFunction;
+	private final GeneticSearchSettings settings;
+
+	private final List<SimulatorCalulatingTask> simulatorCalculatingTasks = new ArrayList<>();
+	List<TradingStrategy> population = Collections.synchronizedList(new ArrayList<TradingStrategy>());;
 	// Boolean mean that Strategy was added as part of best strategies
-	final Map<TradingStrategy, Boolean> sortedPopulation;
+	private final Map<TradingStrategy, Boolean> sortedPopulation = Collections.synchronizedMap(new HashMap<TradingStrategy, Boolean>());
 
 	private boolean stoppedByRequest = false;
 	private volatile IndicatorProgressListener progressIndicator = null;
 
-	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount)
-			throws InterruptedException {
-		this(algorithmSettings, selector, threadAmount, selector.currentStrategiesAmount(), POPULATION_DEFAULT_SIZE);
+	public static StrategyGeneticSearcherBuilder getBuilder() {
+		return new StrategyGeneticSearcherBuilder();
 	}
 
-	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount, int maxSelectionIndex,
-			int populationSize) throws InterruptedException {
-		this(algorithmSettings, selector, threadAmount, new CostWeightedSumFunction(), maxSelectionIndex, populationSize, BEST_DEFAULT_PART,
-				CROSSOVER_DEFAULT_PART);
-	}
+	StrategyGeneticSearcher(final StrategyGeneticSearcherBuilder builder) {
+		this.simulatorSettingsGeneticList = builder.simulatorSettingsGeneticList;
+		this.strategySelector = builder.strategySelector;
+		this.executor = Executors.newFixedThreadPool(builder.threadAmount);
+		this.costFunction = builder.populationCostFunction;
+		this.settings = new GeneticSearchSettings(builder);
 
-	public StrategyGeneticSearcher(SimulatorSettingsGeneticList algorithmSettings, final StrategySelector selector, int threadAmount,
-			CostFunction costFunction, int maxSelectionIndex, int populationSize, double bestPart, double crossoverPart) throws InterruptedException {
-		Validate.isTrue(threadAmount > 0, "threadAmount (%s) should be bigger then 0", threadAmount);
-
-		this.selector = selector;
-		this.settingsGeneticList = algorithmSettings;
-		this.population = Collections.synchronizedList(new ArrayList<TradingStrategy>());
-		this.sortedPopulation = Collections.synchronizedMap(new HashMap<TradingStrategy, Boolean>());
-		this.executor = Executors.newFixedThreadPool(threadAmount);
-
-		this.costFunction = costFunction;
-		this.countDownLatch = new CountDownLatch(populationSize);
-		this.simulatorCalculatingTasks = new ArrayList<>();
-
-		this.settings = new GeneticSearchSettings(maxSelectionIndex, populationSize, bestPart, crossoverPart, selector.maxPossibleAmount());
-		this.lastSelectionIndex = maxSelectionIndex;
+		this.populationCalculationTasksLatch = new CountDownLatch(builder.populationSize);
 
 		startSearcher();
 	}
 
 	private void startSearcher() {
-		executor.submit(new GenerateInitialPopulationsTask(this, this));
+		executor.submit(new GenerateInitialPopulationsTask(this, settings.populationSize));
 	}
 
 	@Override
-	public StrategySelector getSelector() throws StrategySearcherException {
+	public StrategySelector waitAndGetSelector() throws StrategySearcherException {
 		try {
 			waitResults();
 		} catch (Exception e) {
 			throw new StrategySearcherException(e.getMessage());
 		}
 		executor.shutdown();
-		return selector;
+		return strategySelector;
 	}
 
-	SimulatorSettings getRandomSettings() throws BadAlgorithmException {
-		return settingsGeneticList.generateRandom();
+	@Override
+	public void stopSearch() {
+		this.stoppedByRequest = true;
+	}
+
+	@Override
+	public void addIndicatorProgress(IndicatorProgressListener r) {
+		progressIndicator = r;
+	}
+
+	SimulatorSettings getRandomSimulatorSettings() throws BadAlgorithmException {
+		return simulatorSettingsGeneticList.generateRandom();
 	}
 
 	private void waitResults() throws InterruptedException {
-		double lastCostSum = maxCostSum;
-		while (!stoppedByRequest && currentSelectionIndex < settings.maxSelectionIndex) {
-			countDownLatch.await();
-			countDownLatch = new CountDownLatch(settings.getTasksSize());
+		double lastCostSum = maxPopulationCost;
+		while (!stoppedByRequest && currentSelectionIndex < settings.maxPopulationsAmount) {
+			populationCalculationTasksLatch.await();
+			populationCalculationTasksLatch = new CountDownLatch(settings.getTasksSize());
 			lastCostSum = geneticAlgorithmIteration(lastCostSum);
 		}
 	}
@@ -184,8 +166,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 
 	private void checkResult(double newCostSum, double lastCostSum) {
 		if (currentSelectionIndex > MINIMUM_STEPS_AMOUNT && shouldTerminate(newCostSum, lastCostSum)) {
-			lastSelectionIndex = currentSelectionIndex;
-			currentSelectionIndex = settings.maxSelectionIndex;
+			currentSelectionIndex = settings.maxPopulationsAmount;
 			logger.debug("summary cost of statistics not changed throw iteration on valuable value");
 		} else {
 			for (SimulatorCalulatingTask task : simulatorCalculatingTasks) {
@@ -193,12 +174,12 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 			}
 			simulatorCalculatingTasks.clear();
 		}
-		if (lastCostSum > maxCostSum) {
-			maxCostSum = lastCostSum;
+		if (lastCostSum > maxPopulationCost) {
+			maxPopulationCost = lastCostSum;
 		}
 		currentSelectionIndex += 1;
 		if (progressIndicator != null) {
-			progressIndicator.processed((double) currentSelectionIndex / settings.maxSelectionIndex);
+			progressIndicator.processed((double) currentSelectionIndex / settings.maxPopulationsAmount);
 		}
 	}
 
@@ -206,7 +187,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		population = Collections.synchronizedList(new ArrayList<TradingStrategy>());
 
 		if (settings.sizeOfBest > 0) {
-			for (TradingStrategy strategy : selector.getStrategies()) {
+			for (TradingStrategy strategy : strategySelector.getStrategies()) {
 				final Boolean pe = sortedPopulation.get(strategy);
 				if (pe != null && pe) {
 					population.add(strategy);
@@ -237,9 +218,8 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 			final SimulatorSettings left = currentPopulation.get(leftIndex).getSettings();
 			final SimulatorSettings right = currentPopulation.get(rightIndex).getSettings();
 
-			final SimulatorSettings mergedStatistics = settingsGeneticList.merge(left, right);
-
-			simulatorCalculatingTasks.add(new SimulatorCalulatingTask(this, this, mergedStatistics));
+			final SimulatorSettings mergedStatistics = simulatorSettingsGeneticList.merge(left, right);
+			simulatorCalculatingTasks.add(new SimulatorCalulatingTask(this, mergedStatistics));
 		}
 	}
 
@@ -251,13 +231,13 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		for (int i = 0; i < settings.mutationSize; ++i) {
 			final int index = indexRandomizator.nextInt(size);
 			final SimulatorSettings settings = currentPopulation.get(index).getSettings();
-			final SimulatorSettings mutatedSettings = settingsGeneticList.mutate(settings);
-			simulatorCalculatingTasks.add(new SimulatorCalulatingTask(this, this, mutatedSettings));
+			final SimulatorSettings mutatedSettings = simulatorSettingsGeneticList.mutate(settings);
+			simulatorCalculatingTasks.add(new SimulatorCalulatingTask(this, mutatedSettings));
 		}
 	}
 
 	private boolean shouldTerminate(double newCostSum, double lastCostSum) {
-		final boolean isMaxCostSum = DoubleMath.fuzzyEquals(newCostSum, maxCostSum, Settings.doubleEpsilon);
+		final boolean isMaxCostSum = DoubleMath.fuzzyEquals(newCostSum, maxPopulationCost, Settings.doubleEpsilon);
 		final boolean costSumNotChanged = DoubleMath.fuzzyEquals(newCostSum, lastCostSum, Settings.doubleEpsilon);
 		return isMaxCostSum && costSumNotChanged;
 	}
@@ -270,22 +250,43 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		return lastCostSum;
 	}
 
-	public double getMaxCostSum() {
-		return maxCostSum;
+	/**
+	 * This method will be called from Genetic Search Subtasks for example:
+	 * {@link SimulatorCalulatingTask} in case when task was resolved.<br/>
+	 * It will be called in any case if simulation failed or sucsesed. // TODO
+	 * search for this word at the dictionary.
+	 */
+	void simulationCalculationFinished() {
+		populationCalculationTasksLatch.countDown();
 	}
 
-	public int getLastSelectionIndex() {
-		return lastSelectionIndex;
+	/**
+	 * This method will be called from Genetic Search Subtasks for example:
+	 * {@link SimulatorCalulatingTask} when simulation accomplished.
+	 */
+	boolean addTradingStrategy(final TradingStrategy strategy) {
+		boolean result = false;
+		final Optional<TradingStrategy> addedToStatistics = strategySelector.addStrategy(strategy);
+		if (addedToStatistics.isPresent()) {
+			if (!addedToStatistics.get().equals(strategy)) {
+				population.add(strategy);
+				sortedPopulation.put(strategy, true);
+				result = true;
+			} else {
+				sortedPopulation.put(strategy, false);
+			}
+		} else {
+			result = true;
+		}
+		return result;
 	}
 
-	@Override
-	public void stopSearch() {
-		this.stoppedByRequest = true;
-	}
-
-	@Override
-	public void addIndicatorProgress(IndicatorProgressListener r) {
-		progressIndicator = r;
+	/**
+	 * This method will be called from Genetic Search Subtasks for example:
+	 * {@link SimulatorCalulatingTask} when simulation accomplished.
+	 */
+	void addTaskToExecutor(final SimulatorCalulatingTask task) {
+		this.executor.submit(task);
 	}
 
 }

@@ -15,7 +15,7 @@ public class StatisticsWithDistanceSelectorTest {
 		final Map<String, Double> doubleList = new HashMap<>();
 		doubleList.put("avGain", avGain);
 		final Map<String, Integer> integerList = new HashMap<>();
-		return new TradingStrategy(null, new Metrics(doubleList, integerList));
+		return TradingStrategy.createTest(new Metrics(doubleList, integerList));
 	}
 
 	@Test

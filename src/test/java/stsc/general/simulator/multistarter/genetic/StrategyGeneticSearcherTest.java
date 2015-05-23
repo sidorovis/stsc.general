@@ -19,7 +19,7 @@ public class StrategyGeneticSearcherTest {
 	@Test
 	public void testStrategyGeneticSearcher() throws InterruptedException, StrategySearcherException {
 		final StrategyGeneticSearcher sgs = createSearcher();
-		final StrategySelector selector = sgs.getSelector();
+		final StrategySelector selector = sgs.waitAndGetSelector();
 		Assert.assertEquals(112, selector.getStrategies().size());
 		Assert.assertEquals(100.0, selector.getStrategies().get(0).getMetrics().getDoubleMetric("avGain"), Settings.doubleEpsilon);
 		Assert.assertEquals(0.666666, selector.getStrategies().get(0).getMetrics().getDoubleMetric("winProb"), Settings.doubleEpsilon);
@@ -29,7 +29,7 @@ public class StrategyGeneticSearcherTest {
 	public void testStrategyGeneticSearchStop() throws InterruptedException, StrategySearcherException {
 		final StrategyGeneticSearcher sgs = createSearcher();
 		sgs.stopSearch();
-		final StrategySelector selector = sgs.getSelector();
+		final StrategySelector selector = sgs.waitAndGetSelector();
 		Assert.assertTrue(100 > selector.getStrategies().size());
 	}
 
@@ -43,7 +43,7 @@ public class StrategyGeneticSearcherTest {
 				updates.add(percent);
 			}
 		});
-		final StrategySelector selector = sgs.getSelector();
+		final StrategySelector selector = sgs.waitAndGetSelector();
 
 		Assert.assertEquals(112, selector.getStrategies().size());
 		Assert.assertTrue(104 >= updates.size());
@@ -64,6 +64,11 @@ public class StrategyGeneticSearcherTest {
 		final SimulatorSettingsGeneticList geneticList = TestGeneticSimulatorSettings.getGeneticList();
 		final int maxGeneticStepsAmount = 104;
 		final int populationSize = 124;
-		return new StrategyGeneticSearcher(geneticList, selector, 8, costFunction, maxGeneticStepsAmount, populationSize, 0.94, 0.86);
+
+		final StrategyGeneticSearcherBuilder builder = StrategyGeneticSearcher.getBuilder().withPopulationCostFunction(costFunction)
+				.withStrategySelector(selector).withSimulatorSettings(geneticList).withPopulationSize(populationSize)
+				.withMaxPopulationsAmount(maxGeneticStepsAmount).withThreadAmount(8).withBestPart(0.94).withCrossoverPart(0.86);
+
+		return new StrategyGeneticSearcher(builder);
 	}
 }

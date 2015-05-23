@@ -11,12 +11,10 @@ import stsc.general.strategy.TradingStrategy;
 final class SimulatorCalulatingTask implements Callable<Boolean> {
 
 	private final StrategyGeneticSearcher strategyGeneticSearcher;
-	private StrategyGeneticSearcher searcher;
 	private SimulatorSettings settings;
 
-	SimulatorCalulatingTask(StrategyGeneticSearcher strategyGeneticSearcher, StrategyGeneticSearcher searcher, SimulatorSettings settings) {
+	SimulatorCalulatingTask(StrategyGeneticSearcher strategyGeneticSearcher, SimulatorSettings settings) {
 		this.strategyGeneticSearcher = strategyGeneticSearcher;
-		this.searcher = searcher;
 		this.settings = settings;
 	}
 
@@ -27,15 +25,10 @@ final class SimulatorCalulatingTask implements Callable<Boolean> {
 			final Optional<Metrics> metrics = simulate();
 			if (metrics.isPresent()) {
 				final TradingStrategy strategy = new TradingStrategy(settings, metrics.get());
-				final Optional<TradingStrategy> addedToStatistics = searcher.selector.addStrategy(strategy);
-				if (!addedToStatistics.isPresent()) {
-					searcher.population.add(strategy);
-					searcher.sortedPopulation.put(strategy, addedToStatistics != null);
-					result = true;
-				}
+				result = strategyGeneticSearcher.addTradingStrategy(strategy);
 			}
 		} finally {
-			this.strategyGeneticSearcher.countDownLatch.countDown();
+			this.strategyGeneticSearcher.simulationCalculationFinished();
 		}
 		return result;
 	}

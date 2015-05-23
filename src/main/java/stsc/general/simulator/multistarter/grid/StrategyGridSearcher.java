@@ -154,7 +154,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 	}
 
 	@Override
-	public StrategySelector getSelector() throws StrategySearcherException {
+	public StrategySelector waitAndGetSelector() throws StrategySearcherException {
 		try {
 			for (Thread t : threads) {
 				t.join();

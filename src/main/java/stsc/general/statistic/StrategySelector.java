@@ -11,16 +11,20 @@ import stsc.general.strategy.TradingStrategy;
  * collections of {@link TradingStrategy}.<br/>
  * Common interface to select strategies from different {@link TradingStrategy}
  * searchers. Be careful and implement multi-thread protected Strategy
- * Selectors.
+ * Selectors.<br/>
+ * This interface do not guarantee that strategies are sorted.
  */
 public interface StrategySelector {
 
 	/**
-	 * If max possible size was reached then we will delete one of the stored
-	 * {@link TradingStrategy} and
+	 * Add {@link TradingStrategy} to {@link StrategySelector}.<br/>
+	 * 
+	 * For any internal reason one of the stored strategies was deleted, then we
+	 * will:
 	 * 
 	 * @return {@link Optional} value in case when one of
-	 *         {@link TradingStrategy} was deleted.
+	 *         {@link TradingStrategy} was deleted. It is possible that we will
+	 *         return the same value we just tried to add.
 	 */
 	Optional<TradingStrategy> addStrategy(final TradingStrategy strategy);
 

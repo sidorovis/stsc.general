@@ -12,22 +12,27 @@ import stsc.general.statistic.Metrics;
 final class GenerateInitialPopulationsTask implements Runnable {
 
 	private final StrategyGeneticSearcher strategyGeneticSearcher;
-	private StrategyGeneticSearcher searcher;
+	private final int populationSize;
 
-	GenerateInitialPopulationsTask(StrategyGeneticSearcher strategyGeneticSearcher, StrategyGeneticSearcher searcher) {
+	GenerateInitialPopulationsTask(final StrategyGeneticSearcher strategyGeneticSearcher, final int populationSize) {
 		this.strategyGeneticSearcher = strategyGeneticSearcher;
-		this.searcher = searcher;
+		this.populationSize = populationSize;
 	}
 
 	@Override
 	public void run() {
-		for (int i = 0; i < this.strategyGeneticSearcher.settings.populationSize; ++i) {
+		for (int i = 0; i < populationSize; ++i) {
+			boolean taskWasNotAdded = true;
 			try {
-				final SimulatorSettings ss = searcher.getRandomSettings();
-				final SimulatorCalulatingTask task = new SimulatorCalulatingTask(this.strategyGeneticSearcher, searcher, ss);
-				this.strategyGeneticSearcher.executor.submit(task);
+				final SimulatorSettings ss = strategyGeneticSearcher.getRandomSimulatorSettings();
+				final SimulatorCalulatingTask task = new SimulatorCalulatingTask(this.strategyGeneticSearcher, ss);
+				this.strategyGeneticSearcher.addTaskToExecutor(task);
+				taskWasNotAdded = false;
 			} catch (BadAlgorithmException e) {
 				StrategyGeneticSearcher.logger.error("Problem while generating random simulator settings: " + e.getMessage());
+			}
+			if (taskWasNotAdded) {
+				strategyGeneticSearcher.simulationCalculationFinished();
 			}
 		}
 	}
