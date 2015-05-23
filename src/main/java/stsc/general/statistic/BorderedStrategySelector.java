@@ -1,5 +1,8 @@
 package stsc.general.statistic;
 
+/**
+ * {@link StrategySelector} with protected maxPossibleSize field.
+ */
 public abstract class BorderedStrategySelector implements StrategySelector {
 
 	protected final int maxPossibleSize;
@@ -8,4 +11,8 @@ public abstract class BorderedStrategySelector implements StrategySelector {
 		this.maxPossibleSize = maxPossibleSize;
 	}
 
+	@Override
+	public int maxPossibleAmount() {
+		return maxPossibleSize;
+	}
 }

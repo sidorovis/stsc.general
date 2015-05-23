@@ -1,6 +1,6 @@
 package stsc.general.statistic;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.SortedMap;
 
@@ -16,6 +16,6 @@ public interface SortedStrategies {
 
 	public int size();
 
-	public SortedMap<Double, List<TradingStrategy>> getValues();
+	public SortedMap<Double, Collection<TradingStrategy>> getValues();
 
 }

@@ -17,7 +17,18 @@ import stsc.general.strategy.TradingStrategy;
 /**
  * This class implement complex {@link StrategySelector} storage that was
  * created for {@link TradingStrategy} Genetic Search.<br/>
- * Synopsis :
+ * Synopsis : the goal of this {@link StrategySelector} to store
+ * {@link TradingStrategy} into clusters (using distance).
+ * <hr/>
+ * Implementation:<br/>
+ * a. <b>ClusterKey</b> - store head strategy and implement equals method (for
+ * all distanceParameters we calculate summary of absolute value for linear
+ * combination: <b>R = abs(a1 * m11 - a1 * m12) + abs(a2 * m21 - a2 * m22) ...
+ * </b>; if R < {@link Settings#doubleEpsilon} then equals returns true.<br/>
+ * b. <b>ClusterKeyComparator</b> implements {@link Comparator} interface for
+ * ClusterKey. (for compare ClusterKeyComparator use algorithm that we just
+ * described).<br/>
+ * 
  */
 public class StatisticsWithDistanceSelector implements StrategySelector {
 
@@ -54,7 +65,6 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	}
 
 	private final class ClusterKeyComparator implements Comparator<ClusterKey> {
-
 		@Override
 		public int compare(ClusterKey left, ClusterKey right) {
 			final Metrics ls = left.getStrategy().getMetrics();
@@ -78,7 +88,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	final private Map<String, Double> distanceParameters = new HashMap<>();
 
 	final private Map<ClusterKey, StatisticsByCostSelector> clusters;
-	final private SortedByRating<ClusterKey> clustersByRating = new SortedByRating<ClusterKey>();
+	final private SortedByRating<ClusterKey> clustersByRating = new SortedByRating<ClusterKey>(new ClusterKeyComparator());
 
 	public StatisticsWithDistanceSelector(int clustersAmount, int elementsInCluster, CostFunction costFunction) {
 		this.clustersAmount = clustersAmount;
@@ -89,11 +99,21 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 
 	@Override
 	public int currentStrategiesAmount() {
+		int result = 0;
+		for (StatisticsByCostSelector statisticsByCostSelector : clusters.values()) {
+			result += statisticsByCostSelector.currentStrategiesAmount();
+		}
+		return result;
+	}
+
+	@Override
+	public int maxPossibleAmount() {
 		return clustersAmount * elementsInCluster;
 	}
 
-	public void addDistanceParameter(String key, Double value) {
+	public StatisticsWithDistanceSelector withDistanceParameter(String key, Double value) {
 		distanceParameters.put(key, value);
+		return this;
 	}
 
 	private Double rating(final TradingStrategy strategy) {

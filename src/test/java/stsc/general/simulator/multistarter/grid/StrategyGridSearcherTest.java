@@ -10,10 +10,10 @@ import org.junit.Test;
 import stsc.common.Settings;
 import stsc.general.simulator.multistarter.StrategySearcher.IndicatorProgressListener;
 import stsc.general.simulator.multistarter.StrategySearcherException;
-import stsc.general.simulator.multistarter.grid.SimulatorSettingsGridList;
-import stsc.general.simulator.multistarter.grid.StrategyGridSearcher;
 import stsc.general.statistic.StatisticsByCostSelector;
+import stsc.general.statistic.StatisticsCompareSelector;
 import stsc.general.statistic.StrategySelector;
+import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.testhelper.TestGridSimulatorSettings;
 import stsc.storage.mocks.StockStorageMock;
@@ -24,7 +24,7 @@ public class StrategyGridSearcherTest {
 	public void testStrategyGridSearcher() throws Exception {
 		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(),
 				Arrays.asList(new String[] { "open" }), "31-01-2000");
-		final StrategySelector selector = new StatisticsByCostSelector(6500, new CostWeightedSumFunction());
+		final StrategySelector selector = new StatisticsCompareSelector(6500, new MetricsSameComparator());
 		final StrategyGridSearcher searcher = new StrategyGridSearcher(list, selector, 20);
 		Assert.assertEquals(6144, searcher.getSelector().getStrategies().size());
 	}
@@ -44,7 +44,7 @@ public class StrategyGridSearcherTest {
 		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(),
 				Arrays.asList(new String[] { "open" }), "31-01-2000");
 
-		final StrategySelector selector = new StatisticsByCostSelector(6500, new CostWeightedSumFunction());
+		final StrategySelector selector = new StatisticsCompareSelector(6500, new MetricsSameComparator());
 		final StrategyGridSearcher searcher = new StrategyGridSearcher(list, selector, 1);
 
 		final List<Double> elements = new ArrayList<>();

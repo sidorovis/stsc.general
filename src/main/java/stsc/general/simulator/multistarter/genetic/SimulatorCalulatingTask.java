@@ -28,7 +28,7 @@ final class SimulatorCalulatingTask implements Callable<Boolean> {
 			if (metrics.isPresent()) {
 				final TradingStrategy strategy = new TradingStrategy(settings, metrics.get());
 				final Optional<TradingStrategy> addedToStatistics = searcher.selector.addStrategy(strategy);
-				if (addedToStatistics.isPresent()) {
+				if (!addedToStatistics.isPresent()) {
 					searcher.population.add(strategy);
 					searcher.sortedPopulation.put(strategy, addedToStatistics != null);
 					result = true;

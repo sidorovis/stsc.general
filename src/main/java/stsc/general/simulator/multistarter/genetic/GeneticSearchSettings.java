@@ -1,5 +1,7 @@
 package stsc.general.simulator.multistarter.genetic;
 
+import org.apache.commons.lang3.Validate;
+
 final class GeneticSearchSettings {
 	final int maxSelectionIndex;
 	final int sizeOfBest;
@@ -18,6 +20,7 @@ final class GeneticSearchSettings {
 		} else {
 			this.sizeOfBest = preSizeOfBest;
 		}
+		Validate.isTrue(sizeOfBest > 0);
 		this.crossoverSize = (int) ((populationSize - this.sizeOfBest) * crossoverPart);
 		this.mutationSize = populationSize - crossoverSize - this.sizeOfBest;
 		this.tasksSize = crossoverSize + mutationSize;

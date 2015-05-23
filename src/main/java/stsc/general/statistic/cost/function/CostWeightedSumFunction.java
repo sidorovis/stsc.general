@@ -19,8 +19,9 @@ public class CostWeightedSumFunction implements CostFunction {
 		parameters.put("avGain", 1.0);
 	}
 
-	public void addParameter(String name, Double value) {
+	public CostWeightedSumFunction withParameter(String name, Double value) {
 		parameters.put(name, value);
+		return this;
 	}
 
 	@Override

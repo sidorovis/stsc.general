@@ -1,7 +1,6 @@
 package stsc.general.statistic;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -10,28 +9,17 @@ import java.util.TreeSet;
 import stsc.general.statistic.cost.comparator.MetricsComparator;
 import stsc.general.strategy.TradingStrategy;
 
+/**
+ * StatisticsSelector compare two {@link TradingStrategy} by {@link Metrics}.
+ */
 public class StatisticsCompareSelector extends BorderedStrategySelector {
 
-	private final class StrategyComparator implements Comparator<TradingStrategy> {
-		private MetricsComparator comparator;
-
-		StrategyComparator(MetricsComparator comparator) {
-			this.comparator = comparator;
-		}
-
-		@Override
-		public int compare(TradingStrategy o1, TradingStrategy o2) {
-			return comparator.compare(o1.getMetrics(), o2.getMetrics());
-		}
-
-	}
-
-	private final StrategyComparator strategyComparator;
+	private final TradingStrategyComparator strategyComparator;
 	private final TreeSet<TradingStrategy> select;
 
 	public StatisticsCompareSelector(int selectLastElements, MetricsComparator comparator) {
 		super(selectLastElements);
-		this.strategyComparator = new StrategyComparator(comparator);
+		this.strategyComparator = new TradingStrategyComparator(comparator);
 		this.select = new TreeSet<TradingStrategy>(strategyComparator);
 	}
 

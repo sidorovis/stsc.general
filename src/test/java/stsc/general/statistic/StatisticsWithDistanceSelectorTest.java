@@ -21,7 +21,7 @@ public class StatisticsWithDistanceSelectorTest {
 	@Test
 	public void testStatisticsWithDistanceSelector() {
 		final StatisticsWithDistanceSelector selector = new StatisticsWithDistanceSelector(3, 3, new CostWeightedSumFunction());
-		selector.addDistanceParameter("avGain", 0.8);
+		selector.withDistanceParameter("avGain", 0.8);
 		selector.addStrategy(getStrategy(1.0));
 		selector.addStrategy(getStrategy(2.0));
 		selector.addStrategy(getStrategy(3.1));

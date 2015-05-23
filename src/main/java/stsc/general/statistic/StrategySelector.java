@@ -3,6 +3,7 @@ package stsc.general.statistic;
 import java.util.List;
 import java.util.Optional;
 
+import stsc.general.simulator.multistarter.genetic.StrategyGeneticSearcher;
 import stsc.general.strategy.TradingStrategy;
 
 /**
@@ -38,4 +39,10 @@ public interface StrategySelector {
 	 * @return current size of stored {@link TradingStrategy} s.
 	 */
 	int currentStrategiesAmount();
+
+	/**
+	 * @return max possible amount of strategies that we store (required by
+	 *         {@link StrategyGeneticSearcher}.
+	 */
+	int maxPossibleAmount();
 }

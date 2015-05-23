@@ -136,7 +136,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		this.countDownLatch = new CountDownLatch(populationSize);
 		this.simulatorCalculatingTasks = new ArrayList<>();
 
-		this.settings = new GeneticSearchSettings(maxSelectionIndex, populationSize, bestPart, crossoverPart, selector.currentStrategiesAmount());
+		this.settings = new GeneticSearchSettings(maxSelectionIndex, populationSize, bestPart, crossoverPart, selector.maxPossibleAmount());
 		this.lastSelectionIndex = maxSelectionIndex;
 
 		startSearcher();

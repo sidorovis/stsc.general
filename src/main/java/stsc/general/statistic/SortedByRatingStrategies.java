@@ -1,12 +1,13 @@
 package stsc.general.statistic;
 
 import stsc.common.collections.SortedByRating;
+import stsc.general.statistic.cost.comparator.MetricsComparator;
 import stsc.general.strategy.TradingStrategy;
 
 class SortedByRatingStrategies extends SortedByRating<TradingStrategy> implements SortedStrategies {
 
-	public SortedByRatingStrategies() {
-		super();
+	public SortedByRatingStrategies(MetricsComparator metricsComparator) {
+		super(new TradingStrategyComparator(metricsComparator));
 	}
 
 	@Override

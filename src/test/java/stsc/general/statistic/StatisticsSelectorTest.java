@@ -35,7 +35,7 @@ public class StatisticsSelectorTest {
 
 		final List<TradingStrategy> strategies = statisticsSelector.getStrategies();
 		Assert.assertEquals(2, strategies.size());
-		Assert.assertEquals(compareMethod.calculate(((TradingStrategy) strategies.toArray()[0]).getMetrics()), values.get(2));
-		Assert.assertEquals(compareMethod.calculate(((TradingStrategy) strategies.toArray()[1]).getMetrics()), values.get(0));
+		Assert.assertEquals(compareMethod.calculate(strategies.get(0).getMetrics()), values.get(0));
+		Assert.assertEquals(compareMethod.calculate(strategies.get(1).getMetrics()), values.get(2));
 	}
 }

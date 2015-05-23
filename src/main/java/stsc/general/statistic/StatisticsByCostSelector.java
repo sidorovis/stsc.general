@@ -1,11 +1,13 @@
 package stsc.general.statistic;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
 
+import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 
@@ -18,19 +20,20 @@ public final class StatisticsByCostSelector extends BorderedStrategySelector {
 	private final CostFunction costFunction;
 	private final SortedByRatingStrategies select;
 
-	public StatisticsByCostSelector(int selectLastElements, CostFunction evaluationFunction) {
+	public StatisticsByCostSelector(int selectLastElements, CostFunction costFunction) {
 		super(selectLastElements);
-		this.costFunction = evaluationFunction;
-		this.select = new SortedByRatingStrategies();
+		this.costFunction = costFunction;
+		this.select = new SortedByRatingStrategies(new MetricsSameComparator());
 	}
 
 	@Override
 	public synchronized Optional<TradingStrategy> addStrategy(final TradingStrategy strategy) {
 		final Metrics metrics = strategy.getMetrics();
 		final Double compareValue = costFunction.calculate(metrics);
-		select.addStrategy(compareValue, strategy);
-		if (select.size() > maxPossibleSize) {
-			return select.deleteLast();
+		if (select.addStrategy(compareValue, strategy)) {
+			if (select.size() > maxPossibleSize) {
+				return select.deleteLast();
+			}
 		}
 		return Optional.empty();
 	}
@@ -43,7 +46,7 @@ public final class StatisticsByCostSelector extends BorderedStrategySelector {
 	@Override
 	public synchronized List<TradingStrategy> getStrategies() {
 		final List<TradingStrategy> result = new LinkedList<>();
-		for (Entry<Double, List<TradingStrategy>> i : select.getValues().entrySet()) {
+		for (Entry<Double, Collection<TradingStrategy>> i : select.getValues().entrySet()) {
 			for (TradingStrategy strategy : i.getValue()) {
 				result.add(strategy);
 			}
@@ -54,7 +57,6 @@ public final class StatisticsByCostSelector extends BorderedStrategySelector {
 	@Override
 	public synchronized int currentStrategiesAmount() {
 		return select.size();
-
 	}
 
 	@Override
