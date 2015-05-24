@@ -2,9 +2,9 @@ package stsc.general.simulator.multistarter.genetic;
 
 import org.apache.commons.lang3.Validate;
 
-import stsc.general.statistic.StrategySelector;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
+import stsc.general.strategy.selector.StrategySelector;
 
 public final class StrategyGeneticSearcherBuilder {
 

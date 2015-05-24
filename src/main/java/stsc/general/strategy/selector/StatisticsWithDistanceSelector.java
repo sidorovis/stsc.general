@@ -1,4 +1,4 @@
-package stsc.general.statistic;
+package stsc.general.strategy.selector;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import stsc.common.Settings;
 import stsc.common.collections.SortedByRating;
+import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 

@@ -11,6 +11,7 @@ import stsc.common.Day;
 import stsc.common.Settings;
 import stsc.general.statistic.cost.comparator.CostWeightedSumComparator;
 import stsc.general.strategy.TradingStrategy;
+import stsc.general.strategy.selector.StatisticsCompareSelector;
 import stsc.general.testhelper.TestMetricsHelper;
 
 public class StatisticsCompareSelectorTest {

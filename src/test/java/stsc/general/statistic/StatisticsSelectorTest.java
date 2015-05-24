@@ -9,9 +9,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.general.simulator.SimulatorSettings;
-import stsc.general.statistic.StatisticsByCostSelector;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
+import stsc.general.strategy.selector.StatisticsByCostSelector;
+import stsc.general.strategy.selector.StrategySelector;
 import stsc.general.testhelper.TestGridSimulatorSettings;
 import stsc.general.testhelper.TestMetricsHelper;
 

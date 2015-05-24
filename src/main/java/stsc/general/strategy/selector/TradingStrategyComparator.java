@@ -1,4 +1,4 @@
-package stsc.general.statistic;
+package stsc.general.strategy.selector;
 
 import java.util.Comparator;
 

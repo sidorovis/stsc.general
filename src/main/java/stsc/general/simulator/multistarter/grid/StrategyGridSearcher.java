@@ -19,8 +19,8 @@ import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorSettings;
 import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
-import stsc.general.statistic.StrategySelector;
 import stsc.general.strategy.TradingStrategy;
+import stsc.general.strategy.selector.StrategySelector;
 
 /**
  * Multithread Strategy Grid Searcher

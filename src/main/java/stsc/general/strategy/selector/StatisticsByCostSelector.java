@@ -1,4 +1,4 @@
-package stsc.general.statistic;
+package stsc.general.strategy.selector;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;

@@ -1,4 +1,4 @@
-package stsc.general.statistic;
+package stsc.general.strategy.selector;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
 
+import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.comparator.MetricsComparator;
 import stsc.general.strategy.TradingStrategy;
 

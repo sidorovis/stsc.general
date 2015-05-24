@@ -9,9 +9,9 @@ import org.junit.Test;
 import stsc.common.Settings;
 import stsc.general.simulator.multistarter.StrategySearcher.IndicatorProgressListener;
 import stsc.general.simulator.multistarter.StrategySearcherException;
-import stsc.general.statistic.StatisticsByCostSelector;
-import stsc.general.statistic.StrategySelector;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
+import stsc.general.strategy.selector.StatisticsByCostSelector;
+import stsc.general.strategy.selector.StrategySelector;
 import stsc.general.testhelper.TestGeneticSimulatorSettings;
 
 public class StrategyGeneticSearcherTest {

@@ -1,6 +1,7 @@
-package stsc.general.statistic;
+package stsc.general.strategy.selector;
 
 import stsc.common.collections.SortedByRating;
+import stsc.general.statistic.SortedStrategies;
 import stsc.general.statistic.cost.comparator.MetricsComparator;
 import stsc.general.strategy.TradingStrategy;
 

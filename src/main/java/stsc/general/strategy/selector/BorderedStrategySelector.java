@@ -1,4 +1,5 @@
-package stsc.general.statistic;
+package stsc.general.strategy.selector;
+
 
 /**
  * {@link StrategySelector} with protected maxPossibleSize field.

@@ -1,6 +1,6 @@
 package stsc.general.simulator.multistarter;
 
-import stsc.general.statistic.StrategySelector;
+import stsc.general.strategy.selector.StrategySelector;
 
 public interface StrategySearcher {
 

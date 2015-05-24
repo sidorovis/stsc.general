@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
+import stsc.general.strategy.selector.StatisticsWithDistanceSelector;
 
 public class StatisticsWithDistanceSelectorTest {
 
