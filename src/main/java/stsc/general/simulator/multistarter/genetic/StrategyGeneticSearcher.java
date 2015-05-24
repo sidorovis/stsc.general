@@ -11,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
@@ -87,7 +88,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	private final SimulatorSettingsGeneticList simulatorSettingsGeneticList;
 	private final StrategySelector strategySelector;
 	private final ExecutorService executor;
-	private final CostFunction costFunction;
+	private final CostFunction populationCostFunction;
 	private final GeneticSearchSettings settings;
 
 	private final List<SimulatorCalulatingTask> simulatorCalculatingTasks = new ArrayList<>();
@@ -103,10 +104,14 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	}
 
 	StrategyGeneticSearcher(final StrategyGeneticSearcherBuilder builder) {
+		Validate.notNull(builder.simulatorSettingsGeneticList);
+		Validate.notNull(builder.strategySelector);
+		Validate.notNull(builder.populationCostFunction);
+
 		this.simulatorSettingsGeneticList = builder.simulatorSettingsGeneticList;
 		this.strategySelector = builder.strategySelector;
 		this.executor = Executors.newFixedThreadPool(builder.threadAmount);
-		this.costFunction = builder.populationCostFunction;
+		this.populationCostFunction = builder.populationCostFunction;
 		this.settings = new GeneticSearchSettings(builder);
 
 		this.populationCalculationTasksLatch = new CountDownLatch(builder.populationSize);
@@ -245,7 +250,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	private double calculateCostSum() {
 		double lastCostSum = 0.0;
 		for (TradingStrategy e : population) {
-			lastCostSum += costFunction.calculate(e.getMetrics());
+			lastCostSum += populationCostFunction.calculate(e.getMetrics());
 		}
 		return lastCostSum;
 	}
@@ -253,8 +258,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	/**
 	 * This method will be called from Genetic Search Subtasks for example:
 	 * {@link SimulatorCalulatingTask} in case when task was resolved.<br/>
-	 * It will be called in any case if simulation failed or sucsesed. // TODO
-	 * search for this word at the dictionary.
+	 * It will be called in any case if simulation failed or succeed.
 	 */
 	void simulationCalculationFinished() {
 		populationCalculationTasksLatch.countDown();
