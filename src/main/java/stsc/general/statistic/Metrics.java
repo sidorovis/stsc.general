@@ -13,7 +13,8 @@ import stsc.general.strategy.TradingStrategy;
 
 /**
  * {@link Metrics} is a class that store comparable (double like) values that
- * describe {@link TradingStrategy}.
+ * describe {@link TradingStrategy}. <br/>
+ * There is two type of Metrics: Integer and Double types.
  */
 public final class Metrics {
 
