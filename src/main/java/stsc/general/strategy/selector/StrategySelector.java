@@ -1,5 +1,6 @@
 package stsc.general.strategy.selector;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,7 +8,7 @@ import stsc.general.simulator.multistarter.genetic.StrategyGeneticSearcher;
 import stsc.general.strategy.TradingStrategy;
 
 /**
- * {@link StrategySelector} interface is an interface for controlling
+ * {@link StrategySelector} - interface for storing and <b>controlling</b>
  * collections of {@link TradingStrategy}.<br/>
  * Common interface to select strategies from different {@link TradingStrategy}
  * searchers. Be careful and implement multi-thread protected Strategy
@@ -19,14 +20,12 @@ public interface StrategySelector {
 	/**
 	 * Add {@link TradingStrategy} to {@link StrategySelector}.<br/>
 	 * 
-	 * For any internal reason one of the stored strategies was deleted, then we
-	 * will:
+	 * If for any internal reason some of stored strategies should be deleted
+	 * while adding, we will return deleted elements in the result.
 	 * 
-	 * @return {@link Optional} value in case when one of
-	 *         {@link TradingStrategy} was deleted. It is possible that we will
-	 *         return the same value we just tried to add.
+	 * @return {@link List} of deleted {@link TradingStrategy}.
 	 */
-	Optional<TradingStrategy> addStrategy(final TradingStrategy strategy);
+	List<TradingStrategy> addStrategy(final TradingStrategy strategy);
 
 	/**
 	 * @return true if {@link TradingStrategy} was deleted from

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -268,16 +267,19 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	 * This method will be called from Genetic Search Subtasks for example:
 	 * {@link SimulatorCalulatingTask} when simulation accomplished.
 	 */
-	boolean addTradingStrategy(final TradingStrategy strategy) {
+	boolean addTradingStrategy(final TradingStrategy newStrategy) {
 		boolean result = false;
-		final Optional<TradingStrategy> addedToStatistics = strategySelector.addStrategy(strategy);
-		if (addedToStatistics.isPresent()) {
-			if (!addedToStatistics.get().equals(strategy)) {
-				population.add(strategy);
-				sortedPopulation.put(strategy, true);
-				result = true;
-			} else {
-				sortedPopulation.put(strategy, false);
+		// TODO test me
+		final List<TradingStrategy> deletedStrategies = strategySelector.addStrategy(newStrategy);
+		if (!deletedStrategies.isEmpty()) {
+			population.add(newStrategy);
+			sortedPopulation.put(newStrategy, true);
+			result = true;
+			for (TradingStrategy i : deletedStrategies) {
+				sortedPopulation.put(i, false);
+				if (i.equals(newStrategy)) {
+					result = false;
+				}
 			}
 		} else {
 			result = true;

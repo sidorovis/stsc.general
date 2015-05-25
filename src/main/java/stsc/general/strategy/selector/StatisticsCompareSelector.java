@@ -1,9 +1,9 @@
 package stsc.general.strategy.selector;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.TreeSet;
 
 import stsc.general.statistic.Metrics;
@@ -25,12 +25,15 @@ public class StatisticsCompareSelector extends BorderedStrategySelector {
 	}
 
 	@Override
-	public synchronized Optional<TradingStrategy> addStrategy(final TradingStrategy strategy) {
-		select.add(strategy);
-		if (select.size() > maxPossibleSize) {
-			return Optional.of(select.pollLast());
+	public synchronized List<TradingStrategy> addStrategy(final TradingStrategy newStrategy) {
+		if (select.add(newStrategy)) {
+			if (select.size() > maxPossibleSize) {
+				return Arrays.asList(select.pollLast());
+			}
+		} else {
+			return Arrays.asList(newStrategy);
 		}
-		return Optional.empty();
+		return Collections.emptyList();
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package stsc.general.strategy.selector;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
@@ -80,11 +80,11 @@ public final class StrategyFilteringSelector implements StrategySelector {
 	}
 
 	@Override
-	public Optional<TradingStrategy> addStrategy(final TradingStrategy strategy) {
-		if (isFilteredOut(strategy)) {
-			return Optional.of(strategy);
+	public List<TradingStrategy> addStrategy(final TradingStrategy newStrategy) {
+		if (isFilteredOut(newStrategy)) {
+			return Arrays.asList(newStrategy);
 		}
-		return originalStrategySelector.addStrategy(strategy);
+		return originalStrategySelector.addStrategy(newStrategy);
 	}
 
 	@Override

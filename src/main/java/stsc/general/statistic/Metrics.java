@@ -73,7 +73,7 @@ public final class Metrics {
 	private final Map<String, Double> doubleMetrics = new HashMap<>();
 	private final Map<String, Integer> integerMetrics = new HashMap<>();
 
-	private EquityCurve equityCurveInMoney;
+	private final EquityCurve equityCurveInMoney;
 
 	static public StatisticsInit createInit() {
 		return new StatisticsInit();
@@ -88,6 +88,7 @@ public final class Metrics {
 	public Metrics(Map<String, Double> doubleList, Map<String, Integer> integerList) {
 		this.getDoubleMetrics().putAll(doubleList);
 		this.getIntegerMetrics().putAll(integerList);
+		this.equityCurveInMoney = new EquityCurve();
 	}
 
 	private void calculateProbabilityStatistics(StatisticsInit init) {
@@ -209,6 +210,37 @@ public final class Metrics {
 			result += " " + e.getKey() + " " + e.getValue().toString();
 		}
 		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((doubleMetrics == null) ? 0 : doubleMetrics.hashCode());
+		result = prime * result + ((integerMetrics == null) ? 0 : integerMetrics.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Metrics other = (Metrics) obj;
+		if (doubleMetrics == null) {
+			if (other.doubleMetrics != null)
+				return false;
+		} else if (!doubleMetrics.equals(other.doubleMetrics))
+			return false;
+		if (integerMetrics == null) {
+			if (other.integerMetrics != null)
+				return false;
+		} else if (!integerMetrics.equals(other.integerMetrics))
+			return false;
+		return true;
 	}
 
 }

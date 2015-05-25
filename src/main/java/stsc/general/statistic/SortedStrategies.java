@@ -4,18 +4,36 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.SortedMap;
 
-import stsc.general.strategy.TradingStrategy;
+import com.google.common.collect.TreeMultimap;
 
+import stsc.general.strategy.TradingStrategy;
+import stsc.general.strategy.selector.StrategySelector;
+
+/**
+ * Store sorted {@link TradingStrategy}'s by Double value (Rating). Can return
+ * SortedMap Double -> Collection of {@link TradingStrategy}.<br/>
+ * The main difference from {@link StrategySelector} is no logic for adding /
+ * deleting. No any restrictions. You can think about {@link SortedStrategies}
+ * as adaptation of {@link TreeMultimap} for storing pairs: Rating(double) ->
+ * tradingStrategy.
+ */
 public interface SortedStrategies {
 
-	public boolean addStrategy(Double rating, TradingStrategy value);
+	/**
+	 * @return true if {@link TradingStrategy} was added.
+	 */
+	boolean addStrategy(Double rating, TradingStrategy value);
 
-	public boolean removeStrategy(Double rating, TradingStrategy value);
+	boolean removeStrategy(Double rating, TradingStrategy value);
 
-	public Optional<TradingStrategy> deleteLast();
+	/**
+	 * 
+	 * @return deleted {@link TradingStrategy} (or {@link Optional#empty()}.
+	 */
+	Optional<TradingStrategy> deleteLast();
 
-	public int size();
+	int size();
 
-	public SortedMap<Double, Collection<TradingStrategy>> getValues();
+	SortedMap<Double, Collection<TradingStrategy>> getValues();
 
 }

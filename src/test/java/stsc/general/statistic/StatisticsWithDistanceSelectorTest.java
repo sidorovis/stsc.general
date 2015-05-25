@@ -6,6 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import stsc.common.Settings;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
 import stsc.general.strategy.selector.StatisticsWithDistanceSelector;
@@ -28,7 +29,7 @@ public class StatisticsWithDistanceSelectorTest {
 		selector.addStrategy(getStrategy(3.1));
 		selector.addStrategy(getStrategy(3.2));
 		selector.addStrategy(getStrategy(3.3));
-		selector.addStrategy(getStrategy(3.4));
+		Assert.assertEquals(3.1, selector.addStrategy(getStrategy(3.4)).get(0).getAvGain(), Settings.doubleEpsilon);
 		Assert.assertEquals(5, selector.getStrategies().size());
 
 		selector.addStrategy(getStrategy(1.2));
@@ -47,5 +48,31 @@ public class StatisticsWithDistanceSelectorTest {
 		Assert.assertEquals(9, selector.getStrategies().size());
 		selector.addStrategy(getStrategy(9.45));
 		Assert.assertEquals(9, selector.getStrategies().size());
+	}
+
+	@Test
+	public void testStatisticsWithDistanceSelectorAposterioryTest() {
+		final StatisticsWithDistanceSelector selector = new StatisticsWithDistanceSelector(10, 4, new CostWeightedSumFunction());
+		selector.withDistanceParameter("avGain", 0.3);
+		for (int i = 0; i < 100; ++i) {
+			selector.addStrategy(getStrategy(Double.valueOf(i)));
+		}
+		Assert.assertEquals(40, selector.currentStrategiesAmount());
+	}
+
+	@Test
+	public void testStatisticsWithDistanceSelectorDeleteClusterTest() {
+		final StatisticsWithDistanceSelector selector = new StatisticsWithDistanceSelector(1, 2, new CostWeightedSumFunction());
+		selector.withDistanceParameter("avGain", 1.0);
+		selector.addStrategy(getStrategy(1.0));
+		Assert.assertEquals(1.0, selector.addStrategy(getStrategy(1.0)).get(0).getAvGain(), Settings.doubleEpsilon);
+		selector.addStrategy(getStrategy(1.1));
+		Assert.assertEquals(1.1, selector.addStrategy(getStrategy(1.1)).get(0).getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(1.0, selector.addStrategy(getStrategy(1.2)).get(0).getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(1.1, selector.addStrategy(getStrategy(1.3)).get(0).getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(1.2, selector.addStrategy(getStrategy(1.4)).get(0).getAvGain(), Settings.doubleEpsilon);
+
+		Assert.assertEquals(1.3, selector.addStrategy(getStrategy(2.4)).get(1).getAvGain(), Settings.doubleEpsilon);
+		Assert.assertTrue(selector.addStrategy(getStrategy(2.5)).isEmpty());
 	}
 }

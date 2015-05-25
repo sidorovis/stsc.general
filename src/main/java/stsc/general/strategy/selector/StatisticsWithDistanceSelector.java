@@ -1,6 +1,8 @@
 package stsc.general.strategy.selector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +12,9 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import stsc.common.Settings;
-import stsc.common.collections.SortedByRating;
 import stsc.general.statistic.Metrics;
+import stsc.general.statistic.SortedStrategies;
+import stsc.general.statistic.cost.comparator.CostFunctionToComparator;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 
@@ -29,7 +32,7 @@ import stsc.general.strategy.TradingStrategy;
  * b. <b>ClusterKeyComparator</b> implements {@link Comparator} interface for
  * ClusterKey. (for compare ClusterKeyComparator use algorithm that we just
  * described).<br/>
- * 
+ * This selector never change center element of cluster.
  */
 public class StatisticsWithDistanceSelector implements StrategySelector {
 
@@ -66,6 +69,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	}
 
 	private final class ClusterKeyComparator implements Comparator<ClusterKey> {
+
 		@Override
 		public int compare(ClusterKey left, ClusterKey right) {
 			final Metrics ls = left.getStrategy().getMetrics();
@@ -83,26 +87,37 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 		}
 	}
 
-	final int clustersAmount;
-	final int elementsInCluster;
-	final CostFunction costFunction;
-	final private Map<String, Double> distanceParameters = new HashMap<>();
+	private final ClusterKeyComparator clusterKeyComparator;
 
-	final private Map<ClusterKey, StatisticsByCostSelector> clusters;
-	final private SortedByRating<ClusterKey> clustersByRating = new SortedByRating<ClusterKey>(new ClusterKeyComparator());
+	private final int clustersAmount;
+	private final int elementsInCluster;
+	/**
+	 * {@link #ratingCostFunction} is cost function to calculate rating of
+	 * {@link TradingStrategy} for sort clusters by rating.<br/>
+	 * We need sorted clusters to have possibility to delete strategies with
+	 * smallest rating.
+	 */
+	private final CostFunction ratingCostFunction;
+	private final CostFunctionToComparator metricsComparator;
+	private final Map<String, Double> distanceParameters;
 
-	public StatisticsWithDistanceSelector(int clustersAmount, int elementsInCluster, CostFunction costFunction) {
+	private final TreeMap<ClusterKey, SortedStrategies> clustersByKey;
+
+	public StatisticsWithDistanceSelector(int clustersAmount, int elementsInCluster, CostFunction ratingCostFunction) {
+		this.clusterKeyComparator = new ClusterKeyComparator();
 		this.clustersAmount = clustersAmount;
 		this.elementsInCluster = elementsInCluster;
-		this.costFunction = costFunction;
-		this.clusters = new TreeMap<ClusterKey, StatisticsByCostSelector>(new ClusterKeyComparator());
+		this.ratingCostFunction = ratingCostFunction;
+		this.metricsComparator = new CostFunctionToComparator(ratingCostFunction);
+		this.distanceParameters = new HashMap<>();
+		this.clustersByKey = new TreeMap<ClusterKey, SortedStrategies>(clusterKeyComparator);
 	}
 
 	@Override
 	public int currentStrategiesAmount() {
 		int result = 0;
-		for (StatisticsByCostSelector statisticsByCostSelector : clusters.values()) {
-			result += statisticsByCostSelector.currentStrategiesAmount();
+		for (SortedStrategies strategies : clustersByKey.values()) {
+			result += strategies.size();
 		}
 		return result;
 	}
@@ -118,76 +133,76 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	}
 
 	private Double rating(final TradingStrategy strategy) {
-		return costFunction.calculate(strategy.getMetrics());
+		return ratingCostFunction.calculate(strategy.getMetrics());
 	}
 
 	@Override
-	public synchronized Optional<TradingStrategy> addStrategy(final TradingStrategy strategy) {
-		final ClusterKey clusterKey = new ClusterKey(strategy);
-		final StatisticsByCostSelector sc = clusters.get(clusterKey);
-		if (sc == null) {
-			final StatisticsByCostSelector selector = new StatisticsByCostSelector(elementsInCluster, costFunction);
-			final Optional<TradingStrategy> ts = selector.addStrategy(strategy);
-			if (!ts.isPresent() || strategy != ts.get()) {
-				clustersByRating.addElement(rating(strategy), clusterKey);
-				clusters.put(clusterKey, selector);
-				checkAndRemoveCluster();
-				return ts;
-			} else
-				return Optional.of(strategy);
+	public synchronized List<TradingStrategy> addStrategy(final TradingStrategy newStrategy) {
+		final ClusterKey clusterKey = new ClusterKey(newStrategy);
+		final SortedStrategies cluster = clustersByKey.get(clusterKey);
+		if (cluster == null) {
+			final SortedStrategies newCluster = new SortedByRatingStrategies(metricsComparator);
+			newCluster.addStrategy(rating(newStrategy), newStrategy);
+			clustersByKey.put(clusterKey, newCluster);
+			return checkAndFixSize(clusterKey, newStrategy);
 		} else {
-			return addStrategyToCluster(sc, clusterKey, strategy);
+			return addStrategyToCluster(cluster, clusterKey, newStrategy);
 		}
+	}
+
+	private List<TradingStrategy> checkAndFixSize(ClusterKey clusterKey, TradingStrategy newStrategy) {
+		final List<TradingStrategy> deletedStrategies = new ArrayList<>();
+		if (clustersByKey.size() > clustersAmount) {
+			final Entry<ClusterKey, SortedStrategies> lastEntry = clustersByKey.lastEntry();
+			clustersByKey.remove(lastEntry.getKey());
+			for (Collection<TradingStrategy> i : lastEntry.getValue().getValues().values()) {
+				deletedStrategies.addAll(i);
+			}
+		}
+		if (currentStrategiesAmount() > maxPossibleAmount()) {
+			final Entry<ClusterKey, SortedStrategies> lastEntry = clustersByKey.lastEntry();
+			if (lastEntry.getValue().size() > 1) {
+				deletedStrategies.add(lastEntry.getValue().deleteLast().get());
+			} else {
+				clustersByKey.remove(lastEntry.getKey());
+				final Optional<TradingStrategy> tradingStrategyToDelete = lastEntry.getValue().deleteLast();
+				deletedStrategies.add(tradingStrategyToDelete.get());
+			}
+		}
+		return deletedStrategies;
 	}
 
 	@Override
 	public boolean removeStrategy(TradingStrategy strategy) {
 		final ClusterKey clusterKey = new ClusterKey(strategy);
-		final StatisticsByCostSelector sc = clusters.get(clusterKey);
+		final SortedStrategies sc = clustersByKey.get(clusterKey);
 		if (sc != null) {
-			return sc.removeStrategy(strategy);
+			sc.removeStrategy(rating(strategy), strategy);
+			if (sc.size() == 0) {
+				clustersByKey.remove(clusterKey);
+			}
+			return true;
 		}
 		return false;
 	}
 
-	private void checkAndRemoveCluster() {
-		if (clusters.size() > clustersAmount) {
-			final Optional<ClusterKey> deletedKeyPtr = clustersByRating.deleteLast();
-			if (deletedKeyPtr.isPresent()) {
-				final StatisticsByCostSelector cluster = clusters.remove(deletedKeyPtr.get());
-				if (cluster != null) {
-					for (TradingStrategy ts : cluster.getStrategies()) {
-						clustersByRating.removeElement(rating(ts), new ClusterKey(ts));
-					}
-				}
+	private List<TradingStrategy> addStrategyToCluster(SortedStrategies cluster, ClusterKey clusterKey, TradingStrategy newStrategy) {
+		if (cluster.addStrategy(rating(newStrategy), newStrategy)) {
+			if (cluster.size() > elementsInCluster) {
+				return Arrays.asList(cluster.deleteLast().get());
 			}
+			return checkAndFixSize(clusterKey, newStrategy);
 		}
-	}
-
-	private Optional<TradingStrategy> addStrategyToCluster(StatisticsByCostSelector sc, ClusterKey clusterKey, TradingStrategy strategy) {
-		final Optional<TradingStrategy> ts = sc.addStrategy(strategy);
-		if (ts.isPresent() && strategy != ts.get()) {
-			clustersByRating.addElement(rating(strategy), clusterKey);
-			findClusterAndDelete(ts.get());
-		}
-		return ts;
-	}
-
-	private void findClusterAndDelete(TradingStrategy ts) {
-		clustersByRating.removeElement(rating(ts), new ClusterKey(ts));
-		final StatisticsByCostSelector scToDelete = clusters.get(new ClusterKey(ts));
-		if (scToDelete != null) {
-			scToDelete.removeStrategy(ts);
-		}
+		return Arrays.asList(newStrategy);
 	}
 
 	@Override
 	public synchronized List<TradingStrategy> getStrategies() {
 		final List<TradingStrategy> result = new ArrayList<>();
-		for (Entry<ClusterKey, StatisticsByCostSelector> clusterValue : clusters.entrySet()) {
-			result.addAll(clusterValue.getValue().getStrategies());
+		for (SortedStrategies clusterValue : clustersByKey.values()) {
+			for (Collection<TradingStrategy> i : clusterValue.getValues().values())
+				result.addAll(i);
 		}
 		return result;
 	}
-
 }
