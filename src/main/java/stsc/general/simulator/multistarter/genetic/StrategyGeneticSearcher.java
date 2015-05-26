@@ -2,9 +2,7 @@ package stsc.general.simulator.multistarter.genetic;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -51,8 +49,8 @@ import com.google.common.math.DoubleMath;
  * population cycle; <br/>
  * 2. Creates and starts for execution {@link GenerateInitialPopulationsTask};<br/>
  * 3. {@link GenerateInitialPopulationsTask} creates amount of
- * {@link SimulatorCalulatingTask} (equal to amount of population);<br/>
- * 4. Each {@link SimulatorCalulatingTask} decrease CountDownLatch amount and
+ * {@link SimulatorCalculatingTask} (equal to amount of population);<br/>
+ * 4. Each {@link SimulatorCalculatingTask} decrease CountDownLatch amount and
  * when all tasks will be resolved we could continue; <br/>
  * 5. Executes genetic algorithm iteration:<br/>
  * 5.a. Creates new population by next rules:<br/>
@@ -90,10 +88,8 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	private final CostFunction populationCostFunction;
 	private final GeneticSearchSettings settings;
 
-	private final List<SimulatorCalulatingTask> simulatorCalculatingTasks = new ArrayList<>();
+	private final List<SimulatorCalculatingTask> simulatorCalculatingTasks = new ArrayList<>();
 	List<TradingStrategy> population = Collections.synchronizedList(new ArrayList<TradingStrategy>());;
-	// Boolean mean that Strategy was added as part of best strategies
-	private final Map<TradingStrategy, Boolean> sortedPopulation = Collections.synchronizedMap(new HashMap<TradingStrategy, Boolean>());
 
 	private boolean stoppedByRequest = false;
 	private volatile IndicatorProgressListener progressIndicator = null;
@@ -147,36 +143,55 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		return simulatorSettingsGeneticList.generateRandom();
 	}
 
-	private void waitResults() throws InterruptedException {
+	private void waitResults() throws InterruptedException, BadAlgorithmException {
 		double lastCostSum = maxPopulationCost;
 		while (!stoppedByRequest && currentSelectionIndex < settings.maxPopulationsAmount) {
 			populationCalculationTasksLatch.await();
-			populationCalculationTasksLatch = new CountDownLatch(settings.getTasksSize());
 			lastCostSum = geneticAlgorithmIteration(lastCostSum);
 		}
 	}
 
-	private double geneticAlgorithmIteration(final double lastCostSum) {
+	private double geneticAlgorithmIteration(final double lastCostSum) throws BadAlgorithmException {
 		final double newCostSum = calculateCostSum();
 		final List<TradingStrategy> currentPopulation = population;
 
 		createNewPopulation(currentPopulation);
 		crossover(currentPopulation);
 		mutation(currentPopulation);
-		checkResult(newCostSum, lastCostSum);
-
+		final boolean shouldWeContinue = checkResult(newCostSum, lastCostSum);
+		if (shouldWeContinue) {
+			generateRandomTasksForTail();
+			startExecutionTasks();
+		}
 		return newCostSum;
 	}
 
-	private void checkResult(double newCostSum, double lastCostSum) {
+	private void generateRandomTasksForTail() throws BadAlgorithmException {
+		final int sizeOfTasks = simulatorCalculatingTasks.size();
+		if (population.size() + sizeOfTasks < settings.populationSize) {
+			for (int i = 0; i < settings.populationSize - sizeOfTasks - population.size(); ++i) {
+				simulatorCalculatingTasks.add(new SimulatorCalculatingTask(this, simulatorSettingsGeneticList.generateRandom()));
+			}
+		}
+	}
+
+	private void startExecutionTasks() {
+		final int sizeOfTasks = simulatorCalculatingTasks.size();
+		populationCalculationTasksLatch = new CountDownLatch(sizeOfTasks);
+		for (SimulatorCalculatingTask task : simulatorCalculatingTasks) {
+			executor.submit(task);
+		}
+		simulatorCalculatingTasks.clear();
+	}
+
+	private boolean checkResult(double newCostSum, double lastCostSum) {
 		if (currentSelectionIndex > MINIMUM_STEPS_AMOUNT && shouldTerminate(newCostSum, lastCostSum)) {
 			currentSelectionIndex = settings.maxPopulationsAmount;
 			logger.debug("summary cost of statistics not changed throw iteration on valuable value");
-		} else {
-			for (SimulatorCalulatingTask task : simulatorCalculatingTasks) {
-				executor.submit(task);
+			if (progressIndicator != null) {
+				progressIndicator.processed((double) currentSelectionIndex / settings.maxPopulationsAmount);
 			}
-			simulatorCalculatingTasks.clear();
+			return false;
 		}
 		if (lastCostSum > maxPopulationCost) {
 			maxPopulationCost = lastCostSum;
@@ -185,6 +200,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		if (progressIndicator != null) {
 			progressIndicator.processed((double) currentSelectionIndex / settings.maxPopulationsAmount);
 		}
+		return true;
 	}
 
 	private void createNewPopulation(List<TradingStrategy> currentPopulation) {
@@ -192,19 +208,11 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 
 		if (settings.sizeOfBest > 0) {
 			for (TradingStrategy strategy : strategySelector.getStrategies()) {
-				final Boolean pe = sortedPopulation.get(strategy);
-				if (pe != null && pe) {
-					population.add(strategy);
-					if (population.size() == settings.sizeOfBest) {
-						break;
-					}
+				population.add(strategy);
+				if (population.size() == settings.sizeOfBest) {
+					break;
 				}
 			}
-		}
-
-		sortedPopulation.clear();
-		for (TradingStrategy strategy : population) {
-			sortedPopulation.put(strategy, true);
 		}
 	}
 
@@ -213,17 +221,16 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 		if (size == 0) {
 			return;
 		}
-		final Random r = new Random();
 
 		for (int i = 0; i < settings.crossoverSize; ++i) {
-			final int leftIndex = r.nextInt(size);
-			final int rightIndex = r.nextInt(size);
+			final int leftIndex = indexRandomizator.nextInt(size);
+			final int rightIndex = indexRandomizator.nextInt(size);
 
 			final SimulatorSettings left = currentPopulation.get(leftIndex).getSettings();
 			final SimulatorSettings right = currentPopulation.get(rightIndex).getSettings();
 
 			final SimulatorSettings mergedStatistics = simulatorSettingsGeneticList.merge(left, right);
-			simulatorCalculatingTasks.add(new SimulatorCalulatingTask(this, mergedStatistics));
+			simulatorCalculatingTasks.add(new SimulatorCalculatingTask(this, mergedStatistics));
 		}
 	}
 
@@ -236,7 +243,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 			final int index = indexRandomizator.nextInt(size);
 			final SimulatorSettings settings = currentPopulation.get(index).getSettings();
 			final SimulatorSettings mutatedSettings = simulatorSettingsGeneticList.mutate(settings);
-			simulatorCalculatingTasks.add(new SimulatorCalulatingTask(this, mutatedSettings));
+			simulatorCalculatingTasks.add(new SimulatorCalculatingTask(this, mutatedSettings));
 		}
 	}
 
@@ -256,7 +263,7 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 
 	/**
 	 * This method will be called from Genetic Search Subtasks for example:
-	 * {@link SimulatorCalulatingTask} in case when task was resolved.<br/>
+	 * {@link SimulatorCalculatingTask} in case when task was resolved.<br/>
 	 * It will be called in any case if simulation failed or succeed.
 	 */
 	void simulationCalculationFinished() {
@@ -265,33 +272,27 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 
 	/**
 	 * This method will be called from Genetic Search Subtasks for example:
-	 * {@link SimulatorCalulatingTask} when simulation accomplished.
+	 * {@link SimulatorCalculatingTask} when simulation accomplished.
 	 */
 	boolean addTradingStrategy(final TradingStrategy newStrategy) {
 		boolean result = false;
-		// TODO test me
 		final List<TradingStrategy> deletedStrategies = strategySelector.addStrategy(newStrategy);
-		if (!deletedStrategies.isEmpty()) {
-			population.add(newStrategy);
-			sortedPopulation.put(newStrategy, true);
-			result = true;
-			for (TradingStrategy i : deletedStrategies) {
-				sortedPopulation.put(i, false);
-				if (i.equals(newStrategy)) {
-					result = false;
-				}
+		population.add(newStrategy);
+		result = true;
+		for (TradingStrategy i : deletedStrategies) {
+			if (i.equals(newStrategy)) {
+				result = false;
+				break;
 			}
-		} else {
-			result = true;
 		}
 		return result;
 	}
 
 	/**
 	 * This method will be called from Genetic Search Subtasks for example:
-	 * {@link SimulatorCalulatingTask} when simulation accomplished.
+	 * {@link SimulatorCalculatingTask} when simulation accomplished.
 	 */
-	void addTaskToExecutor(final SimulatorCalulatingTask task) {
+	void addTaskToExecutor(final SimulatorCalculatingTask task) {
 		this.executor.submit(task);
 	}
 

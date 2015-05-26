@@ -8,12 +8,12 @@ import stsc.general.simulator.SimulatorSettings;
 import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
 
-final class SimulatorCalulatingTask implements Callable<Boolean> {
+final class SimulatorCalculatingTask implements Callable<Boolean> {
 
 	private final StrategyGeneticSearcher strategyGeneticSearcher;
 	private SimulatorSettings settings;
 
-	SimulatorCalulatingTask(StrategyGeneticSearcher strategyGeneticSearcher, SimulatorSettings settings) {
+	SimulatorCalculatingTask(StrategyGeneticSearcher strategyGeneticSearcher, SimulatorSettings settings) {
 		this.strategyGeneticSearcher = strategyGeneticSearcher;
 		this.settings = settings;
 	}

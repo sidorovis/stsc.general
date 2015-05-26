@@ -6,7 +6,7 @@ import stsc.general.statistic.Metrics;
 
 /**
  * This class generate initial genetic population of {@link SimulatorSettings}
- * Also it creates and starts {@link SimulatorCalulatingTask} (Trading
+ * Also it creates and starts {@link SimulatorCalculatingTask} (Trading
  * Strategies {@link Metrics} calculation procedures).
  */
 final class GenerateInitialPopulationsTask implements Runnable {
@@ -25,7 +25,7 @@ final class GenerateInitialPopulationsTask implements Runnable {
 			boolean taskWasNotAdded = true;
 			try {
 				final SimulatorSettings ss = strategyGeneticSearcher.getRandomSimulatorSettings();
-				final SimulatorCalulatingTask task = new SimulatorCalulatingTask(this.strategyGeneticSearcher, ss);
+				final SimulatorCalculatingTask task = new SimulatorCalculatingTask(this.strategyGeneticSearcher, ss);
 				this.strategyGeneticSearcher.addTaskToExecutor(task);
 				taskWasNotAdded = false;
 			} catch (BadAlgorithmException e) {

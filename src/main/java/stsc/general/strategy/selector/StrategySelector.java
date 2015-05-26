@@ -1,8 +1,6 @@
 package stsc.general.strategy.selector;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import stsc.general.simulator.multistarter.genetic.StrategyGeneticSearcher;
 import stsc.general.strategy.TradingStrategy;

@@ -209,6 +209,7 @@ public final class Metrics {
 		for (Map.Entry<String, Integer> e : getIntegerMetrics().entrySet()) {
 			result += " " + e.getKey() + " " + e.getValue().toString();
 		}
+		result += "\n";
 		return result;
 	}
 
