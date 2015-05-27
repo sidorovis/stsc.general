@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
@@ -122,6 +123,10 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	public StrategySelector waitAndGetSelector() throws StrategySearcherException {
 		try {
 			waitResults();
+		} catch (RejectedExecutionException e) {
+			if (!stoppedByRequest) {
+				throw new StrategySearcherException(e.getMessage());
+			}
 		} catch (Exception e) {
 			throw new StrategySearcherException(e.getMessage());
 		}
@@ -132,6 +137,10 @@ public class StrategyGeneticSearcher implements StrategySearcher {
 	@Override
 	public void stopSearch() {
 		this.stoppedByRequest = true;
+		this.executor.shutdownNow();
+		while (populationCalculationTasksLatch.getCount() > 0) {
+			populationCalculationTasksLatch.countDown();
+		}
 	}
 
 	@Override
