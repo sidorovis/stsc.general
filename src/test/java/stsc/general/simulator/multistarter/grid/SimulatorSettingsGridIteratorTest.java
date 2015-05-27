@@ -62,7 +62,7 @@ public class SimulatorSettingsGridIteratorTest {
 			Assert.assertNotNull(salevel);
 			Assert.assertNotNull(saone);
 		}
-		Assert.assertEquals(30720, count);
+		Assert.assertEquals(6144, count);
 	}
 
 	@Test
