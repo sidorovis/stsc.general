@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.SortedStrategies;
+import stsc.general.statistic.cost.comparator.MetricsComparator;
 import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
@@ -29,10 +30,10 @@ public final class StatisticsByCostSelector extends BorderedStrategySelector {
 	private final CostFunction costFunction;
 	private final SortedStrategies select;
 
-	public StatisticsByCostSelector(final int selectLastElements, final CostFunction costFunction) {
+	public StatisticsByCostSelector(final int selectLastElements, final CostFunction costFunction, final MetricsComparator metricsComparator) {
 		super(selectLastElements);
 		this.costFunction = costFunction;
-		this.select = new SortedByRatingStrategies(new MetricsSameComparator());
+		this.select = new SortedByRatingStrategies(metricsComparator);
 	}
 
 	@Override

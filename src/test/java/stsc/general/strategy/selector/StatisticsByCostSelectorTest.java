@@ -9,6 +9,7 @@ import org.junit.Test;
 import stsc.common.Settings;
 import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
+import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
 
@@ -23,7 +24,7 @@ public class StatisticsByCostSelectorTest {
 
 	@Test
 	public void testStatisticsByCostSelector() {
-		final StatisticsByCostSelector selector = new StatisticsByCostSelector(10, new CostWeightedSumFunction());
+		final StatisticsByCostSelector selector = new StatisticsByCostSelector(10, new CostWeightedSumFunction(), new MetricsSameComparator());
 		Assert.assertTrue(selector.addStrategy(getTs(10.5, 6.9)).isEmpty());
 		Assert.assertTrue(selector.addStrategy(getTs(10.8, 4.2)).isEmpty());
 		Assert.assertTrue(selector.addStrategy(getTs(11.1, 3.3)).isEmpty());

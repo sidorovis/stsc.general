@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
+import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
 
@@ -23,7 +24,8 @@ public class StrategyFilteringSelectorTest {
 
 	@Test
 	public void testStrategyFilteringSelectorWithMinDouble() {
-		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction()));
+		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction(),
+				new MetricsSameComparator()));
 		Assert.assertEquals(10000, selector.maxPossibleAmount());
 		Assert.assertEquals(0, selector.currentStrategiesAmount());
 		selector.withDoubleMinFilter(MetricType.freq, 0.01);
@@ -33,7 +35,8 @@ public class StrategyFilteringSelectorTest {
 
 	@Test
 	public void testStrategyFilteringSelectorWithMaxDouble() {
-		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction()));
+		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction(),
+				new MetricsSameComparator()));
 		selector.withDoubleMaxFilter(MetricType.freq, 1.00);
 		selector.addStrategy(getTs(1.00001, 10));
 		Assert.assertEquals(0, selector.currentStrategiesAmount());
@@ -41,7 +44,8 @@ public class StrategyFilteringSelectorTest {
 
 	@Test
 	public void testStrategyFilteringSelectorWithMinInteger() {
-		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction()));
+		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction(),
+				new MetricsSameComparator()));
 		selector.withIntegerMinFilter(MetricType.period, 11);
 		selector.addStrategy(getTs(1.00001, 10));
 		Assert.assertEquals(0, selector.currentStrategiesAmount());
@@ -49,7 +53,8 @@ public class StrategyFilteringSelectorTest {
 
 	@Test
 	public void testStrategyFilteringSelectorWithMaxInteger() {
-		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction()));
+		final StrategyFilteringSelector selector = new StrategyFilteringSelector(new StatisticsByCostSelector(10000, new CostWeightedSumFunction(),
+				new MetricsSameComparator()));
 		selector.withIntegerMaxFilter(MetricType.period, 11);
 		selector.addStrategy(getTs(1.00001, 12));
 		Assert.assertEquals(0, selector.currentStrategiesAmount());

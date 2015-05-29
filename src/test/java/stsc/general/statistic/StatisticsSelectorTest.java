@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.general.simulator.SimulatorSettings;
+import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
 import stsc.general.strategy.selector.StatisticsByCostSelector;
@@ -21,7 +22,7 @@ public class StatisticsSelectorTest {
 	@Test
 	public void testStatisticsSelector() throws ParseException {
 		final CostWeightedSumFunction compareMethod = new CostWeightedSumFunction();
-		final StrategySelector statisticsSelector = new StatisticsByCostSelector(2, compareMethod);
+		final StrategySelector statisticsSelector = new StatisticsByCostSelector(2, compareMethod, new MetricsSameComparator());
 
 		final List<Double> values = new ArrayList<>();
 		values.add(compareMethod.calculate(TestMetricsHelper.getMetrics(100, 200)));

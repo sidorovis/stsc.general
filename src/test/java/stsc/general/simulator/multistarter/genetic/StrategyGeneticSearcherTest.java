@@ -10,6 +10,7 @@ import stsc.common.Settings;
 import stsc.general.simulator.multistarter.StrategySearcher.IndicatorProgressListener;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.statistic.MetricType;
+import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.selector.StatisticsByCostSelector;
 import stsc.general.strategy.selector.StrategySelector;
@@ -60,7 +61,7 @@ public class StrategyGeneticSearcherTest {
 		costFunction.withParameter(MetricType.maxLoss, -0.3);
 		costFunction.withParameter(MetricType.avLoss, -0.5);
 
-		final StrategySelector selector = new StatisticsByCostSelector(112, costFunction);
+		final StrategySelector selector = new StatisticsByCostSelector(112, costFunction, new MetricsSameComparator());
 
 		final SimulatorSettingsGeneticList geneticList = TestGeneticSimulatorSettings.getGeneticList();
 		final int maxGeneticStepsAmount = 104;
