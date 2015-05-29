@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
@@ -18,13 +19,13 @@ import stsc.general.statistic.Metrics;
  */
 public class CostWeightedSumComparator implements MetricsComparator {
 
-	private final Map<String, Double> parameters = new HashMap<>();
+	private final Map<MetricType, Double> parameters = new HashMap<>();
 
 	public CostWeightedSumComparator() {
-		parameters.put("avGain", 1.0);
+		parameters.put(MetricType.avGain, 1.0);
 	}
 
-	public CostWeightedSumComparator withParameter(String name, Double value) {
+	public CostWeightedSumComparator withParameter(MetricType name, Double value) {
 		parameters.put(name, value);
 		return this;
 	}
@@ -36,7 +37,7 @@ public class CostWeightedSumComparator implements MetricsComparator {
 			sum += d;
 		}
 		Double result = 0.0;
-		for (Entry<String, Double> i : parameters.entrySet()) {
+		for (Entry<MetricType, Double> i : parameters.entrySet()) {
 			Double v1 = s1.getMetric(i.getKey());
 			Double v2 = s2.getMetric(i.getKey());
 			final Double w = i.getValue() / sum;

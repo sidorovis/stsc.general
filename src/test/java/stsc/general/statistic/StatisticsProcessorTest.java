@@ -77,9 +77,9 @@ public class StatisticsProcessorTest {
 		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn
 				* (1.0 + statistics.getCommision());
 
-		Assert.assertEquals(3.0, metrics.getIntegerMetric("period"), Settings.doubleEpsilon);
-		Assert.assertEquals(aaplPriceDiff, metrics.getDoubleMetric("maxWin"), Settings.doubleEpsilon);
-		Assert.assertEquals(admPriceDiff, metrics.getDoubleMetric("maxLoss"), Settings.doubleEpsilon);
+		Assert.assertEquals(3, metrics.getIntegerMetric(MetricType.period).intValue());
+		Assert.assertEquals(aaplPriceDiff, metrics.getDoubleMetric(MetricType.maxWin), Settings.doubleEpsilon);
+		Assert.assertEquals(admPriceDiff, metrics.getDoubleMetric(MetricType.maxLoss), Settings.doubleEpsilon);
 		Assert.assertEquals(aaplPriceDiff - admPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
 	}
 
@@ -133,9 +133,9 @@ public class StatisticsProcessorTest {
 		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn
 				* (1.0 + statistics.getCommision());
 
-		Assert.assertEquals(3.0, metrics.getMetric("period"), Settings.doubleEpsilon);
-		Assert.assertEquals(aaplPriceDiff, metrics.getMetric("maxLoss"), Settings.doubleEpsilon);
-		Assert.assertEquals(admPriceDiff, metrics.getMetric("maxWin"), Settings.doubleEpsilon);
+		Assert.assertEquals(3.0, metrics.getMetric(MetricType.period), Settings.doubleEpsilon);
+		Assert.assertEquals(aaplPriceDiff, metrics.getMetric(MetricType.maxLoss), Settings.doubleEpsilon);
+		Assert.assertEquals(admPriceDiff, metrics.getMetric(MetricType.maxWin), Settings.doubleEpsilon);
 		Assert.assertEquals(admPriceDiff - aaplPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
 	}
 
@@ -205,77 +205,77 @@ public class StatisticsProcessorTest {
 		final double spyDiff = -spyShortOut * 30 * (1 - c) + spyShortIn * 30 * (1 + c);
 
 		final double lastResult = aaplDiff + admDiff + spyDiff;
-		Assert.assertEquals(4.0, metrics.getMetric("period"), Settings.doubleEpsilon);
+		Assert.assertEquals(4.0, metrics.getMetric(MetricType.period), Settings.doubleEpsilon);
 		Assert.assertEquals(lastResult, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
-		Assert.assertEquals(0.042828, metrics.getMetric("avGain"), Settings.doubleEpsilon);
+		Assert.assertEquals(0.042828, metrics.getMetric(MetricType.avGain), Settings.doubleEpsilon);
 
-		Assert.assertEquals(0.75, metrics.getMetric("freq"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.666666, metrics.getMetric("winProb"), Settings.doubleEpsilon);
+		Assert.assertEquals(0.75, metrics.getMetric(MetricType.freq), Settings.doubleEpsilon);
+		Assert.assertEquals(0.666666, metrics.getMetric(MetricType.winProb), Settings.doubleEpsilon);
 
-		Assert.assertEquals(54.473079, metrics.getMetric("avWin"), Settings.doubleEpsilon);
-		Assert.assertEquals(53.263523, metrics.getMetric("avLoss"), Settings.doubleEpsilon);
+		Assert.assertEquals(54.473079, metrics.getMetric(MetricType.avWin), Settings.doubleEpsilon);
+		Assert.assertEquals(53.263523, metrics.getMetric(MetricType.avLoss), Settings.doubleEpsilon);
 
 		Assert.assertEquals(81.913320, aaplDiff, Settings.doubleEpsilon);
-		Assert.assertEquals(-spyDiff, metrics.getMetric("maxLoss"), Settings.doubleEpsilon);
+		Assert.assertEquals(-spyDiff, metrics.getMetric(MetricType.maxLoss), Settings.doubleEpsilon);
 
-		Assert.assertEquals(1.022708, metrics.getMetric("avWinAvLoss"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.340734, metrics.getMetric("kelly"), Settings.doubleEpsilon);
+		Assert.assertEquals(1.022708, metrics.getMetric(MetricType.avWinAvLoss), Settings.doubleEpsilon);
+		Assert.assertEquals(0.340734, metrics.getMetric(MetricType.kelly), Settings.doubleEpsilon);
 	}
 
 	@Test
 	public void testEquityCurveOn518DaysStatistics() throws IOException {
 		final Metrics stats = testTradingHelper(518, true);
 
-		Assert.assertEquals(-16.710421, stats.getMetric("avGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.301158, stats.getMetric("freq"), Settings.doubleEpsilon);
+		Assert.assertEquals(-16.710421, stats.getMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.301158, stats.getMetric(MetricType.freq), Settings.doubleEpsilon);
 
-		Assert.assertEquals(430.313881, stats.getMetric("avWin"), Settings.doubleEpsilon);
-		Assert.assertEquals(-0.091019, stats.getMetric("kelly"), Settings.doubleEpsilon);
+		Assert.assertEquals(430.313881, stats.getMetric(MetricType.avWin), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.091019, stats.getMetric(MetricType.kelly), Settings.doubleEpsilon);
 
-		Assert.assertEquals(-0.765763, stats.getMetric("sharpeRatio"), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.765763, stats.getMetric(MetricType.sharpeRatio), Settings.doubleEpsilon);
 
-		Assert.assertEquals(-0.668416, stats.getMetric("startMonthAvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(4.930223, stats.getMetric("startMonthStDevGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(15.162020, stats.getMetric("startMonthMax"), Settings.doubleEpsilon);
-		Assert.assertEquals(-7.577820, stats.getMetric("startMonthMin"), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.668416, stats.getMetric(MetricType.startMonthAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(4.930223, stats.getMetric(MetricType.startMonthStDevGain), Settings.doubleEpsilon);
+		Assert.assertEquals(15.162020, stats.getMetric(MetricType.startMonthMax), Settings.doubleEpsilon);
+		Assert.assertEquals(-7.577820, stats.getMetric(MetricType.startMonthMin), Settings.doubleEpsilon);
 
-		Assert.assertEquals(-21.378450, stats.getMetric("month12AvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(9.683782, stats.getMetric("month12StDevGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.0, stats.getMetric("month12Max"), Settings.doubleEpsilon);
-		Assert.assertEquals(-34.239761, stats.getMetric("month12Min"), Settings.doubleEpsilon);
+		Assert.assertEquals(-21.378450, stats.getMetric(MetricType.month12AvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(9.683782, stats.getMetric(MetricType.month12StDevGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.0, stats.getMetric(MetricType.month12Max), Settings.doubleEpsilon);
+		Assert.assertEquals(-34.239761, stats.getMetric(MetricType.month12Min), Settings.doubleEpsilon);
 
-		Assert.assertEquals(145, stats.getMetric("ddDurationAvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(675.0, stats.getMetric("ddDurationMax"), Settings.doubleEpsilon);
-		Assert.assertEquals(12.568085, stats.getMetric("ddValueAvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(48.826069, stats.getMetric("ddValueMax"), Settings.doubleEpsilon);
+		Assert.assertEquals(145, stats.getMetric(MetricType.ddDurationAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(675.0, stats.getMetric(MetricType.ddDurationMax), Settings.doubleEpsilon);
+		Assert.assertEquals(12.568085, stats.getMetric(MetricType.ddValueAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(48.826069, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 
 	@Test
 	public void testEquityCurveOn251DaysStatistics() throws IOException {
 		final Metrics stats = testTradingHelper(251, true);
 
-		Assert.assertEquals(-9.350847, stats.getMetric("avGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.298804, stats.getMetric("freq"), Settings.doubleEpsilon);
+		Assert.assertEquals(-9.350847, stats.getMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.298804, stats.getMetric(MetricType.freq), Settings.doubleEpsilon);
 
-		Assert.assertEquals(499.964045, stats.getMetric("avWin"), Settings.doubleEpsilon);
-		Assert.assertEquals(-0.077171, stats.getMetric("kelly"), Settings.doubleEpsilon);
+		Assert.assertEquals(499.964045, stats.getMetric(MetricType.avWin), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.077171, stats.getMetric(MetricType.kelly), Settings.doubleEpsilon);
 
-		Assert.assertEquals(-0.611352, stats.getMetric("sharpeRatio"), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.611352, stats.getMetric(MetricType.sharpeRatio), Settings.doubleEpsilon);
 
-		Assert.assertEquals(-0.779237, stats.getMetric("startMonthAvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(6.554998, stats.getMetric("startMonthStDevGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(17.914611, stats.getMetric("startMonthMax"), Settings.doubleEpsilon);
-		Assert.assertEquals(-6.845838, stats.getMetric("startMonthMin"), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.779237, stats.getMetric(MetricType.startMonthAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(6.554998, stats.getMetric(MetricType.startMonthStDevGain), Settings.doubleEpsilon);
+		Assert.assertEquals(17.914611, stats.getMetric(MetricType.startMonthMax), Settings.doubleEpsilon);
+		Assert.assertEquals(-6.845838, stats.getMetric(MetricType.startMonthMin), Settings.doubleEpsilon);
 
-		Assert.assertEquals(-9.350847, stats.getMetric("month12AvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.0, stats.getMetric("month12StDevGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.0, stats.getMetric("month12Max"), Settings.doubleEpsilon);
-		Assert.assertEquals(-9.350847, stats.getMetric("month12Min"), Settings.doubleEpsilon);
+		Assert.assertEquals(-9.350847, stats.getMetric(MetricType.month12AvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.0, stats.getMetric(MetricType.month12StDevGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.0, stats.getMetric(MetricType.month12Max), Settings.doubleEpsilon);
+		Assert.assertEquals(-9.350847, stats.getMetric(MetricType.month12Min), Settings.doubleEpsilon);
 
-		Assert.assertEquals(67.2, stats.getMetric("ddDurationAvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(286.0, stats.getMetric("ddDurationMax"), Settings.doubleEpsilon);
-		Assert.assertEquals(10.581057, stats.getMetric("ddValueAvGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(36.346692, stats.getMetric("ddValueMax"), Settings.doubleEpsilon);
+		Assert.assertEquals(67.2, stats.getMetric(MetricType.ddDurationAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(286.0, stats.getMetric(MetricType.ddDurationMax), Settings.doubleEpsilon);
+		Assert.assertEquals(10.581057, stats.getMetric(MetricType.ddValueAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(36.346692, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -283,7 +283,7 @@ public class StatisticsProcessorTest {
 		final Metrics stats = testTradingHelper(3, false);
 		stats.print("./test/out.csv");
 
-		Assert.assertEquals(0.0, stats.getMetric("ddValueMax"), Settings.doubleEpsilon);
+		Assert.assertEquals(0.0, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 		final File file = new File("./test/out.csv");
 		Assert.assertTrue(file.exists());
 		Assert.assertEquals(456.0, file.length(), Settings.doubleEpsilon);
@@ -337,7 +337,7 @@ public class StatisticsProcessorTest {
 		}
 
 		Metrics metrics = statisticsProcessor.calculate();
-		Assert.assertEquals(daysCount, metrics.getIntegerMetric("period").intValue());
+		Assert.assertEquals(daysCount, metrics.getIntegerMetric(MetricType.period).intValue());
 
 		return metrics;
 	}

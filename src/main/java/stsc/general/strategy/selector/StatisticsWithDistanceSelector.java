@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import stsc.common.Settings;
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.SortedStrategies;
 import stsc.general.statistic.cost.comparator.CostFunctionToComparator;
@@ -59,7 +60,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 			final Metrics ls = this.getStrategy().getMetrics();
 			final Metrics rs = ((ClusterKey) other).getStrategy().getMetrics();
 			Double resDiff = 0.0;
-			for (Entry<String, Double> e : distanceParameters.entrySet()) {
+			for (Entry<MetricType, Double> e : distanceParameters.entrySet()) {
 				final Double lv = ls.getDoubleMetric(e.getKey()) * e.getValue();
 				final Double rv = rs.getDoubleMetric(e.getKey()) * e.getValue();
 				resDiff += Math.abs(lv - rv);
@@ -75,7 +76,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 			final Metrics ls = left.getStrategy().getMetrics();
 			final Metrics rs = right.getStrategy().getMetrics();
 			Double resDiff = 0.0;
-			for (Entry<String, Double> e : distanceParameters.entrySet()) {
+			for (Entry<MetricType, Double> e : distanceParameters.entrySet()) {
 				final Double lv = ls.getDoubleMetric(e.getKey()) * e.getValue();
 				final Double rv = rs.getDoubleMetric(e.getKey()) * e.getValue();
 				resDiff += Math.abs(lv - rv);
@@ -83,7 +84,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 			if (resDiff <= 1.0) {
 				return 0;
 			}
-			return (int) (rs.getDoubleMetric("avGain") - ls.getDoubleMetric("avGain"));
+			return (int) (rs.getDoubleMetric(MetricType.avGain) - ls.getDoubleMetric(MetricType.avGain));
 		}
 	}
 
@@ -99,7 +100,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	 */
 	private final CostFunction ratingCostFunction;
 	private final CostFunctionToComparator metricsComparator;
-	private final Map<String, Double> distanceParameters;
+	private final Map<MetricType, Double> distanceParameters;
 
 	private final TreeMap<ClusterKey, SortedStrategies> clustersByKey;
 
@@ -127,7 +128,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 		return clustersAmount * elementsInCluster;
 	}
 
-	public StatisticsWithDistanceSelector withDistanceParameter(String key, Double value) {
+	public StatisticsWithDistanceSelector withDistanceParameter(MetricType key, Double value) {
 		distanceParameters.put(key, value);
 		return this;
 	}

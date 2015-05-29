@@ -3,6 +3,7 @@ package stsc.general.strategy;
 import org.apache.commons.lang3.Validate;
 
 import stsc.general.simulator.SimulatorSettings;
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
@@ -46,7 +47,7 @@ public final class TradingStrategy {
 	}
 
 	public double getAvGain() {
-		return metrics.getDoubleMetric("avGain");
+		return metrics.getDoubleMetric(MetricType.avGain);
 	}
 
 	@Override

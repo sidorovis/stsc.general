@@ -3,6 +3,7 @@ package stsc.general.statistic.cost.function;
 import java.util.HashMap;
 import java.util.Map;
 
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
@@ -13,13 +14,13 @@ import stsc.general.statistic.Metrics;
  */
 public class CostWeightedSumFunction implements CostFunction {
 
-	private final Map<String, Double> parameters = new HashMap<>();
+	private final Map<MetricType, Double> parameters = new HashMap<>();
 
 	public CostWeightedSumFunction() {
-		parameters.put("avGain", 1.0);
+		parameters.put(MetricType.avGain, 1.0);
 	}
 
-	public CostWeightedSumFunction withParameter(String name, Double value) {
+	public CostWeightedSumFunction withParameter(MetricType name, Double value) {
 		parameters.put(name, value);
 		return this;
 	}
@@ -27,7 +28,7 @@ public class CostWeightedSumFunction implements CostFunction {
 	@Override
 	public Double calculate(final Metrics metrics) {
 		Double result = 0.0;
-		for (Map.Entry<String, Double> e : parameters.entrySet()) {
+		for (Map.Entry<MetricType, Double> e : parameters.entrySet()) {
 			result += e.getValue() * metrics.getMetric(e.getKey());
 		}
 

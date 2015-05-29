@@ -4,6 +4,7 @@ import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.testhelper.TestMetricsHelper;
 
@@ -13,7 +14,7 @@ public class CostUniterComparatorTest {
 	public void testCostUniterComparator() {
 		final CostUniterComparator cu = new CostUniterComparator();
 		cu.withComparator(new CostWeightedSumComparator(), 0.5);
-		cu.withComparator(new CostWeightedSumComparator().withParameter("winProb", 0.6), 0.8);
+		cu.withComparator(new CostWeightedSumComparator().withParameter(MetricType.winProb, 0.6), 0.8);
 
 		for (int i = 1; i < 6; ++i) {
 			final Metrics leftStat = TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, i));

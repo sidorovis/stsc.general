@@ -18,7 +18,7 @@ import stsc.general.strategy.TradingStrategy;
  */
 public final class Metrics {
 
-	static class StatisticsInit {
+	static class Builder {
 
 		public EquityCurve equityCurve = new EquityCurve();
 		public EquityCurve equityCurveInMoney;
@@ -70,63 +70,64 @@ public final class Metrics {
 		}
 	}
 
-	private final Map<String, Double> doubleMetrics = new HashMap<>();
-	private final Map<String, Integer> integerMetrics = new HashMap<>();
+	static public Builder getBuilder() {
+		return new Builder();
+	}
+
+	private final Map<MetricType, Double> doubleMetrics = new HashMap<>();
+	private final Map<MetricType, Integer> integerMetrics = new HashMap<>();
 
 	private final EquityCurve equityCurveInMoney;
 
-	static public StatisticsInit createInit() {
-		return new StatisticsInit();
-	}
-
-	public Metrics(Metrics.StatisticsInit init) {
+	public Metrics(final Builder init) {
 		calculateProbabilityStatistics(init);
 		calculateEquityStatistics(init);
 		this.equityCurveInMoney = init.equityCurveInMoney;
 	}
 
-	public Metrics(Map<String, Double> doubleList, Map<String, Integer> integerList) {
+	public Metrics(Map<MetricType, Double> doubleList, Map<MetricType, Integer> integerList) {
 		this.getDoubleMetrics().putAll(doubleList);
 		this.getIntegerMetrics().putAll(integerList);
 		this.equityCurveInMoney = new EquityCurve();
 	}
 
-	private void calculateProbabilityStatistics(StatisticsInit init) {
-		setDoubleMetric("avGain", init.getAvGain());
-		setIntegerMetric("period", init.period);
+	private void calculateProbabilityStatistics(Builder init) {
+		setDoubleMetric(MetricType.avGain, init.getAvGain());
+		setIntegerMetric(MetricType.period, init.period);
 
-		setDoubleMetric("freq", division(init.count, init.period));
-		setDoubleMetric("winProb", division(init.winCount, init.count));
+		setDoubleMetric(MetricType.freq, division(init.count, init.period));
+		setDoubleMetric(MetricType.winProb, division(init.winCount, init.count));
 
-		setDoubleMetric("avWin", division(init.winSum, init.winCount));
-		setDoubleMetric("maxWin", init.maxWin);
-		setDoubleMetric("avLoss", Math.abs(division(init.lossSum, init.lossCount)));
-		setDoubleMetric("maxLoss", -init.maxLoss);
-		setDoubleMetric("avWinAvLoss", division(getDoubleMetric("avWin"), getDoubleMetric("avLoss")));
+		setDoubleMetric(MetricType.avWin, division(init.winSum, init.winCount));
+		setDoubleMetric(MetricType.maxWin, init.maxWin);
+		setDoubleMetric(MetricType.avLoss, Math.abs(division(init.lossSum, init.lossCount)));
+		setDoubleMetric(MetricType.maxLoss, -init.maxLoss);
+		setDoubleMetric(MetricType.avWinAvLoss, division(getDoubleMetric(MetricType.avWin), getDoubleMetric(MetricType.avLoss)));
 
-		if (getDoubleMetric("avWinAvLoss") == 0.0)
-			setDoubleMetric("kelly", 0.0);
+		if (getDoubleMetric(MetricType.avWinAvLoss) == 0.0)
+			setDoubleMetric(MetricType.kelly, 0.0);
 		else
-			setDoubleMetric("kelly", getDoubleMetric("winProb") - (1 - getDoubleMetric("winProb")) / getDoubleMetric("avWinAvLoss"));
+			setDoubleMetric(MetricType.kelly, getDoubleMetric(MetricType.winProb) - (1 - getDoubleMetric(MetricType.winProb))
+					/ getDoubleMetric(MetricType.avWinAvLoss));
 
 	}
 
-	private void calculateEquityStatistics(StatisticsInit init) {
-		setDoubleMetric("sharpeRatio", init.sharpeRatio);
-		setDoubleMetric("startMonthAvGain", init.startMonthAvGain);
-		setDoubleMetric("startMonthStDevGain", init.startMonthStDevGain);
-		setDoubleMetric("startMonthMax", init.startMonthMax);
-		setDoubleMetric("startMonthMin", init.startMonthMin);
+	private void calculateEquityStatistics(Builder init) {
+		setDoubleMetric(MetricType.sharpeRatio, init.sharpeRatio);
+		setDoubleMetric(MetricType.startMonthAvGain, init.startMonthAvGain);
+		setDoubleMetric(MetricType.startMonthStDevGain, init.startMonthStDevGain);
+		setDoubleMetric(MetricType.startMonthMax, init.startMonthMax);
+		setDoubleMetric(MetricType.startMonthMin, init.startMonthMin);
 
-		setDoubleMetric("month12AvGain", init.month12AvGain);
-		setDoubleMetric("month12StDevGain", init.month12StDevGain);
-		setDoubleMetric("month12Max", init.month12Max);
-		setDoubleMetric("month12Min", init.month12Min);
+		setDoubleMetric(MetricType.month12AvGain, init.month12AvGain);
+		setDoubleMetric(MetricType.month12StDevGain, init.month12StDevGain);
+		setDoubleMetric(MetricType.month12Max, init.month12Max);
+		setDoubleMetric(MetricType.month12Min, init.month12Min);
 
-		setDoubleMetric("ddDurationAvGain", init.ddDurationAvGain);
-		setDoubleMetric("ddDurationMax", init.ddDurationMax);
-		setDoubleMetric("ddValueAvGain", init.ddValueAvGain);
-		setDoubleMetric("ddValueMax", init.ddValueMax);
+		setDoubleMetric(MetricType.ddDurationAvGain, init.ddDurationAvGain);
+		setDoubleMetric(MetricType.ddDurationMax, init.ddDurationMax);
+		setDoubleMetric(MetricType.ddValueAvGain, init.ddValueAvGain);
+		setDoubleMetric(MetricType.ddValueMax, init.ddValueMax);
 	}
 
 	static private double division(double a, double b) {
@@ -136,18 +137,19 @@ public final class Metrics {
 			return a / b;
 	}
 
-	public void setDoubleMetric(String name, Double value) {
+	public void setDoubleMetric(MetricType name, Double value) {
 		getDoubleMetrics().put(name, value);
 	}
 
-	public Double getDoubleMetric(String name) {
+	public Double getDoubleMetric(MetricType name) {
 		return getDoubleMetrics().get(name);
 	}
 
 	/**
-	 * Try to return by double first, if not by integer
+	 * Try to return by double metric; if double value is not there -> try to
+	 * return integer
 	 */
-	public Double getMetric(String name) {
+	public Double getMetric(MetricType name) {
 		Double r = getDoubleMetric(name);
 		if (r == null) {
 			return getIntegerMetric(name).doubleValue();
@@ -156,7 +158,7 @@ public final class Metrics {
 		}
 	}
 
-	public void setIntegerMetric(String name, Integer value) {
+	public void setIntegerMetric(MetricType name, Integer value) {
 		getIntegerMetrics().put(name, value);
 	}
 
@@ -164,15 +166,15 @@ public final class Metrics {
 		return equityCurveInMoney;
 	}
 
-	public Integer getIntegerMetric(String name) {
+	public Integer getIntegerMetric(MetricType name) {
 		return getIntegerMetrics().get(name);
 	}
 
-	public Map<String, Double> getDoubleMetrics() {
+	public Map<MetricType, Double> getDoubleMetrics() {
 		return doubleMetrics;
 	}
 
-	public Map<String, Integer> getIntegerMetrics() {
+	public Map<MetricType, Integer> getIntegerMetrics() {
 		return integerMetrics;
 	}
 
@@ -186,11 +188,11 @@ public final class Metrics {
 		final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		final DecimalFormat decimalFormat = new DecimalFormat("#0.000");
 
-		for (Map.Entry<String, Double> e : getDoubleMetrics().entrySet()) {
-			outfile.append(e.getKey()).append('\t').append(decimalFormat.format(e.getValue())).append('\n');
+		for (Map.Entry<MetricType, Double> e : getDoubleMetrics().entrySet()) {
+			outfile.append(e.getKey().name()).append('\t').append(decimalFormat.format(e.getValue())).append('\n');
 		}
-		for (Map.Entry<String, Integer> e : getIntegerMetrics().entrySet()) {
-			outfile.append(e.getKey()).append('\t').append(e.getValue().toString()).append('\n');
+		for (Map.Entry<MetricType, Integer> e : getIntegerMetrics().entrySet()) {
+			outfile.append(e.getKey().name()).append('\t').append(e.getValue().toString()).append('\n');
 		}
 		outfile.append('\n');
 
@@ -203,10 +205,10 @@ public final class Metrics {
 	@Override
 	public String toString() {
 		String result = "Metrics: \n";
-		for (Map.Entry<String, Double> e : getDoubleMetrics().entrySet()) {
+		for (Map.Entry<MetricType, Double> e : getDoubleMetrics().entrySet()) {
 			result += " " + e.getKey() + " " + e.getValue().toString();
 		}
-		for (Map.Entry<String, Integer> e : getIntegerMetrics().entrySet()) {
+		for (Map.Entry<MetricType, Integer> e : getIntegerMetrics().entrySet()) {
 			result += " " + e.getKey() + " " + e.getValue().toString();
 		}
 		result += "\n";

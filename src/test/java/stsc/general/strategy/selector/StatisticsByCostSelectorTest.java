@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.common.Settings;
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
@@ -14,9 +15,9 @@ import stsc.general.strategy.TradingStrategy;
 public class StatisticsByCostSelectorTest {
 
 	private TradingStrategy getTs(double avGain, double winProb) {
-		final HashMap<String, Double> dh = new HashMap<>();
-		dh.put("avGain", avGain);
-		dh.put("winProb", winProb);
+		final HashMap<MetricType, Double> dh = new HashMap<>();
+		dh.put(MetricType.avGain, avGain);
+		dh.put(MetricType.winProb, winProb);
 		return TradingStrategy.createTest(new Metrics(dh, new HashMap<>()));
 	}
 

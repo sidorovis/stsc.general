@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
@@ -20,14 +21,14 @@ import stsc.general.statistic.Metrics;
  */
 public class CostMaximumLikelihoodComparator implements MetricsComparator {
 
-	private final Map<String, Double> parameters = new HashMap<>();
+	private final Map<MetricType, Double> parameters = new HashMap<>();
 
 	public CostMaximumLikelihoodComparator() {
-		parameters.put("avGain", 100.0);
+		parameters.put(MetricType.avGain, 100.0);
 	}
 
-	public CostMaximumLikelihoodComparator withParameter(String name, Double value) {
-		parameters.put(name, value);
+	public CostMaximumLikelihoodComparator withParameter(MetricType type, Double value) {
+		parameters.put(type, value);
 		return this;
 	}
 
@@ -35,7 +36,7 @@ public class CostMaximumLikelihoodComparator implements MetricsComparator {
 	public int compare(Metrics s1, Metrics s2) {
 		Double result1 = 0.0;
 		Double result2 = 0.0;
-		for (Entry<String, Double> i : parameters.entrySet()) {
+		for (Entry<MetricType, Double> i : parameters.entrySet()) {
 			final Double w = i.getValue();
 			final Double v1 = Math.abs(w - s1.getMetric(i.getKey()));
 			final Double v2 = Math.abs(w - s2.getMetric(i.getKey()));

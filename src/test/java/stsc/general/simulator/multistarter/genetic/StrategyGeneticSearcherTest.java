@@ -9,6 +9,7 @@ import org.junit.Test;
 import stsc.common.Settings;
 import stsc.general.simulator.multistarter.StrategySearcher.IndicatorProgressListener;
 import stsc.general.simulator.multistarter.StrategySearcherException;
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.selector.StatisticsByCostSelector;
 import stsc.general.strategy.selector.StrategySelector;
@@ -21,8 +22,8 @@ public class StrategyGeneticSearcherTest {
 		final StrategyGeneticSearcher sgs = createSearcher();
 		final StrategySelector selector = sgs.waitAndGetSelector();
 		Assert.assertEquals(112, selector.getStrategies().size());
-		Assert.assertEquals(100.0, selector.getStrategies().get(0).getMetrics().getDoubleMetric("avGain"), Settings.doubleEpsilon);
-		Assert.assertEquals(0.666666, selector.getStrategies().get(0).getMetrics().getDoubleMetric("winProb"), Settings.doubleEpsilon);
+		Assert.assertEquals(100.0, selector.getStrategies().get(0).getMetrics().getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.666666, selector.getStrategies().get(0).getMetrics().getDoubleMetric(MetricType.winProb), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -51,13 +52,13 @@ public class StrategyGeneticSearcherTest {
 
 	private StrategyGeneticSearcher createSearcher() throws InterruptedException {
 		final CostWeightedSumFunction costFunction = new CostWeightedSumFunction();
-		costFunction.withParameter("winProb", 1.2);
-		costFunction.withParameter("kelly", 0.6);
-		costFunction.withParameter("ddDurationAvGain", 0.4);
-		costFunction.withParameter("freq", 0.3);
-		costFunction.withParameter("sharpeRatio", 0.2);
-		costFunction.withParameter("maxLoss", -0.3);
-		costFunction.withParameter("avLoss", -0.5);
+		costFunction.withParameter(MetricType.winProb, 1.2);
+		costFunction.withParameter(MetricType.kelly, 0.6);
+		costFunction.withParameter(MetricType.ddDurationAvGain, 0.4);
+		costFunction.withParameter(MetricType.freq, 0.3);
+		costFunction.withParameter(MetricType.sharpeRatio, 0.2);
+		costFunction.withParameter(MetricType.maxLoss, -0.3);
+		costFunction.withParameter(MetricType.avLoss, -0.5);
 
 		final StrategySelector selector = new StatisticsByCostSelector(112, costFunction);
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
 
@@ -20,33 +21,33 @@ public final class StrategyFilteringSelector implements StrategySelector {
 
 	private final StrategySelector originalStrategySelector;
 
-	private final HashMap<String, Integer> integerMinFilters = new HashMap<>();
-	private final HashMap<String, Integer> integerMaxFilters = new HashMap<>();
+	private final HashMap<MetricType, Integer> integerMinFilters = new HashMap<>();
+	private final HashMap<MetricType, Integer> integerMaxFilters = new HashMap<>();
 
-	private final HashMap<String, Double> doubleMinFilters = new HashMap<>();
-	private final HashMap<String, Double> doubleMaxFilters = new HashMap<>();
+	private final HashMap<MetricType, Double> doubleMinFilters = new HashMap<>();
+	private final HashMap<MetricType, Double> doubleMaxFilters = new HashMap<>();
 
 	public StrategyFilteringSelector(StrategySelector originalStrategySelector) {
 		super();
 		this.originalStrategySelector = originalStrategySelector;
 	}
 
-	public StrategyFilteringSelector withIntegerMinFilter(final String filterKey, final Integer filterValue) {
+	public StrategyFilteringSelector withIntegerMinFilter(final MetricType filterKey, final Integer filterValue) {
 		integerMinFilters.put(filterKey, filterValue);
 		return this;
 	}
 
-	public StrategyFilteringSelector withIntegerMaxFilter(final String filterKey, final Integer filterValue) {
+	public StrategyFilteringSelector withIntegerMaxFilter(final MetricType filterKey, final Integer filterValue) {
 		integerMaxFilters.put(filterKey, filterValue);
 		return this;
 	}
 
-	public StrategyFilteringSelector withDoubleMinFilter(final String filterKey, final Double filterValue) {
+	public StrategyFilteringSelector withDoubleMinFilter(final MetricType filterKey, final Double filterValue) {
 		doubleMinFilters.put(filterKey, filterValue);
 		return this;
 	}
 
-	public StrategyFilteringSelector withDoubleMaxFilter(final String filterKey, final Double filterValue) {
+	public StrategyFilteringSelector withDoubleMaxFilter(final MetricType filterKey, final Double filterValue) {
 		doubleMaxFilters.put(filterKey, filterValue);
 		return this;
 	}
@@ -56,22 +57,22 @@ public final class StrategyFilteringSelector implements StrategySelector {
 	 */
 	private boolean isFilteredOut(final TradingStrategy strategy) {
 		final Metrics m = strategy.getMetrics();
-		for (Entry<String, Integer> i : integerMinFilters.entrySet()) {
+		for (Entry<MetricType, Integer> i : integerMinFilters.entrySet()) {
 			if (m.getIntegerMetric(i.getKey()) < i.getValue()) {
 				return true;
 			}
 		}
-		for (Entry<String, Integer> i : integerMaxFilters.entrySet()) {
+		for (Entry<MetricType, Integer> i : integerMaxFilters.entrySet()) {
 			if (m.getIntegerMetric(i.getKey()) > i.getValue()) {
 				return true;
 			}
 		}
-		for (Entry<String, Double> i : doubleMinFilters.entrySet()) {
+		for (Entry<MetricType, Double> i : doubleMinFilters.entrySet()) {
 			if (m.getDoubleMetric(i.getKey()) < i.getValue()) {
 				return true;
 			}
 		}
-		for (Entry<String, Double> i : doubleMaxFilters.entrySet()) {
+		for (Entry<MetricType, Double> i : doubleMaxFilters.entrySet()) {
 			if (m.getDoubleMetric(i.getKey()) > i.getValue()) {
 				return true;
 			}

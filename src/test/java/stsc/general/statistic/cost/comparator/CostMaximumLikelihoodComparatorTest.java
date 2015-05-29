@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import stsc.common.Day;
 import stsc.common.Settings;
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
 import stsc.general.strategy.selector.StatisticsCompareSelector;
@@ -19,9 +20,9 @@ public class CostMaximumLikelihoodComparatorTest {
 	@Test
 	public void testCostMaximumLikelihoodComparatorOnSeveral() {
 		final CostMaximumLikelihoodComparator comparator = new CostMaximumLikelihoodComparator();
-		comparator.withParameter("kelly", 0.8);
-		comparator.withParameter("winProb", 0.4);
-		comparator.withParameter("maxWin", 0.9);
+		comparator.withParameter(MetricType.kelly, 0.8);
+		comparator.withParameter(MetricType.winProb, 0.4);
+		comparator.withParameter(MetricType.maxWin, 0.9);
 		for (int i = 1; i < 6; ++i) {
 			final Metrics leftStat = TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, i));
 			for (int u = i + 20; u < 25; ++u) {
@@ -56,9 +57,9 @@ public class CostMaximumLikelihoodComparatorTest {
 	@Test
 	public void testCostStatisticsCompareSelectorWithLikelihoodWithKelly() {
 		final CostMaximumLikelihoodComparator c = new CostMaximumLikelihoodComparator();
-		c.withParameter("maxLoss", 100.0);
-		c.withParameter("avGain", -50.0);
-		c.withParameter("freq", 15.0);
+		c.withParameter(MetricType.maxLoss, 100.0);
+		c.withParameter(MetricType.avGain, -50.0);
+		c.withParameter(MetricType.freq, 15.0);
 		final StatisticsCompareSelector sel = new StatisticsCompareSelector(3, c);
 		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 8))));
 		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 4))));

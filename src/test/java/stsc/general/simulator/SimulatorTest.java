@@ -13,6 +13,7 @@ import stsc.common.Settings;
 import stsc.common.algorithms.EodExecution;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.testhelper.TestMetricsHelper;
 import stsc.general.trading.TradeProcessorInit;
@@ -46,8 +47,8 @@ public class SimulatorTest {
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorage, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
-		Assert.assertEquals(19, metrics.getIntegerMetric("period").intValue());
-		Assert.assertEquals(1.761237, metrics.getDoubleMetric("avGain"), Settings.doubleEpsilon);
+		Assert.assertEquals(19, metrics.getIntegerMetric(MetricType.period).intValue());
+		Assert.assertEquals(1.761237, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -61,8 +62,8 @@ public class SimulatorTest {
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorage, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
-		Assert.assertEquals(39, metrics.getIntegerMetric("period").intValue());
-		Assert.assertEquals(3.218612, metrics.getDoubleMetric("avGain"), Settings.doubleEpsilon);
+		Assert.assertEquals(39, metrics.getIntegerMetric(MetricType.period).intValue());
+		Assert.assertEquals(3.218612, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -76,8 +77,8 @@ public class SimulatorTest {
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorage, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
-		Assert.assertEquals(19, metrics.getIntegerMetric("period").intValue());
-		Assert.assertEquals(-1.761237, metrics.getDoubleMetric("avGain"), Settings.doubleEpsilon);
+		Assert.assertEquals(19, metrics.getIntegerMetric(MetricType.period).intValue());
+		Assert.assertEquals(-1.761237, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -117,7 +118,7 @@ public class SimulatorTest {
 		Assert.assertEquals(2, stockExecutions.size());
 		Assert.assertEquals("Alg1", stockExecutions.get(1));
 		final Simulator simulator = new Simulator(new SimulatorSettings(0, init));
-		Assert.assertEquals(0.0, simulator.getMetrics().getDoubleMetric("avGain"), Settings.doubleEpsilon);
+		Assert.assertEquals(0.0, simulator.getMetrics().getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 		final SignalsStorage ss = simulator.getSignalsStorage();
 		final String en = ExecutionsStorage.outNameFor("Alg1");
 		Assert.assertEquals(2515, ss.getIndexSize("aapl", en));

@@ -19,8 +19,8 @@ public class StatisticsCompareSelectorTest {
 	@Test
 	public void testStatisticsCompareSelector() throws ParseException {
 		final CostWeightedSumComparator c = new CostWeightedSumComparator();
-		c.withParameter("winProb", 5.0);
-		c.withParameter("avLoss", 14.0);
+		c.withParameter(MetricType.winProb, 5.0);
+		c.withParameter(MetricType.avLoss, 14.0);
 		final StatisticsCompareSelector sel = new StatisticsCompareSelector(3, c);
 
 		final TradingStrategy ts1 = TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("08-05-2013")));

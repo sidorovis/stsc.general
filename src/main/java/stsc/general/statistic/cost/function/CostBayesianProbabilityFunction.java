@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
@@ -22,14 +23,14 @@ import stsc.general.statistic.Metrics;
  */
 public class CostBayesianProbabilityFunction implements CostFunction {
 
-	private final List<Map<String, Double>> parameters = new ArrayList<Map<String, Double>>();
+	private final List<Map<MetricType, Double>> parameters = new ArrayList<Map<MetricType, Double>>();
 
 	public CostBayesianProbabilityFunction() {
 		super();
 	}
 
-	public Map<String, Double> addLayer() {
-		final Map<String, Double> result = new HashMap<String, Double>();
+	public Map<MetricType, Double> addLayer() {
+		final Map<MetricType, Double> result = new HashMap<MetricType, Double>();
 		parameters.add(result);
 		return result;
 	}
@@ -37,9 +38,9 @@ public class CostBayesianProbabilityFunction implements CostFunction {
 	@Override
 	public Double calculate(Metrics metrics) {
 		Double min = Double.MAX_VALUE;
-		for (Map<String, Double> layer : parameters) {
+		for (Map<MetricType, Double> layer : parameters) {
 			Double max = -Double.MAX_VALUE;
-			for (Entry<String, Double> e : layer.entrySet()) {
+			for (Entry<MetricType, Double> e : layer.entrySet()) {
 				final Double sValue = metrics.getMetric(e.getKey());
 				final Double pValue = sValue * e.getValue();
 				if (max < pValue)

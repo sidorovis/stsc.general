@@ -3,6 +3,7 @@ package stsc.general.statistic.cost.function;
 import java.util.ArrayList;
 import java.util.List;
 
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
@@ -15,7 +16,7 @@ import stsc.general.statistic.Metrics;
 
 public class CostLexicographicalFunction implements CostFunction {
 
-	final List<String> order = new ArrayList<>();
+	final List<MetricType> order = new ArrayList<>();
 	private final double multiplikator;
 
 	public CostLexicographicalFunction() {
@@ -27,14 +28,14 @@ public class CostLexicographicalFunction implements CostFunction {
 
 	}
 
-	public void addNextValue(String value) {
+	public void addNextValue(MetricType value) {
 		order.add(value);
 	}
 
 	@Override
 	public Double calculate(Metrics metrics) {
 		Double result = 0.0;
-		for (String metricName : order) {
+		for (MetricType metricName : order) {
 			final Double dMetric = metrics.getMetric(metricName);
 			if (dMetric != null) {
 				result = result * multiplikator + dMetric;

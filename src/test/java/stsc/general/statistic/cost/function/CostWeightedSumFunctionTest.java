@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.common.Settings;
+import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.testhelper.TestMetricsHelper;
 
@@ -16,22 +17,22 @@ public class CostWeightedSumFunctionTest {
 		final Metrics metrics = TestMetricsHelper.getMetrics();
 
 		final CostWeightedSumFunction function = new CostWeightedSumFunction();
-		final Double expectedResult = 1.0 * metrics.getDoubleMetric("avGain");
+		final Double expectedResult = 1.0 * metrics.getDoubleMetric(MetricType.avGain);
 		final Double result = function.calculate(metrics);
 		Assert.assertEquals(expectedResult, result, Settings.doubleEpsilon);
 
-		function.withParameter("period", 0.5);
-		final Double expectedResult2 = expectedResult + metrics.getIntegerMetric("period") * 0.5;
+		function.withParameter(MetricType.period, 0.5);
+		final Double expectedResult2 = expectedResult + metrics.getIntegerMetric(MetricType.period) * 0.5;
 		final Double result2 = function.calculate(metrics);
 		Assert.assertEquals(expectedResult2, result2, Settings.doubleEpsilon);
 
-		function.withParameter("kelly", 0.3);
-		final Double expectedResult3 = expectedResult2 + metrics.getDoubleMetric("kelly") * 0.3;
+		function.withParameter(MetricType.kelly, 0.3);
+		final Double expectedResult3 = expectedResult2 + metrics.getDoubleMetric(MetricType.kelly) * 0.3;
 		final Double result3 = function.calculate(metrics);
 		Assert.assertEquals(expectedResult3, result3, Settings.doubleEpsilon);
 
-		function.withParameter("maxLoss", 0.7);
-		final Double expectedResult4 = expectedResult3 + metrics.getDoubleMetric("maxLoss") * 0.7;
+		function.withParameter(MetricType.maxLoss, 0.7);
+		final Double expectedResult4 = expectedResult3 + metrics.getDoubleMetric(MetricType.maxLoss) * 0.7;
 		final Double result4 = function.calculate(metrics);
 		Assert.assertEquals(expectedResult4, result4, Settings.doubleEpsilon);
 	}

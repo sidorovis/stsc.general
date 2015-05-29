@@ -14,16 +14,16 @@ import stsc.general.strategy.selector.StatisticsWithDistanceSelector;
 public class StatisticsWithDistanceSelectorTest {
 
 	TradingStrategy getStrategy(Double avGain) {
-		final Map<String, Double> doubleList = new HashMap<>();
-		doubleList.put("avGain", avGain);
-		final Map<String, Integer> integerList = new HashMap<>();
+		final Map<MetricType, Double> doubleList = new HashMap<>();
+		doubleList.put(MetricType.avGain, avGain);
+		final Map<MetricType, Integer> integerList = new HashMap<>();
 		return TradingStrategy.createTest(new Metrics(doubleList, integerList));
 	}
 
 	@Test
 	public void testStatisticsWithDistanceSelector() {
 		final StatisticsWithDistanceSelector selector = new StatisticsWithDistanceSelector(3, 3, new CostWeightedSumFunction());
-		selector.withDistanceParameter("avGain", 0.8);
+		selector.withDistanceParameter(MetricType.avGain, 0.8);
 		selector.addStrategy(getStrategy(1.0));
 		selector.addStrategy(getStrategy(2.0));
 		selector.addStrategy(getStrategy(3.1));
@@ -53,7 +53,7 @@ public class StatisticsWithDistanceSelectorTest {
 	@Test
 	public void testStatisticsWithDistanceSelectorAposterioryTest() {
 		final StatisticsWithDistanceSelector selector = new StatisticsWithDistanceSelector(10, 4, new CostWeightedSumFunction());
-		selector.withDistanceParameter("avGain", 0.3);
+		selector.withDistanceParameter(MetricType.avGain, 0.3);
 		for (int i = 0; i < 100; ++i) {
 			selector.addStrategy(getStrategy(Double.valueOf(i)));
 		}
@@ -63,7 +63,7 @@ public class StatisticsWithDistanceSelectorTest {
 	@Test
 	public void testStatisticsWithDistanceSelectorDeleteClusterTest() {
 		final StatisticsWithDistanceSelector selector = new StatisticsWithDistanceSelector(1, 2, new CostWeightedSumFunction());
-		selector.withDistanceParameter("avGain", 1.0);
+		selector.withDistanceParameter(MetricType.avGain, 1.0);
 		selector.addStrategy(getStrategy(1.0));
 		Assert.assertEquals(1.0, selector.addStrategy(getStrategy(1.0)).get(0).getAvGain(), Settings.doubleEpsilon);
 		selector.addStrategy(getStrategy(1.1));
