@@ -68,8 +68,7 @@ public class ExecutionsLoaderTest {
 		throwTesthelper(new File("./test_data/executions_loader_tests/algs_bad_repeat.ini"), "algorithm AlgDefines already registered");
 		throwTesthelper(new File("./test_data/executions_loader_tests/algs_no_load_line.ini"),
 				"bad stock execution registration, no AlgDefine.loadLine property");
-		throwTesthelper(new File("./test_data/executions_loader_tests/algs_bad_load_line1.ini"),
-				"bad algorithm load line: INPUT( e = close");
+		throwTesthelper(new File("./test_data/executions_loader_tests/algs_bad_load_line1.ini"), "bad algorithm load line: INPUT( e = close");
 		throwTesthelper(new File("./test_data/executions_loader_tests/algs_bad_load_line2.ini"), "bad algorithm load line: INPUT)");
 		throwTesthelper(
 				new File("./test_data/executions_loader_tests/algs_bad_load_line3.ini"),
@@ -82,6 +81,16 @@ public class ExecutionsLoaderTest {
 		final ExecutionStarter starter = executions.initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 		Assert.assertEquals(4, starter.getStockAlgorithmsSize());
 		Assert.assertNotNull(starter.getEodAlgorithm("a1"));
+	}
+
+	@Test
+	public void testAlgorithmLoaderWithEodOnEod() throws Exception {
+		final ExecutionsStorage executions = helperForSuccessLoadTests(new File("./test_data/executions_loader_tests/eod_on_eod_dependency.ini"));
+		final ExecutionStarter starter = executions.initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
+		Assert.assertEquals(2, starter.getEodAlgorithmsSize());
+		Assert.assertNotNull(starter.getEodAlgorithm("a1"));
+		Assert.assertEquals(2, starter.getStockAlgorithmsSize());
+		Assert.assertTrue(starter.getStockAlgorithm(".Tma(.Input())", "aapl").isPresent());
 	}
 
 }
