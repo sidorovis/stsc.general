@@ -41,13 +41,27 @@ public class ExecutionsLoaderTest {
 
 	@Test
 	public void testAlgorithmLoaderWithSubExecutions() throws BadAlgorithmException {
-		final String config = "StockExecutions = smcTest, ssmm\n" + "smcTest.loadLine = .StockMarketCycle()\n"
-				+ "ssmm.loadLine = .Sma(N=50i, .StockMarketCycle() )\n";
+		final String config = "StockExecutions = smcTest, ssmm\n" + //
+				"smcTest.loadLine = .StockMarketCycle()\n" + //
+				"ssmm.loadLine = .Sma(N=50i, .StockMarketCycle() )\n"; //
 		final ExecutionsLoader el = new ExecutionsLoader(TestMetricsHelper.getPeriod(), config);
 		Assert.assertEquals(2, el.getExecutionsStorage().getStockExecutions().size());
 		Assert.assertEquals("smcTest", el.getExecutionsStorage().getStockExecutions().get(0).getExecutionName());
 		Assert.assertEquals("ssmm", el.getExecutionsStorage().getStockExecutions().get(1).getExecutionName());
 		Assert.assertEquals("smcTest", el.getExecutionsStorage().getStockExecutions().get(1).getSettings().getSubExecutions().get(0));
+		el.getExecutionsStorage().initialize(new BrokerImpl(new StockStorageMock()));
+	}
+
+	@Test
+	public void testAlgorithmLoaderWithEodSubExecutions() throws BadAlgorithmException {
+		final String config = "EodExecutions = sma1, sma2\n" + //
+				"sma1.loadLine = .Sma(.AdlAdl())\n" + //
+				"sma2.loadLine = .Sma(.AdlAdl(),N=5i)\n"; //
+		final ExecutionsLoader el = new ExecutionsLoader(TestMetricsHelper.getPeriod(), config);
+		Assert.assertEquals(3, el.getExecutionsStorage().getEodExecutions().size());
+		Assert.assertEquals(".AdlAdl()", el.getExecutionsStorage().getEodExecutions().get(0).getExecutionName());
+		Assert.assertEquals("sma1", el.getExecutionsStorage().getEodExecutions().get(1).getExecutionName());
+		Assert.assertEquals("sma2", el.getExecutionsStorage().getEodExecutions().get(2).getExecutionName());
 		el.getExecutionsStorage().initialize(new BrokerImpl(new StockStorageMock()));
 	}
 

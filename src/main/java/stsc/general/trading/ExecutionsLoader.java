@@ -221,8 +221,8 @@ final class ExecutionsLoader {
 				throw new BadAlgorithmException("bad eod algorithm execution registration, no " + executionName + ".loadLine property");
 			checkNewEodExecution(executionName);
 			final String generatedName = processEodExecution(executionName, loadLine);
-			namedStockExecutions.put(executionName, generatedName);
-			registeredStockExecutions.put(generatedName, executionName);
+			namedEodExecutions.put(executionName, generatedName);
+			registeredEodExecutions.put(generatedName, executionName);
 		}
 	}
 
@@ -325,7 +325,7 @@ final class ExecutionsLoader {
 				if (subEodName.isPresent()) {
 					final String subName = subEodName.get();
 					if (!namedEodExecutions.containsKey(subName)) {
-						registeredStockExecutions.put(subName, subName);
+						registeredEodExecutions.put(subName, subName);
 					}
 					algorithmSettings.addSubExecutionName(subName);
 				} else {
