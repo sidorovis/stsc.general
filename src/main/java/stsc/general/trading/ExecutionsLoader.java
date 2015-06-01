@@ -33,7 +33,7 @@ import stsc.storage.ExecutionsStorage;
 
 /**
  * Executions Loader - load (create set of instances for algorithms) executions
- * settings from text file / String.
+ * settings from text file / string.
  */
 final class ExecutionsLoader {
 
