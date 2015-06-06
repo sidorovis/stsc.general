@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.algorithms.AlgorithmSettingsImpl;
-import stsc.algorithms.eod.primitive.TestingEodAlgorithm;
-import stsc.algorithms.eod.primitive.TestingEodAlgorithmSignal;
+import stsc.algorithms.primitive.eod.TestingEodAlgorithm;
+import stsc.algorithms.primitive.eod.TestingEodAlgorithmSignal;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.EodExecution;
@@ -82,9 +82,9 @@ public final class TradeProcessorTest {
 		Assert.assertTrue(e1s6.getClass() == TestingEodAlgorithmSignal.class);
 		Assert.assertEquals("2013-11-04", ((TestingEodAlgorithmSignal) e1s6).dateRepresentation);
 
-		Assert.assertNull(signalsStorage.getEodSignal("e1", new LocalDate(2013, 11, 6).toDate()));
+		Assert.assertFalse(signalsStorage.getEodSignal("e1", new LocalDate(2013, 11, 6).toDate()).isPresent());
 		Assert.assertFalse(signalsStorage.getEodSignal("e2", new LocalDate(2013, 11, 3).toDate()).isPresent());
-		Assert.assertNull(signalsStorage.getEodSignal("e1", new LocalDate(2013, 11, 29).toDate()));
+		Assert.assertFalse(signalsStorage.getEodSignal("e1", new LocalDate(2013, 11, 29).toDate()).isPresent());
 	}
 
 	@Test
