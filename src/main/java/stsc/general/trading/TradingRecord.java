@@ -10,6 +10,15 @@ import org.joda.time.LocalDate;
 
 import stsc.common.Side;
 
+/**
+ * {@link TradingRecord} is a structure to store one buy or sell signal.<br/>
+ * <b>Buy</b> is a signal from algorithm to buy {@link #stockName} with amount
+ * of shares {@link #amount}.<br/>
+ * <b>Sell</b> is a signal from algorithm to sell {@link #stockName} with amount
+ * of shares {@link #amount}.<br/>
+ * This record is used by {@link TradingLog} to store trading information from
+ * several algorithms.
+ */
 public final class TradingRecord {
 	public enum TradingType {
 		BUY, SELL;
