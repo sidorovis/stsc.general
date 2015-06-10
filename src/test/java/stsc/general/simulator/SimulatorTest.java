@@ -102,7 +102,7 @@ public class SimulatorTest {
 	public void testOpenWhileSignalAlgorithmSimulator() throws Exception {
 		deleteFileIfExists("./test/statistics.csv");
 		Simulator.fromFile(new File("./test_data/simulator_tests/open_while_signal.ini")).getMetrics().print("./test/statistics.csv");
-		Assert.assertEquals(58768, new File("./test/statistics.csv").length());
+		Assert.assertEquals(59322, new File("./test/statistics.csv").length());
 		deleteFileIfExists("./test/statistics.csv");
 	}
 
