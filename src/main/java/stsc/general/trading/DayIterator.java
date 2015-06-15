@@ -8,6 +8,12 @@ import java.util.Optional;
 import stsc.common.Day;
 import stsc.common.stocks.Stock;
 
+/**
+ * This class provide possibility to store days and last (current) day. <br/>
+ * Such storage helps with looking for next day for stock. So we can easily
+ * check / return required day from storage without locating by O(1). (extremely
+ * fast).
+ */
 final class DayIterator {
 	private final Date from;
 

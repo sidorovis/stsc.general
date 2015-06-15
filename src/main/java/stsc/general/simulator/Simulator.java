@@ -19,6 +19,9 @@ import stsc.general.trading.TradeProcessorInit;
 
 import com.google.common.base.Joiner;
 
+/**
+ * This class includes all necessary procedures and data for trading simulation.
+ */
 public class Simulator {
 
 	static {

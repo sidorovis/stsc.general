@@ -7,6 +7,11 @@ import java.util.Map.Entry;
 
 import stsc.common.stocks.Stock;
 
+/**
+ * This class stores map of {@link DayIterator}'s. So you can easily keep all
+ * stocks with current processing date and receive them with {@link Iterator}
+ * based interface.
+ */
 final class DayIteratorStorage implements Iterable<Entry<String, DayIterator>> {
 
 	private HashMap<String, DayIterator> stocks = new HashMap<String, DayIterator>();

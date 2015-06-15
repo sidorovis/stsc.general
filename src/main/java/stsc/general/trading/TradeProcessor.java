@@ -17,10 +17,16 @@ import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.stocks.Stock;
 import stsc.common.storage.StockStorage;
+import stsc.common.trading.Broker;
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.StatisticsProcessor;
 import stsc.storage.ExecutionStarter;
 
+/**
+ * {@link TradeProcessor} is a container for {@link Broker},
+ * {@link ExecutionStarter}, {@link DayIteratorStorage} and algorithm of
+ * simulation.
+ */
 public class TradeProcessor {
 
 	static {
