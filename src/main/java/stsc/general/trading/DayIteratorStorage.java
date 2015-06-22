@@ -54,7 +54,7 @@ final class DayIteratorStorage implements Iterable<Entry<String, DayIterator>> {
 		if (stock != null) {
 			DayIterator stockIterator = new DayIterator(stock, from);
 			if (stockIterator.dataFound()) {
-				stocks.put(stock.getName(), stockIterator);
+				stocks.put(stock.getInstrumentName(), stockIterator);
 			}
 		}
 	}
