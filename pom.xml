@@ -37,6 +37,10 @@
      		<url>https://raw.github.com/sidorovis/stsc/stsc.algorithms.common/</url>
    		</repository>
 	    <repository>
+    	  	<id>stsc-algorithms-fundamental-analysis-mvn-repo</id>
+     		<url>https://raw.github.com/sidorovis/stsc/stsc.algorithms.fundamental.analysis/</url>
+   		</repository>
+	    <repository>
     	  	<id>stsc-algorithms-equity-test-mvn-repo</id>
      		<url>https://raw.github.com/sidorovis/stsc/stsc.algorithms.equity.test/</url>
    		</repository>
