@@ -3,6 +3,8 @@ package stsc.general.trading;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.List;
@@ -60,12 +62,12 @@ public class TradeProcessorInit implements Cloneable {
 		try {
 			Properties p = loadProperties(configPath.getAbsolutePath());
 			final Set<String> stockNamesSet = getStockSet(p);
-			final String filterDataFolderPath = p.getProperty("Data.filter.folder");
-			final StockStorage stockStorage = stockStorageFactory.createStockStorage(stockNamesSet, filterDataFolderPath);
+			final Path filterDataRelativePath = resolveAbsoluteDataPath(configPath.toPath().getParent(), p.getProperty("Data.filter.folder"));
+			final StockStorage stockStorage = stockStorageFactory.createStockStorage(stockNamesSet, filterDataRelativePath);
 
-			final File algsConfig = new File(p.getProperty("Executions.path", "./algs.ini"));
+			final Path algsConfig = resolveAbsoluteDataPath(configPath.toPath().getParent(), p.getProperty("Executions.path", "./algs.ini"));
 			final FromToPeriod period = new FromToPeriod(p);
-			final ExecutionsLoader executionsLoader = new ExecutionsLoader(algsConfig, period);
+			final ExecutionsLoader executionsLoader = new ExecutionsLoader(algsConfig.toFile(), period);
 			final ExecutionsStorage executionsStorage = executionsLoader.getExecutionsStorage();
 
 			this.broker = new BrokerImpl(stockStorage);
@@ -74,6 +76,14 @@ public class TradeProcessorInit implements Cloneable {
 		} catch (ClassNotFoundException | IOException | InterruptedException | ParseException e) {
 			throw new BadAlgorithmException(e.getMessage());
 		}
+	}
+
+	private Path resolveAbsoluteDataPath(final Path configPath, final String path) {
+		final Path absolutePath = FileSystems.getDefault().getPath(path);
+		if (!FileSystems.getDefault().getPath(path).isAbsolute()) {
+			return FileSystems.getDefault().getPath(configPath.toString()).resolve(path);
+		}
+		return absolutePath;
 	}
 
 	private TradeProcessorInit(final BrokerImpl broker, final FromToPeriod period, final ExecutionsStorage executionsStorage) {

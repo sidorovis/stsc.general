@@ -1,6 +1,8 @@
 package stsc.general.trading;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 import org.joda.time.LocalDate;
@@ -28,9 +30,12 @@ public final class TradeProcessorTest {
 
 	private final StockStorageFactory stockStorageFactory = new StockStorageFactory();
 
-	private void csvReaderHelper(StockStorage ss, String stockName) throws IOException, ParseException {
-		final String stocksFilePath = "./test_data/trade_processor_tests/";
-		ss.updateStock(UnitedFormatStock.readFromCsvFile(stockName, stocksFilePath + stockName + ".csv"));
+	final private File resourceToPath(final String resourcePath) throws URISyntaxException {
+		return new File(BrokerTest.class.getResource(resourcePath).toURI());
+	}
+
+	private void csvReaderHelper(final StockStorage ss, final String stockName) throws IOException, ParseException, URISyntaxException {
+		ss.updateStock(UnitedFormatStock.readFromCsvFile(stockName, resourceToPath("trade_processor_tests").toPath().resolve(stockName + ".csv").toString()));
 	}
 
 	@Test
