@@ -17,6 +17,8 @@ import stsc.storage.StockStorageFactory;
 
 public class TradeProcessorInit implements Cloneable {
 
+	private final StockStorageFactory stockStorageFactory = new StockStorageFactory();
+
 	private final BrokerImpl broker;
 	private final FromToPeriod period;
 	private final ExecutionsStorage executionsStorage;
@@ -40,12 +42,26 @@ public class TradeProcessorInit implements Cloneable {
 		this.executionsStorage = executionsLoader.getExecutionsStorage();
 	}
 
+	/**
+	 * This constructor requires several configuration files on file system:
+	 * <br/>
+	 * 1. <Data.filter.folder> folder where stock data is placed (for
+	 * StockStorage). <br/>
+	 * 2. <Executions.path> (./algs.ini by default). This settings should point
+	 * to the file with execution plan settings.
+	 * 
+	 * @param configPath
+	 *            - path to the configuration file
+	 * @throws BadAlgorithmException
+	 *             - this exception appears when algorithm settings are not
+	 *             appropriate for algorithm.
+	 */
 	public TradeProcessorInit(final File configPath) throws BadAlgorithmException {
 		try {
 			Properties p = loadProperties(configPath.getAbsolutePath());
 			final Set<String> stockNamesSet = getStockSet(p);
 			final String filterDataFolderPath = p.getProperty("Data.filter.folder");
-			final StockStorage stockStorage = StockStorageFactory.createStockStorage(stockNamesSet, filterDataFolderPath);
+			final StockStorage stockStorage = stockStorageFactory.createStockStorage(stockNamesSet, filterDataFolderPath);
 
 			final File algsConfig = new File(p.getProperty("Executions.path", "./algs.ini"));
 			final FromToPeriod period = new FromToPeriod(p);

@@ -3,10 +3,15 @@ package stsc.general.trading;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.text.ParseException;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import stsc.common.Day;
 import stsc.common.Side;
@@ -17,13 +22,20 @@ import stsc.storage.ThreadSafeStockStorage;
 
 public class BrokerTest {
 
-	private void csvReaderHelper(StockStorage ss, String stockName) throws IOException, ParseException {
-		ss.updateStock(UnitedFormatStock.readFromCsvFile(stockName, "./test_data/trade_processor_tests/" + stockName + ".csv"));
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
+
+	final private File resourceToPath(final String resourcePath) throws URISyntaxException {
+		return new File(BrokerTest.class.getResource(resourcePath).toURI());
+	}
+
+	private void csvReaderHelper(StockStorage ss, String stockName) throws IOException, ParseException, URISyntaxException {
+		ss.updateStock(UnitedFormatStock.readFromCsvFile(stockName, resourceToPath("trade_processor_tests").toPath().resolve(stockName + ".csv").toString()));
 	}
 
 	@Test
-	public void testBroker() throws IOException, ParseException {
-		StockStorage stockStorage = new ThreadSafeStockStorage();
+	public void testBroker() throws IOException, ParseException, URISyntaxException {
+		final StockStorage stockStorage = new ThreadSafeStockStorage();
 
 		csvReaderHelper(stockStorage, "aapl");
 		csvReaderHelper(stockStorage, "gfi");
@@ -45,17 +57,18 @@ public class BrokerTest {
 		Assert.assertEquals(500, broker.sell("aapl", Side.LONG, 1000));
 		Assert.assertEquals(1000, broker.sell("aapl", Side.SHORT, 1000));
 
-		try (FileWriter fw = new FileWriter("./test/out_file.txt")) {
+		final Path testPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
+		try (FileWriter fw = new FileWriter(testPath.resolve("out_file.txt").toFile())) {
 			broker.getTradingLog().printOut(fw);
 		}
 
-		File out = new File("./test/out_file.txt");
+		final File out = testPath.resolve("out_file.txt").toFile();
 		Assert.assertEquals(194, out.length());
 		out.delete();
 	}
 
 	@Test
-	public void testBrokerTradingCalculating() throws IOException, ParseException {
+	public void testBrokerTradingCalculating() throws IOException, ParseException, URISyntaxException {
 		StockStorage stockStorage = new ThreadSafeStockStorage();
 
 		csvReaderHelper(stockStorage, "aapl");

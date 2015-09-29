@@ -20,8 +20,7 @@ public class StrategyGridSearcherTest {
 
 	@Test
 	public void testStrategyGridSearcher() throws Exception {
-		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(),
-				Arrays.asList(new String[] { "open" }), "31-01-2000");
+		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(), Arrays.asList(new String[] { "open" }), "31-01-2000");
 		final StrategySelector selector = new StatisticsCompareSelector(6500, new MetricsDifferentComparator());
 		final StrategyGridSearcher searcher = new StrategyGridSearcher(list, selector, 20);
 		Assert.assertEquals(6144, searcher.waitAndGetSelector().getStrategies().size());
@@ -29,8 +28,7 @@ public class StrategyGridSearcherTest {
 
 	@Test
 	public void testStrategyGridSearcherStop() throws StrategySearcherException {
-		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(),
-				Arrays.asList(new String[] { "open" }), "31-01-2000");
+		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(), Arrays.asList(new String[] { "open" }), "31-01-2000");
 		final StrategySelector selector = new StatisticsCompareSelector(6500, new MetricsDifferentComparator());
 		final StrategyGridSearcher searcher = new StrategyGridSearcher(list, selector, 20);
 		searcher.stopSearch();
@@ -39,8 +37,7 @@ public class StrategyGridSearcherTest {
 
 	@Test
 	public void testStrategyGridSearcherProcessingListener() throws StrategySearcherException {
-		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(),
-				Arrays.asList(new String[] { "open" }), "31-01-2000");
+		final SimulatorSettingsGridList list = TestGridSimulatorSettings.getGridList(StockStorageMock.getStockStorage(), Arrays.asList(new String[] { "open" }), "31-01-2000");
 
 		final StrategySelector selector = new StatisticsCompareSelector(6500, new MetricsDifferentComparator());
 		final StrategyGridSearcher searcher = new StrategyGridSearcher(list, selector, 1);
