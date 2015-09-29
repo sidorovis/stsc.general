@@ -21,14 +21,10 @@ import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
 import stsc.storage.ExecutionStarter;
 import stsc.storage.ExecutionsStorage;
-import stsc.storage.StockStorageFactory;
 import stsc.storage.ThreadSafeStockStorage;
-
-import com.google.common.collect.Sets;
+import stsc.storage.mocks.StockStorageMock;
 
 public final class TradeProcessorTest {
-
-	private final StockStorageFactory stockStorageFactory = new StockStorageFactory();
 
 	final private File resourceToPath(final String resourcePath) throws URISyntaxException {
 		return new File(BrokerTest.class.getResource(resourcePath).toURI());
@@ -94,7 +90,7 @@ public final class TradeProcessorTest {
 
 	@Test
 	public void testTradeProcessorWithStatistics() throws Exception {
-		final StockStorage ss = stockStorageFactory.createStockStorage(Sets.newHashSet(new String[] { "aapl", "adm", "spy" }), "./test_data/");
+		final StockStorage ss = StockStorageMock.getStockStorage();
 		final FromToPeriod period = new FromToPeriod("02-09-2013", "06-11-2013");
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final AlgorithmSettings algoSettings = new AlgorithmSettingsImpl(period);
