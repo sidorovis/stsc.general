@@ -50,8 +50,8 @@ public class Simulator {
 		logger.info("Simulated finished");
 	}
 
-	public static Simulator fromConfig(final StockStorage stockStorage, final FromToPeriod period, final String config) throws BadAlgorithmException,
-			BadSignalException, Exception {
+	public static Simulator fromConfig(final StockStorage stockStorage, final FromToPeriod period, final String config)
+			throws BadAlgorithmException, BadSignalException, Exception {
 		return new Simulator(new SimulatorSettings(0, new TradeProcessorInit(stockStorage, period, config)));
 	}
 
