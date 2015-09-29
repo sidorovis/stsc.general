@@ -1,10 +1,15 @@
 package stsc.general.simulator;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import stsc.algorithms.AlgorithmSettingsImpl;
 import stsc.algorithms.primitive.eod.OneSideOpenAlgorithm;
@@ -20,25 +25,28 @@ import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionsStorage;
 import stsc.storage.StockStorageFactory;
 
-public class SimulatorTest {
+public final class SimulatorTest {
 
-	private void deleteFileIfExists(String fileName) {
-		File file = new File(fileName);
-		if (file.exists())
-			file.delete();
+	private final StockStorageFactory stockStorageFactory = new StockStorageFactory();
+
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
+
+	final private File resourceToPath(final String resourcePath) throws URISyntaxException {
+		return new File(SimulatorTest.class.getResource(resourcePath).toURI());
 	}
 
 	@Test
 	public void testOneSideSimulator() throws Exception {
-		deleteFileIfExists("./test/statistics.csv");
-		Simulator.fromFile(new File("./test_data/simulator_tests/one_side.ini")).getMetrics().print("./test/statistics.csv");
-		Assert.assertEquals(541, new File("./test/statistics.csv").length());
-		deleteFileIfExists("./test/statistics.csv");
+		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
+		Simulator.fromFile(resourceToPath("simulator_configs/one_side.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		Assert.assertEquals(541, testOutputPath.resolve("statistics.csv").toFile().length());
+		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
 
 	@Test
 	public void testLongSideOnAppl() throws Exception {
-		final StockStorage stockStorage = StockStorageFactory.createStockStorage("aapl", "./test_data/");
+		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-09-2002");
 		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl(period));
@@ -53,7 +61,7 @@ public class SimulatorTest {
 
 	@Test
 	public void testLongSideOnApplForTwoMonths() throws Exception {
-		final StockStorage stockStorage = StockStorageFactory.createStockStorage("aapl", "./test_data/");
+		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-10-2002");
 		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl(period));
@@ -68,7 +76,7 @@ public class SimulatorTest {
 
 	@Test
 	public void testShortSideOnAppl() throws Exception {
-		final StockStorage stockStorage = StockStorageFactory.createStockStorage("aapl", "./test_data/");
+		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-09-2002");
 		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl(period).setString("side", "short"));
@@ -83,37 +91,36 @@ public class SimulatorTest {
 
 	@Test
 	public void testSimpleSimulator() throws Exception {
-		deleteFileIfExists("./test/statistics.csv");
-		final Metrics metrics = Simulator.fromFile(new File("./test_data/simulator_tests/simple.ini")).getMetrics();
-		metrics.print("./test/statistics.csv");
+		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
+		final Metrics metrics = Simulator.fromFile(resourceToPath("simulator_configs/simple.ini")).getMetrics();
+		metrics.print(testOutputPath.resolve("statistics.csv").toString());
 		Assert.assertEquals(2096, metrics.getEquityCurveInMoney().size());
-		Assert.assertEquals(46132, new File("./test/statistics.csv").length());
-		deleteFileIfExists("./test/statistics.csv");
+		Assert.assertEquals(46132, testOutputPath.resolve("statistics.csv").toFile().length());
+		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
 
 	public void testPositiveNDaysSimulator() throws Exception {
-		deleteFileIfExists("./test/statistics.csv");
-		Simulator.fromFile(new File("./test_data/simulator_tests/ndays.ini")).getMetrics().print("./test/statistics.csv");
-		Assert.assertEquals(575 * 2 + 11165, new File("./test/statistics.csv").length());
-		deleteFileIfExists("./test/statistics.csv");
+		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
+		Simulator.fromFile(resourceToPath("simulator_configs/ndays.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		Assert.assertEquals(575 * 2 + 11165, testOutputPath.resolve("statistics.csv").toFile().length());
+		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
 
 	@Test
 	public void testOpenWhileSignalAlgorithmSimulator() throws Exception {
-		deleteFileIfExists("./test/statistics.csv");
-		Simulator.fromFile(new File("./test_data/simulator_tests/open_while_signal.ini")).getMetrics().print("./test/statistics.csv");
-		Assert.assertEquals(59322, new File("./test/statistics.csv").length());
-		deleteFileIfExists("./test/statistics.csv");
+		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
+		Simulator.fromFile(resourceToPath("simulator_configs/open_while_signal.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		Assert.assertEquals(59322, testOutputPath.resolve("statistics.csv").toFile().length());
+		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
 
 	@Test
 	public void testFromConfigOutAlgos() throws Exception {
-		deleteFileIfExists("./test/statistics.csv");
-		final StockStorage stoskStorage = StockStorageFactory.createStockStorage("aapl", "./test_data/");
+		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final FromToPeriod period = TestMetricsHelper.getPeriod();
 		final String config = "StockExecutions = Alg1\n" + "Alg1.loadLine = .Sma(n = 5, Input(e=close))";
 
-		final TradeProcessorInit init = new TradeProcessorInit(stoskStorage, period, config);
+		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period, config);
 		final List<String> stockExecutions = init.generateOutForStocks();
 		Assert.assertEquals(2, stockExecutions.size());
 		Assert.assertEquals("Alg1", stockExecutions.get(1));

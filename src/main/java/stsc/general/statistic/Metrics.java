@@ -107,8 +107,7 @@ public final class Metrics {
 		if (getDoubleMetric(MetricType.avWinAvLoss) == 0.0)
 			setDoubleMetric(MetricType.kelly, 0.0);
 		else
-			setDoubleMetric(MetricType.kelly, getDoubleMetric(MetricType.winProb) - (1 - getDoubleMetric(MetricType.winProb))
-					/ getDoubleMetric(MetricType.avWinAvLoss));
+			setDoubleMetric(MetricType.kelly, getDoubleMetric(MetricType.winProb) - (1 - getDoubleMetric(MetricType.winProb)) / getDoubleMetric(MetricType.avWinAvLoss));
 
 	}
 
@@ -178,6 +177,7 @@ public final class Metrics {
 		return integerMetrics;
 	}
 
+	// TODO move to {@link Path} class
 	public void print(final String outputFile) throws IOException, IllegalArgumentException, IllegalAccessException {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
 			print(writer);

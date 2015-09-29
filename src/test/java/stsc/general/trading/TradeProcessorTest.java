@@ -26,6 +26,8 @@ import com.google.common.collect.Sets;
 
 public final class TradeProcessorTest {
 
+	private final StockStorageFactory stockStorageFactory = new StockStorageFactory();
+
 	private void csvReaderHelper(StockStorage ss, String stockName) throws IOException, ParseException {
 		final String stocksFilePath = "./test_data/trade_processor_tests/";
 		ss.updateStock(UnitedFormatStock.readFromCsvFile(stockName, stocksFilePath + stockName + ".csv"));
@@ -68,13 +70,11 @@ public final class TradeProcessorTest {
 		Assert.assertTrue(e1s1.getClass() == TestingEodAlgorithmSignal.class);
 		Assert.assertEquals("2013-10-30", ((TestingEodAlgorithmSignal) e1s1).dateRepresentation);
 
-		final SerieSignal e1s2 = signalsStorage.getEodSignal("e1", new LocalDate(2013, 10, 31).toDate()).getContent(
-				TestingEodAlgorithmSignal.class);
+		final SerieSignal e1s2 = signalsStorage.getEodSignal("e1", new LocalDate(2013, 10, 31).toDate()).getContent(TestingEodAlgorithmSignal.class);
 		Assert.assertTrue(e1s2.getClass() == TestingEodAlgorithmSignal.class);
 		Assert.assertEquals("2013-10-31", ((TestingEodAlgorithmSignal) e1s2).dateRepresentation);
 
-		final SerieSignal e1s3 = signalsStorage.getEodSignal("e1", new LocalDate(2013, 11, 01).toDate()).getContent(
-				TestingEodAlgorithmSignal.class);
+		final SerieSignal e1s3 = signalsStorage.getEodSignal("e1", new LocalDate(2013, 11, 01).toDate()).getContent(TestingEodAlgorithmSignal.class);
 		Assert.assertTrue(e1s3.getClass() == TestingEodAlgorithmSignal.class);
 		Assert.assertEquals("2013-11-01", ((TestingEodAlgorithmSignal) e1s3).dateRepresentation);
 
@@ -89,8 +89,7 @@ public final class TradeProcessorTest {
 
 	@Test
 	public void testTradeProcessorWithStatistics() throws Exception {
-		final StockStorage ss = StockStorageFactory.createStockStorage(Sets.newHashSet(new String[] { "aapl", "adm", "spy" }),
-				"./test_data/");
+		final StockStorage ss = stockStorageFactory.createStockStorage(Sets.newHashSet(new String[] { "aapl", "adm", "spy" }), "./test_data/");
 		final FromToPeriod period = new FromToPeriod("02-09-2013", "06-11-2013");
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final AlgorithmSettings algoSettings = new AlgorithmSettingsImpl(period);
