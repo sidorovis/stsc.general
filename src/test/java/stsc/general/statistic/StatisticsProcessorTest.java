@@ -2,11 +2,15 @@ package stsc.general.statistic;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.Date;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import stsc.common.Day;
 import stsc.common.Settings;
@@ -18,6 +22,9 @@ import stsc.general.trading.TradingLog;
 import stsc.storage.mocks.StockStorageMock;
 
 public class StatisticsProcessorTest {
+
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
 
 	private Day gd(Stock s, int i) {
 		return s.getDays().get(i);
@@ -72,10 +79,8 @@ public class StatisticsProcessorTest {
 
 		final Metrics metrics = statistics.calculate();
 
-		final double aaplPriceDiff = aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision()) - aaplLongIn * aaplLongSize
-				* (1.0 + statistics.getCommision());
-		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn
-				* (1.0 + statistics.getCommision());
+		final double aaplPriceDiff = aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision()) - aaplLongIn * aaplLongSize * (1.0 + statistics.getCommision());
+		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn * (1.0 + statistics.getCommision());
 
 		Assert.assertEquals(3, metrics.getIntegerMetric(MetricType.period).intValue());
 		Assert.assertEquals(aaplPriceDiff, metrics.getDoubleMetric(MetricType.maxWin), Settings.doubleEpsilon);
@@ -128,10 +133,8 @@ public class StatisticsProcessorTest {
 
 		Metrics metrics = statistics.calculate();
 
-		final double aaplPriceDiff = aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision()) - aaplLongIn * aaplLongSize
-				* (1.0 + statistics.getCommision());
-		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn
-				* (1.0 + statistics.getCommision());
+		final double aaplPriceDiff = aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision()) - aaplLongIn * aaplLongSize * (1.0 + statistics.getCommision());
+		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn * (1.0 + statistics.getCommision());
 
 		Assert.assertEquals(3.0, metrics.getMetric(MetricType.period), Settings.doubleEpsilon);
 		Assert.assertEquals(aaplPriceDiff, metrics.getMetric(MetricType.maxLoss), Settings.doubleEpsilon);
@@ -280,11 +283,12 @@ public class StatisticsProcessorTest {
 
 	@Test
 	public void testStatisticsOnLastClose() throws IOException, IllegalArgumentException, IllegalAccessException {
+		final Path testPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
 		final Metrics stats = testTradingHelper(3, false);
-		stats.print("./test/out.csv");
+		stats.print(testPath.resolve("out.csv").toString());
 
 		Assert.assertEquals(0.0, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
-		final File file = new File("./test/out.csv");
+		final File file = testPath.resolve("out.csv").toFile();
 		Assert.assertTrue(file.exists());
 		Assert.assertEquals(456.0, file.length(), Settings.doubleEpsilon);
 		file.delete();

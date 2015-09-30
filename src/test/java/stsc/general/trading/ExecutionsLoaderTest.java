@@ -1,6 +1,7 @@
 package stsc.general.trading;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,9 +24,13 @@ public class ExecutionsLoaderTest {
 		return executions;
 	}
 
+	final private File resourceToPath(final String resourcePath) throws URISyntaxException {
+		return new File(BrokerTest.class.getResource(resourcePath).toURI());
+	}
+
 	@Test
 	public void testAlgorithmLoader() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(new File("./test_data/executions_loader_tests/algs_t1.ini"));
+		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/algs_t1.ini"));
 		final ExecutionStarter starter = executions.initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 		Assert.assertEquals(3, starter.getStockAlgorithmsSize());
 		Assert.assertEquals(0, starter.getEodAlgorithmsSize());
@@ -33,7 +38,7 @@ public class ExecutionsLoaderTest {
 
 	@Test
 	public void testSeveralAlgorithmLoader() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(new File("./test_data/executions_loader_tests/algs_t2.ini"));
+		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/algs_t2.ini"));
 		final ExecutionStarter starter = executions.initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 		Assert.assertEquals(5, starter.getStockAlgorithmsSize());
 		Assert.assertEquals(0, starter.getEodAlgorithmsSize());
@@ -79,19 +84,17 @@ public class ExecutionsLoaderTest {
 
 	@Test
 	public void testBadAlgoFiles() throws Exception {
-		throwTesthelper(new File("./test_data/executions_loader_tests/algs_bad_repeat.ini"), "algorithm AlgDefines already registered");
-		throwTesthelper(new File("./test_data/executions_loader_tests/algs_no_load_line.ini"),
-				"bad stock execution registration, no AlgDefine.loadLine property");
-		throwTesthelper(new File("./test_data/executions_loader_tests/algs_bad_load_line1.ini"), "bad algorithm load line: INPUT( e = close");
-		throwTesthelper(new File("./test_data/executions_loader_tests/algs_bad_load_line2.ini"), "bad algorithm load line: INPUT)");
-		throwTesthelper(
-				new File("./test_data/executions_loader_tests/algs_bad_load_line3.ini"),
+		throwTesthelper(resourceToPath("executions_loader_tests/algs_bad_repeat.ini"), "algorithm AlgDefines already registered");
+		throwTesthelper(resourceToPath("executions_loader_tests/algs_no_load_line.ini"), "bad stock execution registration, no AlgDefine.loadLine property");
+		throwTesthelper(resourceToPath("executions_loader_tests/algs_bad_load_line1.ini"), "bad algorithm load line: INPUT( e = close");
+		throwTesthelper(resourceToPath("executions_loader_tests/algs_bad_load_line2.ini"), "bad algorithm load line: INPUT)");
+		throwTesthelper(resourceToPath("executions_loader_tests/algs_bad_load_line3.ini"),
 				"Exception while loading algo: stsc.algorithms.indices.primitive.stock.Sma( AlgDefine ) , exception: stsc.common.algorithms.BadAlgorithmException: Sma algorithm should receive at least one sub algorithm");
 	}
 
 	@Test
 	public void testAlgorithmLoaderWithEod() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(new File("./test_data/executions_loader_tests/trade_algs.ini"));
+		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/trade_algs.ini"));
 		final ExecutionStarter starter = executions.initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 		Assert.assertEquals(4, starter.getStockAlgorithmsSize());
 		Assert.assertNotNull(starter.getEodAlgorithm("a1"));
@@ -99,7 +102,7 @@ public class ExecutionsLoaderTest {
 
 	@Test
 	public void testAlgorithmLoaderWithEodOnEod() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(new File("./test_data/executions_loader_tests/eod_on_eod_dependency.ini"));
+		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/eod_on_eod_dependency.ini"));
 		final ExecutionStarter starter = executions.initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 		Assert.assertEquals(2, starter.getEodAlgorithmsSize());
 		Assert.assertNotNull(starter.getEodAlgorithm("a1"));
