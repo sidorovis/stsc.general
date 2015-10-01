@@ -13,13 +13,12 @@ import java.util.Set;
 
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
+import stsc.common.stocks.UnitedFormatStock;
 import stsc.common.storage.StockStorage;
 import stsc.storage.ExecutionsStorage;
-import stsc.storage.StockStorageFactory;
+import stsc.storage.ThreadSafeStockStorage;
 
-public class TradeProcessorInit implements Cloneable {
-
-	private final StockStorageFactory stockStorageFactory = new StockStorageFactory();
+public final class TradeProcessorInit implements Cloneable {
 
 	private final BrokerImpl broker;
 	private final FromToPeriod period;
@@ -61,9 +60,8 @@ public class TradeProcessorInit implements Cloneable {
 	public TradeProcessorInit(final File configPath) throws BadAlgorithmException {
 		try {
 			Properties p = loadProperties(configPath.getAbsolutePath());
-			final Set<String> stockNamesSet = getStockSet(p);
 			final Path filterDataRelativePath = resolveAbsoluteDataPath(configPath.toPath().getParent(), p.getProperty("Data.filter.folder"));
-			final StockStorage stockStorage = stockStorageFactory.createStockStorage(stockNamesSet, filterDataRelativePath);
+			final StockStorage stockStorage = createStockStorageForStockSet(getStockSet(p), filterDataRelativePath);
 
 			final Path algsConfig = resolveAbsoluteDataPath(configPath.toPath().getParent(), p.getProperty("Executions.path", "./algs.ini"));
 			final FromToPeriod period = new FromToPeriod(p);
@@ -73,9 +71,18 @@ public class TradeProcessorInit implements Cloneable {
 			this.broker = new BrokerImpl(stockStorage);
 			this.period = period;
 			this.executionsStorage = executionsStorage;
-		} catch (ClassNotFoundException | IOException | InterruptedException | ParseException e) {
+		} catch (ClassNotFoundException | IOException | ParseException e) {
 			throw new BadAlgorithmException(e.getMessage());
 		}
+	}
+
+	private StockStorage createStockStorageForStockSet(final Set<String> stockNamesSet, final Path filterDataPath) throws IOException {
+		final StockStorage stockStorage = new ThreadSafeStockStorage();
+		for (String name : stockNamesSet) {
+			final String path = filterDataPath.resolve(name + UnitedFormatStock.EXTENSION).toString();
+			stockStorage.updateStock(UnitedFormatStock.readFromUniteFormatFile(path));
+		}
+		return stockStorage;
 	}
 
 	private Path resolveAbsoluteDataPath(final Path configPath, final String path) {

@@ -16,10 +16,10 @@ public class SimulatorSettingsGridCopyListTest {
 
 	@Test
 	public void testSimulatorSettingsGridCopyList() throws BadAlgorithmException, BadParameterException {
-		final StockStorage stockStorage = new StockStorageMock();
+		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 
-		final SimulatorSettingsGridFactory factory = TestGridSimulatorSettings.getSmallGridFactory(stockStorage,
-				Arrays.asList(new String[] { "open", "close", "high", "low" }), "31-01-2000");
+		final SimulatorSettingsGridFactory factory = TestGridSimulatorSettings.getSmallGridFactory(stockStorage, Arrays.asList(new String[] { "open", "close", "high", "low" }),
+				"31-01-2000");
 		final SimulatorSettingsGridList listExternal = factory.getCopyList();
 
 		int count = 0;

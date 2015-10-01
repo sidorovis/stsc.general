@@ -29,7 +29,7 @@ public class SimulatorSettingsGridIteratorTest {
 
 	@Test
 	public void testEmptySimulatorSettingsGridIterator() throws BadAlgorithmException, BadParameterException {
-		final StockStorage stockStorage = new StockStorageMock();
+		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 		final FromToPeriod period = TestMetricsHelper.getPeriod();
 
 		final SimulatorSettingsGridFactory ssFactory = new SimulatorSettingsGridFactory(stockStorage, period);
@@ -44,7 +44,7 @@ public class SimulatorSettingsGridIteratorTest {
 
 	@Test
 	public void testSimulatorSettingsGridIterator() throws BadAlgorithmException, BadParameterException {
-		final StockStorage stockStorage = new StockStorageMock();
+		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 
 		final SimulatorSettingsGridList settings = TestGridSimulatorSettings.getGridList();
 
@@ -67,7 +67,7 @@ public class SimulatorSettingsGridIteratorTest {
 
 	@Test
 	public void testSimulatorSettingsGridIteratorHashCode() throws BadParameterException, BadAlgorithmException {
-		final StockStorage stockStorage = new StockStorageMock();
+		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 		final SimulatorSettingsGridFactory ssFactory = new SimulatorSettingsGridFactory(stockStorage, TestMetricsHelper.getPeriod());
 		AlgorithmSettingsIteratorFactory f1 = new AlgorithmSettingsIteratorFactory(TestMetricsHelper.getPeriod());
 		f1.add(new MpInteger("a", 1, 3, 1));
