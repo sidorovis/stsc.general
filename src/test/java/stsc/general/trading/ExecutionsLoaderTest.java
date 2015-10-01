@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.common.storage.StockStorage;
 import stsc.general.testhelper.TestMetricsHelper;
 import stsc.storage.ExecutionStarter;
 import stsc.storage.ExecutionsStorage;
@@ -16,11 +15,10 @@ import stsc.storage.mocks.StockStorageMock;
 public class ExecutionsLoaderTest {
 
 	private ExecutionsStorage helperForSuccessLoadTests(File filename) throws Exception {
-		final StockStorage ss = new StockStorageMock();
 		final ExecutionsLoader el = new ExecutionsLoader(filename, TestMetricsHelper.getPeriod());
 		Assert.assertNotNull(el.getExecutionsStorage());
 		final ExecutionsStorage executions = el.getExecutionsStorage();
-		executions.initialize(new BrokerImpl(ss));
+		executions.initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 		return executions;
 	}
 
@@ -54,7 +52,7 @@ public class ExecutionsLoaderTest {
 		Assert.assertEquals("smcTest", el.getExecutionsStorage().getStockExecutions().get(0).getExecutionName());
 		Assert.assertEquals("ssmm", el.getExecutionsStorage().getStockExecutions().get(1).getExecutionName());
 		Assert.assertEquals("smcTest", el.getExecutionsStorage().getStockExecutions().get(1).getSettings().getSubExecutions().get(0));
-		el.getExecutionsStorage().initialize(new BrokerImpl(new StockStorageMock()));
+		el.getExecutionsStorage().initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 	}
 
 	@Test
@@ -67,14 +65,14 @@ public class ExecutionsLoaderTest {
 		Assert.assertEquals(".AdlAdl()", el.getExecutionsStorage().getEodExecutions().get(0).getExecutionName());
 		Assert.assertEquals("sma1", el.getExecutionsStorage().getEodExecutions().get(1).getExecutionName());
 		Assert.assertEquals("sma2", el.getExecutionsStorage().getEodExecutions().get(2).getExecutionName());
-		el.getExecutionsStorage().initialize(new BrokerImpl(new StockStorageMock()));
+		el.getExecutionsStorage().initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 	}
 
 	private void throwTesthelper(File file, String message) throws Exception {
 		boolean throwed = false;
 		try {
 			ExecutionsLoader loader = new ExecutionsLoader(file, TestMetricsHelper.getPeriod());
-			loader.getExecutionsStorage().initialize(new BrokerImpl(new StockStorageMock()));
+			loader.getExecutionsStorage().initialize(new BrokerImpl(StockStorageMock.getStockStorage()));
 		} catch (BadAlgorithmException e) {
 			Assert.assertEquals(message, e.getMessage());
 			throwed = true;

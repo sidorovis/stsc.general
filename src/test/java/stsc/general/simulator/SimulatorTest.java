@@ -23,11 +23,11 @@ import stsc.general.statistic.Metrics;
 import stsc.general.testhelper.TestMetricsHelper;
 import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionsStorage;
-import stsc.storage.StockStorageFactory;
+import stsc.storage.mocks.StockStorageMock;
 
 public final class SimulatorTest {
 
-	private final StockStorageFactory stockStorageFactory = new StockStorageFactory();
+	private final StockStorage stockStorageForAapl = StockStorageMock.getStockStorageFor("aapl");
 
 	@Rule
 	public TemporaryFolder testFolder = new TemporaryFolder();
@@ -46,13 +46,12 @@ public final class SimulatorTest {
 
 	@Test
 	public void testLongSideOnAppl() throws Exception {
-		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-09-2002");
 		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl(period));
 		executionsStorage.addEodExecution(execution);
 
-		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorage, period, executionsStorage);
+		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(19, metrics.getIntegerMetric(MetricType.period).intValue());
@@ -61,13 +60,12 @@ public final class SimulatorTest {
 
 	@Test
 	public void testLongSideOnApplForTwoMonths() throws Exception {
-		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-10-2002");
 		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl(period));
 		executionsStorage.addEodExecution(execution);
 
-		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorage, period, executionsStorage);
+		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(39, metrics.getIntegerMetric(MetricType.period).intValue());
@@ -76,13 +74,12 @@ public final class SimulatorTest {
 
 	@Test
 	public void testShortSideOnAppl() throws Exception {
-		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-09-2002");
 		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl(period).setString("side", "short"));
 		executionsStorage.addEodExecution(execution);
 
-		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorage, period, executionsStorage);
+		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(19, metrics.getIntegerMetric(MetricType.period).intValue());
@@ -116,11 +113,10 @@ public final class SimulatorTest {
 
 	@Test
 	public void testFromConfigOutAlgos() throws Exception {
-		final StockStorage stockStorage = stockStorageFactory.createStockStorage("aapl", resourceToPath("./").getAbsolutePath());
 		final FromToPeriod period = TestMetricsHelper.getPeriod();
 		final String config = "StockExecutions = Alg1\n" + "Alg1.loadLine = .Sma(n = 5, Input(e=close))";
 
-		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period, config);
+		final TradeProcessorInit init = new TradeProcessorInit(stockStorageForAapl, period, config);
 		final List<String> stockExecutions = init.generateOutForStocks();
 		Assert.assertEquals(2, stockExecutions.size());
 		Assert.assertEquals("Alg1", stockExecutions.get(1));
