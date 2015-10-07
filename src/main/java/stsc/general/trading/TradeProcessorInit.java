@@ -13,6 +13,7 @@ import java.util.Set;
 
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
+import stsc.common.stocks.UnitedFormatHelper;
 import stsc.common.stocks.UnitedFormatStock;
 import stsc.common.storage.StockStorage;
 import stsc.storage.ExecutionsStorage;
@@ -79,7 +80,7 @@ public final class TradeProcessorInit implements Cloneable {
 	private StockStorage createStockStorageForStockSet(final Set<String> stockNamesSet, final Path filterDataPath) throws IOException {
 		final StockStorage stockStorage = new ThreadSafeStockStorage();
 		for (String name : stockNamesSet) {
-			final String path = filterDataPath.resolve(name + UnitedFormatStock.EXTENSION).toString();
+			final String path = filterDataPath.resolve(UnitedFormatHelper.toFilesystem(name).getFilename()).toString();
 			stockStorage.updateStock(UnitedFormatStock.readFromUniteFormatFile(path));
 		}
 		return stockStorage;
