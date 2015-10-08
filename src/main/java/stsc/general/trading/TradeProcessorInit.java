@@ -3,6 +3,7 @@ package stsc.general.trading;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -80,8 +81,9 @@ public final class TradeProcessorInit implements Cloneable {
 	private StockStorage createStockStorageForStockSet(final Set<String> stockNamesSet, final Path filterDataPath) throws IOException {
 		final StockStorage stockStorage = new ThreadSafeStockStorage();
 		for (String name : stockNamesSet) {
-			final String path = filterDataPath.resolve(UnitedFormatHelper.toFilesystem(name).getFilename()).toString();
-			stockStorage.updateStock(UnitedFormatStock.readFromUniteFormatFile(path));
+			try (InputStream is = new FileInputStream(filterDataPath.resolve(UnitedFormatHelper.toFilesystem(name).getFilename()).toFile())) {
+				stockStorage.updateStock(UnitedFormatStock.readFromUniteFormatFile(is));
+			}
 		}
 		return stockStorage;
 	}
