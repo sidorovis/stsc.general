@@ -79,7 +79,7 @@ public final class TradeProcessorInit implements Cloneable {
 	}
 
 	private StockStorage createStockStorageForStockSet(final Set<String> stockNamesSet, final Path filterDataPath) throws IOException {
-		final StockStorage stockStorage = new ThreadSafeStockStorage();
+		final ThreadSafeStockStorage stockStorage = new ThreadSafeStockStorage();
 		for (String name : stockNamesSet) {
 			try (InputStream is = new FileInputStream(filterDataPath.resolve(UnitedFormatHelper.toFilesystem(name).getFilename()).toFile())) {
 				stockStorage.updateStock(UnitedFormatStock.readFromUniteFormatFile(is));
