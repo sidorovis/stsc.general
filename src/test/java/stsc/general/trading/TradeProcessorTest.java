@@ -30,13 +30,13 @@ public final class TradeProcessorTest {
 		return new File(BrokerTest.class.getResource(resourcePath).toURI());
 	}
 
-	private void csvReaderHelper(final StockStorage ss, final String stockName) throws IOException, ParseException, URISyntaxException {
+	private void csvReaderHelper(final ThreadSafeStockStorage ss, final String stockName) throws IOException, ParseException, URISyntaxException {
 		ss.updateStock(UnitedFormatStock.readFromCsvFile(stockName, resourceToPath("trade_processor_tests").toPath().resolve(stockName + ".csv").toString()));
 	}
 
 	@Test
 	public void testTradeProcessor() throws Exception {
-		final StockStorage ss = new ThreadSafeStockStorage();
+		final ThreadSafeStockStorage ss = new ThreadSafeStockStorage();
 
 		csvReaderHelper(ss, "aapl");
 		csvReaderHelper(ss, "gfi");

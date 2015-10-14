@@ -23,6 +23,8 @@ import stsc.storage.mocks.StockStorageMock;
 
 public class StatisticsProcessorTest {
 
+	private final static StockStorage stockStorage = StockStorageMock.getStockStorage();
+
 	@Rule
 	public TemporaryFolder testFolder = new TemporaryFolder();
 
@@ -36,7 +38,6 @@ public class StatisticsProcessorTest {
 
 	@Test
 	public void testStatistics() throws Exception {
-		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
 
@@ -90,7 +91,6 @@ public class StatisticsProcessorTest {
 
 	@Test
 	public void testReverseStatistics() throws Exception {
-		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
 
@@ -144,7 +144,6 @@ public class StatisticsProcessorTest {
 
 	@Test
 	public void testProbabilityStatistics() throws IOException {
-		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
 		final Stock spy = stockStorage.getStock("spy").get();
@@ -295,7 +294,6 @@ public class StatisticsProcessorTest {
 	}
 
 	private Metrics testTradingHelper(int daysCount, boolean closeOnExit) throws IOException {
-		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
 		final Stock spy = stockStorage.getStock("spy").get();
@@ -340,7 +338,7 @@ public class StatisticsProcessorTest {
 			statisticsProcessor.processEod();
 		}
 
-		Metrics metrics = statisticsProcessor.calculate();
+		final Metrics metrics = statisticsProcessor.calculate();
 		Assert.assertEquals(daysCount, metrics.getIntegerMetric(MetricType.period).intValue());
 
 		return metrics;

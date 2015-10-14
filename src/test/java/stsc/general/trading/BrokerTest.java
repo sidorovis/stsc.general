@@ -16,7 +16,6 @@ import org.junit.rules.TemporaryFolder;
 import stsc.common.Day;
 import stsc.common.Side;
 import stsc.common.stocks.UnitedFormatStock;
-import stsc.common.storage.StockStorage;
 import stsc.storage.ThreadSafeStockStorage;
 
 public class BrokerTest {
@@ -28,13 +27,13 @@ public class BrokerTest {
 		return new File(BrokerTest.class.getResource(resourcePath).toURI());
 	}
 
-	private void csvReaderHelper(StockStorage ss, String stockName) throws IOException, ParseException, URISyntaxException {
+	private void csvReaderHelper(ThreadSafeStockStorage ss, String stockName) throws IOException, ParseException, URISyntaxException {
 		ss.updateStock(UnitedFormatStock.readFromCsvFile(stockName, resourceToPath("trade_processor_tests").toPath().resolve(stockName + ".csv").toString()));
 	}
 
 	@Test
 	public void testBroker() throws IOException, ParseException, URISyntaxException {
-		final StockStorage stockStorage = new ThreadSafeStockStorage();
+		final ThreadSafeStockStorage stockStorage = new ThreadSafeStockStorage();
 
 		csvReaderHelper(stockStorage, "aapl");
 		csvReaderHelper(stockStorage, "gfi");
@@ -68,7 +67,7 @@ public class BrokerTest {
 
 	@Test
 	public void testBrokerTradingCalculating() throws IOException, ParseException, URISyntaxException {
-		StockStorage stockStorage = new ThreadSafeStockStorage();
+		final ThreadSafeStockStorage stockStorage = new ThreadSafeStockStorage();
 
 		csvReaderHelper(stockStorage, "aapl");
 		csvReaderHelper(stockStorage, "gfi");
