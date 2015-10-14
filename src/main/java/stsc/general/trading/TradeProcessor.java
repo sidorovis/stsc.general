@@ -43,7 +43,7 @@ public class TradeProcessor {
 	public TradeProcessor(final TradeProcessorInit settings) throws BadAlgorithmException {
 		this.broker = settings.getBrokerImpl();
 		this.stocks = new DayIteratorStorage(settings.getPeriod().getFrom());
-		this.executionsStarter = settings.getExecutionsStorage().initialize(broker);
+		this.executionsStarter = settings.getExecutionsStorage().initialize(broker, broker.getStockStorage().getStockNames());
 	}
 
 	public Metrics simulate(final FromToPeriod period, Set<String> stockNames) throws BadSignalException {

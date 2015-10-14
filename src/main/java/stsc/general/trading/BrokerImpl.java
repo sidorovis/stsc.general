@@ -46,12 +46,10 @@ public class BrokerImpl implements Broker {
 		this.stockStorage = stockStorage;
 	}
 
-	@Override
 	public void setToday(Date today) {
 		this.today = today;
 	}
 
-	@Override
 	public StockStorage getStockStorage() {
 		return stockStorage;
 	}

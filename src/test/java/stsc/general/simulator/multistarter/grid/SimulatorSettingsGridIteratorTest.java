@@ -27,9 +27,10 @@ import stsc.storage.mocks.StockStorageMock;
 
 public class SimulatorSettingsGridIteratorTest {
 
+	private static final StockStorage stockStorage = StockStorageMock.getStockStorage();
+
 	@Test
 	public void testEmptySimulatorSettingsGridIterator() throws BadAlgorithmException, BadParameterException {
-		final StockStorage stockStorage = StockStorageMock.getStockStorage();
 		final FromToPeriod period = TestMetricsHelper.getPeriod();
 
 		final SimulatorSettingsGridFactory ssFactory = new SimulatorSettingsGridFactory(stockStorage, period);
@@ -44,15 +45,12 @@ public class SimulatorSettingsGridIteratorTest {
 
 	@Test
 	public void testSimulatorSettingsGridIterator() throws BadAlgorithmException, BadParameterException {
-		final StockStorage stockStorage = StockStorageMock.getStockStorage();
-
 		final SimulatorSettingsGridList settings = TestGridSimulatorSettings.getGridList();
-
 		int count = 0;
 		for (SimulatorSettings simulatorSettings : settings) {
 			count += 1;
 			final ExecutionsStorage executionsStorage = simulatorSettings.getInit().getExecutionsStorage();
-			final ExecutionStarter executionStarter = executionsStorage.initialize(new BrokerImpl(stockStorage));
+			final ExecutionStarter executionStarter = executionsStorage.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 			final StockAlgorithm sain = executionStarter.getStockAlgorithm("in", "aapl").get();
 			final StockAlgorithm saema = executionStarter.getStockAlgorithm("ema", "aapl").get();
 			final StockAlgorithm salevel = executionStarter.getStockAlgorithm("level", "aapl").get();
