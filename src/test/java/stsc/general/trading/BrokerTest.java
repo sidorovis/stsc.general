@@ -17,7 +17,6 @@ import stsc.common.Day;
 import stsc.common.Side;
 import stsc.common.stocks.UnitedFormatStock;
 import stsc.common.storage.StockStorage;
-import stsc.common.trading.Broker;
 import stsc.storage.ThreadSafeStockStorage;
 
 public class BrokerTest {
@@ -76,7 +75,7 @@ public class BrokerTest {
 		csvReaderHelper(stockStorage, "oldstock");
 		csvReaderHelper(stockStorage, "no30");
 
-		Broker broker = new BrokerImpl(stockStorage);
+		final BrokerImpl broker = new BrokerImpl(stockStorage);
 		broker.setToday(Day.createDate("30-10-2013"));
 		Assert.assertEquals(200, broker.buy("aapl", Side.LONG, 200));
 		Assert.assertEquals(0, broker.buy("no30", Side.LONG, 200));
