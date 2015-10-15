@@ -29,7 +29,7 @@ public class Simulator {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/simulator.log4j2.xml");
 	}
 
-	private static Logger logger = LogManager.getLogger("Simulator");
+	private static Logger logger = LogManager.getLogger(Simulator.class.getName());
 
 	private final Metrics metrics;
 	private final SignalsStorage signalsStorage;
