@@ -15,6 +15,7 @@ import stsc.algorithms.AlgorithmSettingsImpl;
 import stsc.algorithms.primitive.eod.OneSideOpenAlgorithm;
 import stsc.common.FromToPeriod;
 import stsc.common.Settings;
+import stsc.common.algorithms.AlgorithmNameGenerator;
 import stsc.common.algorithms.EodExecution;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
@@ -123,7 +124,7 @@ public final class SimulatorTest {
 		final Simulator simulator = new Simulator(new SimulatorSettings(0, init));
 		Assert.assertEquals(0.0, simulator.getMetrics().getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 		final SignalsStorage ss = simulator.getSignalsStorage();
-		final String en = ExecutionsStorage.outNameFor("Alg1");
+		final String en = AlgorithmNameGenerator.generateOutAlgorithmName("Alg1");
 		Assert.assertEquals(2515, ss.getIndexSize("aapl", en));
 	}
 
