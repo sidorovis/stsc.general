@@ -27,7 +27,7 @@ import stsc.storage.ExecutionStarter;
  * {@link ExecutionStarter}, {@link DayIteratorStorage} and algorithm of
  * simulation.
  */
-public class TradeProcessor {
+public final class TradeProcessor {
 
 	static {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
