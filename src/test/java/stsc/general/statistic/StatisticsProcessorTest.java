@@ -23,7 +23,7 @@ import stsc.storage.mocks.StockStorageMock;
 
 public class StatisticsProcessorTest {
 
-	private final static StockStorage stockStorage = StockStorageMock.getStockStorage();
+	private static final StockStorage stockStorage = StockStorageMock.getStockStorage();
 
 	@Rule
 	public TemporaryFolder testFolder = new TemporaryFolder();
@@ -43,7 +43,6 @@ public class StatisticsProcessorTest {
 
 		int aaplIndex = aapl.findDayIndex(new LocalDate(2013, 9, 4).toDate());
 		int admIndex = adm.findDayIndex(new LocalDate(2013, 9, 4).toDate());
-
 		final TradingLog tradingLog = new BrokerImpl(stockStorage).getTradingLog();
 
 		final StatisticsProcessor statistics = new StatisticsProcessor(tradingLog);
@@ -80,16 +79,18 @@ public class StatisticsProcessorTest {
 
 		final Metrics metrics = statistics.calculate();
 
-		final double aaplPriceDiff = aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision()) - aaplLongIn * aaplLongSize * (1.0 + statistics.getCommision());
-		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn * (1.0 + statistics.getCommision());
+		final double aaplPriceDiff = aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision())
+				- aaplLongIn * aaplLongSize * (1.0 + statistics.getCommision());
+		final double admPriceDiff = -(admShortSize * admShortOut * (1.0 - statistics.getCommision())
+				- admShortSize * admShortIn * (1.0 + statistics.getCommision()));
 
 		Assert.assertEquals(3, metrics.getIntegerMetric(MetricType.period).intValue());
-		Assert.assertEquals(aaplPriceDiff, metrics.getDoubleMetric(MetricType.maxWin), Settings.doubleEpsilon);
-		Assert.assertEquals(admPriceDiff, metrics.getDoubleMetric(MetricType.maxLoss), Settings.doubleEpsilon);
-		Assert.assertEquals(aaplPriceDiff - admPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
+		Assert.assertEquals(Math.max(0.0, Math.max(aaplPriceDiff, admPriceDiff)), metrics.getDoubleMetric(MetricType.maxWin), Settings.doubleEpsilon);
+		Assert.assertEquals(-Math.min(0.0, Math.min(admPriceDiff, aaplPriceDiff)), metrics.getDoubleMetric(MetricType.maxLoss), Settings.doubleEpsilon);
+		Assert.assertEquals(aaplPriceDiff + admPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
 	}
 
-//	@Test
+	@Test
 	public void testReverseStatistics() throws Exception {
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
@@ -133,16 +134,18 @@ public class StatisticsProcessorTest {
 
 		Metrics metrics = statistics.calculate();
 
-		final double aaplPriceDiff = aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision()) - aaplLongIn * aaplLongSize * (1.0 + statistics.getCommision());
-		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision()) - admShortSize * admShortIn * (1.0 + statistics.getCommision());
+		final double aaplPriceDiff = -(aaplLongSize * aaplLongOut * (1.0 - statistics.getCommision())
+				- aaplLongIn * aaplLongSize * (1.0 + statistics.getCommision()));
+		final double admPriceDiff = admShortSize * admShortOut * (1.0 - statistics.getCommision())
+				- admShortSize * admShortIn * (1.0 + statistics.getCommision());
 
 		Assert.assertEquals(3.0, metrics.getMetric(MetricType.period), Settings.doubleEpsilon);
-		Assert.assertEquals(aaplPriceDiff, metrics.getMetric(MetricType.maxLoss), Settings.doubleEpsilon);
-		Assert.assertEquals(admPriceDiff, metrics.getMetric(MetricType.maxWin), Settings.doubleEpsilon);
-		Assert.assertEquals(admPriceDiff - aaplPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
+		Assert.assertEquals(Math.max(0.0, Math.max(aaplPriceDiff, admPriceDiff)), metrics.getDoubleMetric(MetricType.maxWin), Settings.doubleEpsilon);
+		Assert.assertEquals(-Math.min(0.0, Math.min(admPriceDiff, aaplPriceDiff)), metrics.getDoubleMetric(MetricType.maxLoss), Settings.doubleEpsilon);
+		Assert.assertEquals(aaplPriceDiff + admPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
 	}
 
-//	@Test
+	// @Test
 	public void testProbabilityStatistics() throws IOException {
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
@@ -224,7 +227,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(0.340734, metrics.getMetric(MetricType.kelly), Settings.doubleEpsilon);
 	}
 
-//	@Test
+	// @Test
 	public void testEquityCurveOn518DaysStatistics() throws IOException {
 		final Metrics stats = testTradingHelper(518, true);
 
@@ -252,7 +255,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(48.826069, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 
-//	@Test
+	// @Test
 	public void testEquityCurveOn251DaysStatistics() throws IOException {
 		final Metrics stats = testTradingHelper(251, true);
 
@@ -280,7 +283,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(36.346692, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 
-//	@Test
+	// @Test
 	public void testStatisticsOnLastClose() throws IOException, IllegalArgumentException, IllegalAccessException {
 		final Path testPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
 		final Metrics stats = testTradingHelper(3, false);
