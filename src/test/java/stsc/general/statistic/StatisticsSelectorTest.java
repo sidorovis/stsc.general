@@ -2,6 +2,7 @@ package stsc.general.statistic;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class StatisticsSelectorTest {
 		values.add(compareMethod.calculate(TestMetricsHelper.getMetrics(100, 200)));
 		values.add(compareMethod.calculate(TestMetricsHelper.getMetrics(200, 250)));
 		values.add(compareMethod.calculate(TestMetricsHelper.getMetrics(150, 210)));
+		Collections.sort(values, Collections.reverseOrder());
 
 		Iterator<SimulatorSettings> testSettings = TestGridSimulatorSettings.getGridList().iterator();
 
@@ -37,7 +39,7 @@ public class StatisticsSelectorTest {
 
 		final List<TradingStrategy> strategies = statisticsSelector.getStrategies();
 		Assert.assertEquals(2, strategies.size());
-		Assert.assertEquals(compareMethod.calculate(strategies.get(0).getMetrics()), values.get(0));
-		Assert.assertEquals(compareMethod.calculate(strategies.get(1).getMetrics()), values.get(2));
+		Assert.assertEquals(values.get(0), compareMethod.calculate(strategies.get(0).getMetrics()));
+		Assert.assertEquals(values.get(1), compareMethod.calculate(strategies.get(1).getMetrics()));
 	}
 }

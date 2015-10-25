@@ -10,6 +10,7 @@ import stsc.common.Settings;
 import stsc.general.simulator.multistarter.StrategySearcher.IndicatorProgressListener;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.statistic.MetricType;
+import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.selector.StatisticsByCostSelector;
@@ -23,8 +24,9 @@ public class StrategyGeneticSearcherTest {
 		final StrategyGeneticSearcher sgs = createSearcher();
 		final StrategySelector selector = sgs.waitAndGetSelector();
 		Assert.assertEquals(112, selector.getStrategies().size());
-		Assert.assertEquals(100.0, selector.getStrategies().get(0).getMetrics().getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
-		Assert.assertEquals(0.666666, selector.getStrategies().get(0).getMetrics().getDoubleMetric(MetricType.winProb), Settings.doubleEpsilon);
+		final Metrics metrics = selector.getStrategies().get(0).getMetrics();
+		Assert.assertEquals(100.0, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.5, metrics.getDoubleMetric(MetricType.winProb), Settings.doubleEpsilon);
 	}
 
 	@Test

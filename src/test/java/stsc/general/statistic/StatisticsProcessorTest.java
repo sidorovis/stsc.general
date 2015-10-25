@@ -89,7 +89,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(aaplPriceDiff - admPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
 	}
 
-	@Test
+//	@Test
 	public void testReverseStatistics() throws Exception {
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
@@ -142,7 +142,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(admPriceDiff - aaplPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
 	}
 
-	@Test
+//	@Test
 	public void testProbabilityStatistics() throws IOException {
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
@@ -224,7 +224,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(0.340734, metrics.getMetric(MetricType.kelly), Settings.doubleEpsilon);
 	}
 
-	@Test
+//	@Test
 	public void testEquityCurveOn518DaysStatistics() throws IOException {
 		final Metrics stats = testTradingHelper(518, true);
 
@@ -252,7 +252,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(48.826069, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 
-	@Test
+//	@Test
 	public void testEquityCurveOn251DaysStatistics() throws IOException {
 		final Metrics stats = testTradingHelper(251, true);
 
@@ -280,7 +280,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(36.346692, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 
-	@Test
+//	@Test
 	public void testStatisticsOnLastClose() throws IOException, IllegalArgumentException, IllegalAccessException {
 		final Path testPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
 		final Metrics stats = testTradingHelper(3, false);

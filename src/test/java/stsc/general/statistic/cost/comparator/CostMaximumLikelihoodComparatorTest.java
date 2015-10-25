@@ -1,11 +1,15 @@
 package stsc.general.statistic.cost.comparator;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.common.collect.Ordering;
 
 import stsc.common.Day;
 import stsc.common.Settings;
@@ -41,17 +45,25 @@ public class CostMaximumLikelihoodComparatorTest {
 		final CostMaximumLikelihoodComparator c = new CostMaximumLikelihoodComparator();
 		final StatisticsCompareSelector sel = new StatisticsCompareSelector(3, c);
 
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("08-05-2013"))));
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("04-05-2013"))));
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("16-05-2013"))));
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("12-05-2013"))));
+		final ArrayList<TradingStrategy> tradingStrategies = new ArrayList<>();
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("08-05-2013"))));
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("04-05-2013"))));
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("16-05-2013"))));
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, Day.createDate("12-05-2013"))));
+
+		final ArrayList<Double> avGains = new ArrayList<>();
+		for (TradingStrategy ts : tradingStrategies) {
+			sel.addStrategy(ts);
+			avGains.add(ts.getAvGain());
+		}
+		avGains.sort(Collections.reverseOrder());
 
 		Assert.assertEquals(3, sel.getStrategies().size());
 		final Iterator<TradingStrategy> si = sel.getStrategies().iterator();
 
-		Assert.assertEquals(1.582514, si.next().getAvGain(), Settings.doubleEpsilon);
-		Assert.assertEquals(0.358820, si.next().getAvGain(), Settings.doubleEpsilon);
-		Assert.assertEquals(-0.201986, si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(0), si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(1), si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(2), si.next().getAvGain(), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -62,15 +74,23 @@ public class CostMaximumLikelihoodComparatorTest {
 		c.withParameter(MetricType.freq, 15.0);
 		final StatisticsCompareSelector sel = new StatisticsCompareSelector(3, c);
 
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 8))));
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 4))));
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 16))));
-		sel.addStrategy(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 12))));
+		final ArrayList<TradingStrategy> tradingStrategies = new ArrayList<>();
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 8))));
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 4))));
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 16))));
+		tradingStrategies.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 12))));
+
+		final ArrayList<Double> avGains = new ArrayList<>();
+		for (TradingStrategy ts : tradingStrategies) {
+			sel.addStrategy(ts);
+			avGains.add(ts.getAvGain());
+		}
+		avGains.sort(Ordering.natural());
 
 		Assert.assertEquals(3, sel.getStrategies().size());
 		final Iterator<TradingStrategy> si = sel.getStrategies().iterator();
-		Assert.assertEquals(-0.201986, si.next().getAvGain(), Settings.doubleEpsilon);
-		Assert.assertEquals(0.358820, si.next().getAvGain(), Settings.doubleEpsilon);
-		Assert.assertEquals(1.582514, si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(1), si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(2), si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(3), si.next().getAvGain(), Settings.doubleEpsilon);
 	}
 }
