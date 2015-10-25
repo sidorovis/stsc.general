@@ -2,7 +2,9 @@ package stsc.general.statistic;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -31,14 +33,17 @@ public class StatisticsCompareSelectorTest {
 		tses.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 16))));
 		tses.add(TradingStrategy.createTest(TestMetricsHelper.getMetrics(50, 150, new LocalDate(2013, 5, 12))));
 
+		final List<Double> avGains = new ArrayList<Double>();
 		for (TradingStrategy ts : tses) {
 			sel.addStrategy(ts);
+			avGains.add(ts.getMetrics().getDoubleMetric(MetricType.avGain));
 		}
+		avGains.sort(Collections.reverseOrder());
 
 		Assert.assertEquals(3, sel.getStrategies().size());
 		final Iterator<TradingStrategy> si = sel.getStrategies().iterator();
-		Assert.assertEquals(0.358820, si.next().getAvGain(), Settings.doubleEpsilon);
-		Assert.assertEquals(1.582514, si.next().getAvGain(), Settings.doubleEpsilon);
-		Assert.assertEquals(-0.201986, si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(1), si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(0), si.next().getAvGain(), Settings.doubleEpsilon);
+		Assert.assertEquals(avGains.get(2), si.next().getAvGain(), Settings.doubleEpsilon);
 	}
 }
