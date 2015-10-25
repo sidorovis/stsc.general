@@ -145,7 +145,7 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(aaplPriceDiff + admPriceDiff, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
 	}
 
-	// @Test
+	@Test
 	public void testProbabilityStatistics() throws IOException {
 		final Stock aapl = stockStorage.getStock("aapl").get();
 		final Stock adm = stockStorage.getStock("adm").get();
@@ -163,7 +163,7 @@ public class StatisticsProcessorTest {
 		statistics.setStockDay("adm", gd(adm, ++admIndex));
 		statistics.setStockDay("spy", gd(spy, ++spyIndex));
 
-		tradingLog.addBuyRecord(gdd(aapl, aaplIndex), "aapl", Side.SHORT, 100);
+		tradingLog.addBuyRecord(gdd(aapl, aaplIndex), "aapl", Side.LONG, 100);
 		tradingLog.addBuyRecord(gdd(adm, admIndex), "adm", Side.LONG, 200);
 		tradingLog.addBuyRecord(gdd(spy, spyIndex), "spy", Side.SHORT, 30);
 
@@ -172,13 +172,13 @@ public class StatisticsProcessorTest {
 		statistics.setStockDay("aapl", gd(aapl, ++aaplIndex));
 		statistics.setStockDay("adm", gd(adm, ++admIndex));
 
-		final double aaplShortIn1 = gd(aapl, aaplIndex).getPrices().getOpen();
+		final double aaplLongIn1 = gd(aapl, aaplIndex).getPrices().getOpen();
 		final double admLongIn1 = gd(adm, admIndex).getPrices().getOpen();
 		final double spyShortIn = gd(spy, spyIndex).getPrices().getOpen();
 
 		spyIndex++;
 
-		tradingLog.addBuyRecord(gdd(aapl, aaplIndex), "aapl", Side.SHORT, 100);
+		tradingLog.addBuyRecord(gdd(aapl, aaplIndex), "aapl", Side.LONG, 100);
 		tradingLog.addBuyRecord(gdd(adm, admIndex), "adm", Side.LONG, 500);
 
 		statistics.processEod();
@@ -189,42 +189,42 @@ public class StatisticsProcessorTest {
 
 		statistics.processEod();
 
-		final double aaplShortIn2 = gd(aapl, aaplIndex).getPrices().getOpen();
+		final double aaplLongIn2 = gd(aapl, aaplIndex).getPrices().getOpen();
 		final double admLongIn2 = gd(adm, admIndex).getPrices().getOpen();
 
-		tradingLog.addSellRecord(gdd(aapl, aaplIndex), "aapl", Side.SHORT, 200);
+		tradingLog.addSellRecord(gdd(aapl, aaplIndex), "aapl", Side.LONG, 200);
 		tradingLog.addSellRecord(gdd(adm, admIndex), "adm", Side.LONG, 700);
 		tradingLog.addSellRecord(gdd(spy, spyIndex), "spy", Side.SHORT, 30);
 
 		statistics.processEod();
 
-		final double aaplShortOut = gd(aapl, aaplIndex).getPrices().getOpen();
+		final double aaplLongOut = gd(aapl, aaplIndex).getPrices().getOpen();
 		final double admLongOut = gd(adm, admIndex).getPrices().getOpen();
 		final double spyShortOut = gd(spy, spyIndex).getPrices().getOpen();
 
 		final Metrics metrics = statistics.calculate();
 		final double c = statistics.getCommision();
 
-		final double aaplDiff = -aaplShortOut * 200 * (1 - c) + (aaplShortIn2 + aaplShortIn1) * 100 * (1 + c);
+		final double aaplDiff = aaplLongOut * 200 * (1 - c) - (aaplLongIn2 + aaplLongIn1) * 100 * (1 + c);
 		final double admDiff = admLongOut * 700 * (1 - c) - admLongIn1 * 200 * (1 + c) - admLongIn2 * 500 * (1 + c);
 		final double spyDiff = -spyShortOut * 30 * (1 - c) + spyShortIn * 30 * (1 + c);
 
 		final double lastResult = aaplDiff + admDiff + spyDiff;
 		Assert.assertEquals(4.0, metrics.getMetric(MetricType.period), Settings.doubleEpsilon);
 		Assert.assertEquals(lastResult, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
-		Assert.assertEquals(0.042828, metrics.getMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.168527, metrics.getMetric(MetricType.avGain), Settings.doubleEpsilon);
 
 		Assert.assertEquals(0.75, metrics.getMetric(MetricType.freq), Settings.doubleEpsilon);
-		Assert.assertEquals(0.666666, metrics.getMetric(MetricType.winProb), Settings.doubleEpsilon);
+		Assert.assertEquals(0.333333, metrics.getMetric(MetricType.winProb), Settings.doubleEpsilon);
 
-		Assert.assertEquals(54.473079, metrics.getMetric(MetricType.avWin), Settings.doubleEpsilon);
-		Assert.assertEquals(53.263523, metrics.getMetric(MetricType.avLoss), Settings.doubleEpsilon);
+		Assert.assertEquals(62.450142, metrics.getMetric(MetricType.avWin), Settings.doubleEpsilon);
+		Assert.assertEquals(67.199905, metrics.getMetric(MetricType.avLoss), Settings.doubleEpsilon);
 
-		Assert.assertEquals(81.913320, aaplDiff, Settings.doubleEpsilon);
-		Assert.assertEquals(-spyDiff, metrics.getMetric(MetricType.maxLoss), Settings.doubleEpsilon);
+		Assert.assertEquals(62.450142, aaplDiff, Settings.doubleEpsilon);
+		Assert.assertEquals(-admDiff, metrics.getMetric(MetricType.maxLoss), Settings.doubleEpsilon);
 
-		Assert.assertEquals(1.022708, metrics.getMetric(MetricType.avWinAvLoss), Settings.doubleEpsilon);
-		Assert.assertEquals(0.340734, metrics.getMetric(MetricType.kelly), Settings.doubleEpsilon);
+		Assert.assertEquals(0.929318, metrics.getMetric(MetricType.avWinAvLoss), Settings.doubleEpsilon);
+		Assert.assertEquals(-0.384037, metrics.getMetric(MetricType.kelly), Settings.doubleEpsilon);
 	}
 
 	// @Test
