@@ -10,7 +10,7 @@ import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpString;
 import stsc.general.simulator.multistarter.SimulatorSettingsFactory;
 
-public final class SimulatorSettingsGeneticFactory extends SimulatorSettingsFactory<SimulatorSettingsGeneticList> {
+public final class SimulatorSettingsGeneticFactory extends SimulatorSettingsFactory<SimulatorSettingsGeneticListImpl> {
 
 	private List<GeneticExecutionInitializer> stockInitializers = new ArrayList<>();
 	private List<GeneticExecutionInitializer> eodInitializers = new ArrayList<>();
@@ -80,8 +80,8 @@ public final class SimulatorSettingsGeneticFactory extends SimulatorSettingsFact
 	}
 
 	@Override
-	public SimulatorSettingsGeneticList getList() {
-		final SimulatorSettingsGeneticList result = new SimulatorSettingsGeneticList(getStockStorage(), getPeriod(), stockInitializers, eodInitializers);
+	public SimulatorSettingsGeneticListImpl getList() {
+		final SimulatorSettingsGeneticListImpl result = new SimulatorSettingsGeneticListImpl(getStockStorage(), getPeriod(), stockInitializers, eodInitializers);
 		stockInitializers = new ArrayList<>();
 		eodInitializers = new ArrayList<>();
 		return result;

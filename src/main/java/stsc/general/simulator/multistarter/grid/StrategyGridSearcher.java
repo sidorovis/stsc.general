@@ -72,8 +72,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 		private final StrategySelector selector;
 		private boolean stoppedByRequest;
 
-		public StatisticsCalculationThread(double fullSize, AtomicDouble processedSize, final IteratorProxy iterator,
-				final StrategySelector selector) {
+		public StatisticsCalculationThread(double fullSize, AtomicDouble processedSize, final IteratorProxy iterator, final StrategySelector selector) {
 			this.fullSize = fullSize;
 			this.processedSize = processedSize;
 			this.iterator = iterator;
@@ -86,9 +85,9 @@ public class StrategyGridSearcher implements StrategySearcher {
 			Optional<SimulatorSettings> settings = getNextSimulatorSettings();
 
 			while (settings.isPresent()) {
-				Simulator simulator;
 				try {
-					simulator = new SimulatorImpl(settings.get());
+					final Simulator simulator = new SimulatorImpl();
+					simulator.simulateMarketTrading(settings.get());
 					final TradingStrategy strategy = new TradingStrategy(settings.get(), simulator.getMetrics());
 					selector.addStrategy(strategy);
 					settings = getNextSimulatorSettings();

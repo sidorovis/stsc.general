@@ -45,10 +45,6 @@ public class SimulatorSettingsGridList implements Iterable<SimulatorSettings> {
 		return period;
 	}
 
-	public boolean isFinished() {
-		return finished;
-	}
-
 	public long size() {
 		if (stockInitializers.isEmpty() && eodInitializers.isEmpty())
 			return 0;

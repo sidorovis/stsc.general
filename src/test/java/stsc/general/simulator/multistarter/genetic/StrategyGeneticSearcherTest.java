@@ -65,14 +65,20 @@ public class StrategyGeneticSearcherTest {
 
 		final StrategySelector selector = new StatisticsByCostSelector(112, costFunction, new MetricsSameComparator());
 
-		final SimulatorSettingsGeneticList geneticList = TestGeneticSimulatorSettings.getGeneticList();
+		final SimulatorSettingsGeneticListImpl geneticList = TestGeneticSimulatorSettings.getGeneticList();
 		final int maxGeneticStepsAmount = 104;
 		final int populationSize = 124;
 
-		final StrategyGeneticSearcherBuilder builder = StrategyGeneticSearcher.getBuilder().withPopulationCostFunction(costFunction)
-				.withStrategySelector(selector).withSimulatorSettings(geneticList).withPopulationSize(populationSize)
-				.withMaxPopulationsAmount(maxGeneticStepsAmount).withThreadAmount(8).withBestPart(0.94).withCrossoverPart(0.86);
+		final StrategyGeneticSearcherBuilder builder = StrategyGeneticSearcher.getBuilder(). //
+				withPopulationCostFunction(costFunction). //
+				withStrategySelector(selector). //
+				withSimulatorSettings(geneticList). //
+				withPopulationSize(populationSize). //
+				withMaxPopulationsAmount(maxGeneticStepsAmount). //
+				withThreadAmount(8). //
+				withBestPart(0.94). //
+				withCrossoverPart(0.86);
 
-		return new StrategyGeneticSearcher(builder);
+		return builder.build();
 	}
 }

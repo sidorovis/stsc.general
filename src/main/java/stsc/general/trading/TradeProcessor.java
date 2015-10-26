@@ -23,9 +23,7 @@ import stsc.general.statistic.StatisticsProcessor;
 import stsc.storage.ExecutionStarter;
 
 /**
- * {@link TradeProcessor} is a container for {@link Broker},
- * {@link ExecutionStarter}, {@link DayIteratorStorage} and algorithm of
- * simulation.
+ * {@link TradeProcessor} is a container for {@link Broker}, {@link ExecutionStarter}, {@link DayIteratorStorage} and algorithm of simulation.
  */
 public final class TradeProcessor {
 
@@ -46,7 +44,7 @@ public final class TradeProcessor {
 		this.executionsStarter = settings.getExecutionsStorage().initialize(broker, broker.getStockStorage().getStockNames());
 	}
 
-	public Metrics simulate(final FromToPeriod period, Set<String> stockNames) throws BadSignalException {
+	public Metrics simulate(final FromToPeriod period, Optional<Set<String>> stockNames) throws BadSignalException {
 		collectStocksFromStorage(stockNames);
 		return startSimulationProcess(period).calculate();
 	}
@@ -92,12 +90,16 @@ public final class TradeProcessor {
 		return statisticsProcessor;
 	}
 
-	private void collectStocksFromStorage(final Set<String> stockNames) {
-		final StockStorage stockStorage = broker.getStockStorage();
-		for (String i : stockStorage.getStockNames()) {
-			if (stockNames.contains(i)) {
-				addStock(stockStorage.getStock(i));
+	private void collectStocksFromStorage(final Optional<Set<String>> stockNames) {
+		if (stockNames.isPresent()) {
+			final StockStorage stockStorage = broker.getStockStorage();
+			for (String i : stockStorage.getStockNames()) {
+				if (stockNames.get().contains(i)) {
+					addStock(stockStorage.getStock(i));
+				}
 			}
+		} else {
+			collectStocksFromStorage();
 		}
 	}
 

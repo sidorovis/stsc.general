@@ -65,8 +65,7 @@ public class SimulatorSettingsGridFactory extends SimulatorSettingsFactory<Simul
 	// add predefined algorithms
 
 	@Override
-	public SimulatorSettingsGridFactory addStock(String eName, String aName, String pName, List<String> values)
-			throws BadParameterException {
+	public SimulatorSettingsGridFactory addStock(String eName, String aName, String pName, List<String> values) throws BadParameterException {
 		final AlgorithmSettingsIteratorFactory algoFactory = createAlgorithmSettingsFactory();
 		algoFactory.add(new MpString(pName, values));
 		return addStock(eName, aName, algoFactory.getGridIterator());
@@ -87,8 +86,7 @@ public class SimulatorSettingsGridFactory extends SimulatorSettingsFactory<Simul
 
 	@Override
 	public SimulatorSettingsGridList getList() {
-		final SimulatorSettingsGridList result = new SimulatorSettingsGridList(getStockStorage(), getPeriod(), stockInitializers,
-				eodInitializers, finished);
+		final SimulatorSettingsGridList result = new SimulatorSettingsGridList(getStockStorage(), getPeriod(), stockInitializers, eodInitializers, finished);
 		stockInitializers = new ArrayList<>();
 		eodInitializers = new ArrayList<>();
 		return result;
@@ -103,8 +101,7 @@ public class SimulatorSettingsGridFactory extends SimulatorSettingsFactory<Simul
 		for (GridExecutionInitializer i : eodInitializers) {
 			eodInitCopy.add(i.clone());
 		}
-		final SimulatorSettingsGridCopyList result = new SimulatorSettingsGridCopyList(getStockStorage(), getPeriod(), stockInitCopy,
-				eodInitCopy, finished);
+		final SimulatorSettingsGridCopyList result = new SimulatorSettingsGridCopyList(getStockStorage(), getPeriod(), stockInitCopy, eodInitCopy, finished);
 		return result;
 	}
 
