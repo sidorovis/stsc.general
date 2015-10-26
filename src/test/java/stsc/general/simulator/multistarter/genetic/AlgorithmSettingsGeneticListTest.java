@@ -11,6 +11,7 @@ import org.junit.Test;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.BadAlgorithmException;
+import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
 import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpDouble;
@@ -69,8 +70,8 @@ public class AlgorithmSettingsGeneticListTest {
 
 	private boolean amountOfMutations() throws BadParameterException {
 		final AlgorithmSettingsGeneticList mas = getList();
-		final AlgorithmSettings original = mas.generateRandom();
-		final AlgorithmSettings copy = original.clone();
+		final MutatingAlgorithmSettings original = mas.generateRandom();
+		final MutatingAlgorithmSettings copy = original.clone();
 		int i = 0;
 		while (true) {
 			final StringBuilder originalSb = new StringBuilder();

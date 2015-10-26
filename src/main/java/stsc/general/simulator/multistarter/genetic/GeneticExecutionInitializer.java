@@ -1,7 +1,7 @@
 package stsc.general.simulator.multistarter.genetic;
 
-import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.EodExecution;
+import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.common.algorithms.StockExecution;
 import stsc.general.simulator.SimulatorSettings;
 
@@ -31,31 +31,31 @@ public class GeneticExecutionInitializer {
 		return executionName + "(" + algorithmName + ")\n" + geneticAlgorithmSettings + "\n";
 	}
 
-	public AlgorithmSettings generateRandom() {
+	public MutatingAlgorithmSettings generateRandom() {
 		return geneticAlgorithmSettings.generateRandom();
 	}
 
 	public void mutateStock(int mutateSettingIndex, SimulatorSettings copy) {
 		final StockExecution execution = copy.getInit().getExecutionsStorage().getStockExecutions().get(mutateSettingIndex);
-		final AlgorithmSettings algorithmSettings = execution.getSettings();
+		final MutatingAlgorithmSettings algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
 
 	public void mutateEod(int eodIndex, SimulatorSettings copy) {
 		final EodExecution execution = copy.getInit().getExecutionsStorage().getEodExecutions().get(eodIndex);
-		final AlgorithmSettings algorithmSettings = execution.getSettings();
+		final MutatingAlgorithmSettings algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
 
-	private void mutateAlgorithmSettings(final AlgorithmSettings algorithmSettings) {
+	private void mutateAlgorithmSettings(final MutatingAlgorithmSettings algorithmSettings) {
 		geneticAlgorithmSettings.mutate(algorithmSettings);
 	}
 
-	public AlgorithmSettings mergeStock(StockExecution leftSe, StockExecution rightSe) {
+	public MutatingAlgorithmSettings mergeStock(StockExecution leftSe, StockExecution rightSe) {
 		return geneticAlgorithmSettings.merge(leftSe.getSettings(), rightSe.getSettings());
 	}
 
-	public AlgorithmSettings mergeEod(EodExecution leftSe, EodExecution rightSe) {
+	public MutatingAlgorithmSettings mergeEod(EodExecution leftSe, EodExecution rightSe) {
 		return geneticAlgorithmSettings.merge(leftSe.getSettings(), rightSe.getSettings());
 	}
 

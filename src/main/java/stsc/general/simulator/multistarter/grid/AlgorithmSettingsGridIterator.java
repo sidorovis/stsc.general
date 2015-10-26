@@ -2,16 +2,16 @@ package stsc.general.simulator.multistarter.grid;
 
 import stsc.algorithms.AlgorithmSettingsImpl;
 import stsc.common.FromToPeriod;
-import stsc.common.algorithms.AlgorithmSettings;
+import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.general.simulator.multistarter.AlgorithmParameters;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.ParameterList;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
 
-public class AlgorithmSettingsGridIterator implements ResetableIterable<AlgorithmSettings> {
+public class AlgorithmSettingsGridIterator implements ResetableIterable<MutatingAlgorithmSettings> {
 
-	public class Element implements ResetableIterator<AlgorithmSettings>, Cloneable {
+	public class Element implements ResetableIterator<MutatingAlgorithmSettings>, Cloneable {
 
 		private final AlgorithmParameters parameters;
 		private boolean finished;
@@ -52,7 +52,7 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Algorith
 		public void remove() {
 		}
 
-		public AlgorithmSettings current() {
+		public MutatingAlgorithmSettings current() {
 			return generateSettings();
 		}
 
@@ -95,6 +95,7 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Algorith
 
 			final ParameterList<Integer, ?> integers = parameters.getIntegers();
 			for (MpIterator<Integer, ?> p : integers.getParams()) {
+				p.currentParameter();
 				final String name = p.currentParameter().getName();
 				final Integer value = p.currentParameter().getValue();
 				algoSettings.setInteger(name, value);

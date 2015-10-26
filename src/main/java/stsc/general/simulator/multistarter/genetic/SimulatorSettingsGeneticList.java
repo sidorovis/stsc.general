@@ -10,9 +10,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
 
 import stsc.common.FromToPeriod;
-import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.EodExecution;
+import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.common.algorithms.StockExecution;
 import stsc.common.storage.StockStorage;
 import stsc.general.simulator.SimulatorSettings;
@@ -21,8 +21,7 @@ import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionsStorage;
 
 /**
- * Stores all possible values from {@link SimulatorSettings} for Genetic
- * {@link TradingStrategy} Search.<br/>
+ * Stores all possible values from {@link SimulatorSettings} for Genetic {@link TradingStrategy} Search.<br/>
  * 
  */
 public final class SimulatorSettingsGeneticList {
@@ -42,7 +41,7 @@ public final class SimulatorSettingsGeneticList {
 	private final List<GeneticExecutionInitializer> stockInitializers;
 	private final List<GeneticExecutionInitializer> eodInitializers;
 
-	public SimulatorSettingsGeneticList(StockStorage stockStorage, FromToPeriod period, List<GeneticExecutionInitializer> stockInitializers,
+	SimulatorSettingsGeneticList(StockStorage stockStorage, FromToPeriod period, List<GeneticExecutionInitializer> stockInitializers,
 			List<GeneticExecutionInitializer> eodInitializers) {
 		super();
 		this.id = new AtomicLong(0);
@@ -114,7 +113,7 @@ public final class SimulatorSettingsGeneticList {
 			final StockExecution leftSe = leftIterator.next();
 			final StockExecution rightSe = rightIterator.next();
 
-			final AlgorithmSettings settings = geneticInitializer.mergeStock(leftSe, rightSe);
+			final MutatingAlgorithmSettings settings = geneticInitializer.mergeStock(leftSe, rightSe);
 			result.addStockExecution(new StockExecution(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
 		}
 		return result;
@@ -141,7 +140,7 @@ public final class SimulatorSettingsGeneticList {
 			final EodExecution leftSe = leftIterator.next();
 			final EodExecution rightSe = rightIterator.next();
 
-			final AlgorithmSettings settings = geneticInitializer.mergeEod(leftSe, rightSe);
+			final MutatingAlgorithmSettings settings = geneticInitializer.mergeEod(leftSe, rightSe);
 			result.addEodExecution(new EodExecution(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
 		}
 		return result;
