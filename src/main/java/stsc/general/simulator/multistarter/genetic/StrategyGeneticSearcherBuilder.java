@@ -23,13 +23,12 @@ public final class StrategyGeneticSearcherBuilder {
 	int threadAmount = 4;
 	CostFunction populationCostFunction;
 	// maximum possible populations iterations
-	int maxPopulationsAmount = 100;
+	int maxPopulationsAmount = POPULATION_DEFAULT_SIZE;
 	int populationSize = POPULATION_DEFAULT_SIZE;
 	double bestPart = BEST_DEFAULT_PART;
 	double crossoverPart = CROSSOVER_DEFAULT_PART;
 
 	StrategyGeneticSearcherBuilder() {
-
 	}
 
 	public StrategyGeneticSearcherBuilder withSimulatorSettings(final SimulatorSettingsGeneticList simulatorSettingsGeneticList) {
@@ -38,8 +37,7 @@ public final class StrategyGeneticSearcherBuilder {
 	}
 
 	/**
-	 * {@link StrategySelector} this strategy selector will be used to select
-	 * {@link TradingStrategy}'s.
+	 * {@link StrategySelector} this strategy selector will be used to select {@link TradingStrategy}'s.
 	 */
 	public StrategyGeneticSearcherBuilder withStrategySelector(final StrategySelector strategySelector) {
 		this.strategySelector = strategySelector;
@@ -47,8 +45,7 @@ public final class StrategyGeneticSearcherBuilder {
 	}
 
 	/**
-	 * Amount of threads that we will use to simulate strategies in parallel. By
-	 * default is 4;
+	 * Amount of threads that we will use to simulate strategies in parallel. By default is 4;
 	 */
 	public StrategyGeneticSearcherBuilder withThreadAmount(int threadAmount) {
 		Validate.isTrue(threadAmount > 0, "thread amount for genetic search should be bigger then 0");
@@ -78,8 +75,7 @@ public final class StrategyGeneticSearcherBuilder {
 	}
 
 	/**
-	 * This part of population will be copied from previous (values that
-	 * {@link StrategySelector} returns first).
+	 * This part of population will be copied from previous (values that {@link StrategySelector} returns first).
 	 */
 	public StrategyGeneticSearcherBuilder withBestPart(double bestPart) {
 		Validate.isTrue(bestPart >= 0.0 && bestPart <= 1.0, "best part for genetic algorithm should be in [0.0, 1.0] interval");
@@ -99,4 +95,5 @@ public final class StrategyGeneticSearcherBuilder {
 	public StrategyGeneticSearcher build() {
 		return new StrategyGeneticSearcher(this);
 	}
+
 }

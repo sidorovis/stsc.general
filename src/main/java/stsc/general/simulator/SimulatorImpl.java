@@ -1,6 +1,7 @@
 package stsc.general.simulator;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -31,32 +32,37 @@ public final class SimulatorImpl implements Simulator {
 
 	private static Logger logger = LogManager.getLogger(SimulatorImpl.class.getName());
 
-	private final Metrics metrics;
-	private final SignalsStorage signalsStorage;
+	private Metrics metrics;
+	private SignalsStorage signalsStorage;
 
-	public SimulatorImpl(final SimulatorSettings settings, Set<String> stockNames) throws BadAlgorithmException, BadSignalException {
-		logger.info("Simulator starting on " + Joiner.on(",").join(stockNames));
-		final TradeProcessor tradeProcessor = new TradeProcessor(settings.getInit());
-		metrics = tradeProcessor.simulate(settings.getInit().getPeriod(), stockNames);
-		signalsStorage = tradeProcessor.getExecutionStorage().getSignalsStorage();
-		logger.info("Simulated finished");
+	public SimulatorImpl() {
 	}
 
-	public SimulatorImpl(final SimulatorSettings settings) throws BadAlgorithmException, BadSignalException {
-		logger.info("Simulator starting");
-		final TradeProcessor tradeProcessor = new TradeProcessor(settings.getInit());
-		this.metrics = tradeProcessor.simulate(settings.getInit().getPeriod());
+	@Override
+	public void simulateMarketTrading(SimulatorSettings simulatorSettings) throws BadAlgorithmException, BadSignalException {
+		final Optional<Set<String>> stockNames = simulatorSettings.getStockNames();
+		if (stockNames.isPresent()) {
+			logger.info("Simulator starting on " + Joiner.on(",").join(stockNames.get()));
+		} else {
+			logger.info("Simulator starting on all possible stocks");
+		}
+		final TradeProcessor tradeProcessor = new TradeProcessor(simulatorSettings.getInit());
+		metrics = tradeProcessor.simulate(simulatorSettings.getInit().getPeriod(), simulatorSettings.getStockNames());
 		signalsStorage = tradeProcessor.getExecutionStorage().getSignalsStorage();
 		logger.info("Simulated finished");
 	}
 
 	public static Simulator fromConfig(final StockStorage stockStorage, final FromToPeriod period, final String config)
 			throws BadAlgorithmException, BadSignalException, Exception {
-		return new SimulatorImpl(new SimulatorSettings(0, new TradeProcessorInit(stockStorage, period, config)));
+		final Simulator simulator = new SimulatorImpl();
+		simulator.simulateMarketTrading(new SimulatorSettings(0, new TradeProcessorInit(stockStorage, period, config)));
+		return simulator;
 	}
 
 	public static Simulator fromFile(final File filePath) throws BadAlgorithmException, BadSignalException, Exception {
-		return new SimulatorImpl(new SimulatorSettings(0, new TradeProcessorInit(filePath)));
+		final Simulator simulator = new SimulatorImpl();
+		simulator.simulateMarketTrading(new SimulatorSettings(0, new TradeProcessorInit(filePath)));
+		return simulator;
 	}
 
 	@Override
