@@ -23,11 +23,9 @@ public abstract class SimulatorSettingsFactory<SimulatorSettingsList> {
 
 	public abstract SimulatorSettingsFactory<SimulatorSettingsList> addEod(String eName, String aName, AlgorithmSettingsIteratorFactory factory);
 
-	public abstract SimulatorSettingsFactory<SimulatorSettingsList> addStock(String eName, String aName, String pName, List<String> values)
-			throws BadParameterException;
+	public abstract SimulatorSettingsFactory<SimulatorSettingsList> addStock(String eName, String aName, String pName, List<String> values) throws BadParameterException;
 
-	public abstract SimulatorSettingsFactory<SimulatorSettingsList> addEod(String eName, String aName, String pName, List<String> values)
-			throws BadParameterException;
+	public abstract SimulatorSettingsFactory<SimulatorSettingsList> addEod(String eName, String aName, String pName, List<String> values) throws BadParameterException;
 
 	public abstract SimulatorSettingsList getList();
 

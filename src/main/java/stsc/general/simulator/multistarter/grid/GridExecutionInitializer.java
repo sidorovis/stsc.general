@@ -1,6 +1,7 @@
 package stsc.general.simulator.multistarter.grid;
 
 import stsc.common.algorithms.AlgorithmSettings;
+import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
 
@@ -52,7 +53,7 @@ public class GridExecutionInitializer implements ResetableIterator<AlgorithmSett
 	}
 
 	@Override
-	public AlgorithmSettings current() {
+	public MutatingAlgorithmSettings current() {
 		return iterator.current();
 	}
 

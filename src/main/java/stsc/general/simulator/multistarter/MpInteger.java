@@ -1,6 +1,5 @@
 package stsc.general.simulator.multistarter;
 
-
 public class MpInteger extends MpNumberIterator<Integer> {
 
 	private final int from;
@@ -9,31 +8,27 @@ public class MpInteger extends MpNumberIterator<Integer> {
 	private int iterator;
 
 	public MpInteger(String name, int from, int to, int step) throws BadParameterException {
+		this(name, from, to, step, null);
+		if (from >= to)
+			throw new BadParameterException("Integer from should be smaller than to for " + name);
+	}
+
+	private MpInteger(String name, int from, int to, int step, Void usedToDistinguishConstructorsWithWithoutException) {
 		super(name);
 		this.from = from;
 		this.to = to;
-		if (from >= to)
-			throw new BadParameterException("Integer from should be smaller than to for " + name);
 		this.step = step;
 		this.iterator = 0;
 	}
 
 	@Override
 	public MpInteger clone() {
-		return new MpInteger(getName(), from, to, step, true);
-	}
-
-	private MpInteger(String name, int from, int to, int step, boolean privateBoolean) {
-		super(name);
-		this.from = from;
-		this.to = to;
-		this.step = step;
-		this.iterator = 0;
+		return new MpInteger(getName(), from, to, step, null);
 	}
 
 	@Override
 	public long size() {
-		long result = (long) Math.ceil(((double) to - from) / step);
+		final long result = (long) Math.ceil(((double) to - from) / step);
 		return (result == 0) ? 1 : result;
 	}
 

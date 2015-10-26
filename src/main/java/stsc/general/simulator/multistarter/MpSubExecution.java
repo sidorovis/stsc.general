@@ -2,7 +2,7 @@ package stsc.general.simulator.multistarter;
 
 import java.util.List;
 
-public class MpSubExecution extends MpString {
+public final class MpSubExecution extends MpString {
 
 	public MpSubExecution(final String name, final List<String> domen) throws BadParameterException {
 		super(name, domen);

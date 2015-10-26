@@ -10,7 +10,7 @@ import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpString;
 import stsc.general.simulator.multistarter.SimulatorSettingsFactory;
 
-public class SimulatorSettingsGeneticFactory extends SimulatorSettingsFactory<SimulatorSettingsGeneticList> {
+public final class SimulatorSettingsGeneticFactory extends SimulatorSettingsFactory<SimulatorSettingsGeneticList> {
 
 	private List<GeneticExecutionInitializer> stockInitializers = new ArrayList<>();
 	private List<GeneticExecutionInitializer> eodInitializers = new ArrayList<>();
@@ -62,16 +62,14 @@ public class SimulatorSettingsGeneticFactory extends SimulatorSettingsFactory<Si
 	// add predefined algorithms
 
 	@Override
-	public SimulatorSettingsGeneticFactory addStock(String eName, String aName, String pName, List<String> values)
-			throws BadParameterException {
+	public SimulatorSettingsGeneticFactory addStock(String eName, String aName, String pName, List<String> values) throws BadParameterException {
 		final AlgorithmSettingsIteratorFactory algoFactory = createAlgorithmSettingsFactory();
 		algoFactory.add(new MpString(pName, values));
 		return addStock(eName, aName, algoFactory.getGeneticList());
 	}
 
 	@Override
-	public SimulatorSettingsGeneticFactory addEod(String eName, String aName, String pName, List<String> values)
-			throws BadParameterException {
+	public SimulatorSettingsGeneticFactory addEod(String eName, String aName, String pName, List<String> values) throws BadParameterException {
 		final AlgorithmSettingsIteratorFactory algoFactory = createAlgorithmSettingsFactory();
 		algoFactory.add(new MpString(pName, values));
 		return addEod(eName, aName, algoFactory.getGeneticList());
@@ -83,8 +81,7 @@ public class SimulatorSettingsGeneticFactory extends SimulatorSettingsFactory<Si
 
 	@Override
 	public SimulatorSettingsGeneticList getList() {
-		final SimulatorSettingsGeneticList result = new SimulatorSettingsGeneticList(getStockStorage(), getPeriod(), stockInitializers,
-				eodInitializers);
+		final SimulatorSettingsGeneticList result = new SimulatorSettingsGeneticList(getStockStorage(), getPeriod(), stockInitializers, eodInitializers);
 		stockInitializers = new ArrayList<>();
 		eodInitializers = new ArrayList<>();
 		return result;

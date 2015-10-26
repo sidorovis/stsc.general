@@ -6,20 +6,18 @@ import java.util.Random;
 import stsc.algorithms.AlgorithmSettingsImpl;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.AlgorithmSettings;
+import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.general.simulator.multistarter.AlgorithmParameters;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MpTextIterator;
 import stsc.general.simulator.multistarter.ParameterList;
 
 /**
- * This class implement list of algorithm settings for genetic search. So we
- * can:<br/>
- * 1. Generate new population of algorithm setting
- * {@link AlgorithmSettingsGeneticList#generateRandom()};<br/>
+ * This class implement list of algorithm settings for genetic search. So we can:<br/>
+ * 1. Generate new population of algorithm setting {@link AlgorithmSettingsGeneticList#generateRandom()};<br/>
  * 2. Mutate {@link AlgorithmSettings};<br/>
  * 3. Merge {@link AlgorithmSettings} (left with right);<br/>
- * We need {@link AlgorithmSettingsGeneticList} for mutate / merge operations
- * because we require algorithm setting domens.
+ * We need {@link AlgorithmSettingsGeneticList} for mutate / merge operations because we require algorithm setting domens.
  */
 public class AlgorithmSettingsGeneticList {
 
@@ -42,7 +40,7 @@ public class AlgorithmSettingsGeneticList {
 
 	// Random generate methods
 
-	public AlgorithmSettings generateRandom() {
+	MutatingAlgorithmSettings generateRandom() {
 		final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl(period);
 		generateRandomIntegers(algoSettings);
 		generateRandomDoubles(algoSettings);
@@ -81,7 +79,7 @@ public class AlgorithmSettingsGeneticList {
 
 	// Mutate methods
 
-	public void mutate(final AlgorithmSettings settings) {
+	void mutate(final MutatingAlgorithmSettings settings) {
 		final int parametersAmount = parameters.parametersSize();
 		if (parametersAmount > 0) {
 			int indexOfMutatingParameter = random.nextInt(parametersAmount);
@@ -102,57 +100,57 @@ public class AlgorithmSettingsGeneticList {
 		return indexOfMutatingParameter < 0;
 	}
 
-	private int mutateIntegers(final AlgorithmSettings settings, final int index) {
+	private int mutateIntegers(final MutatingAlgorithmSettings settings, final int index) {
 		if (index < 0)
 			return index;
 		final ParameterList<Integer, ?> list = parameters.getIntegers();
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<Integer, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutate(mutatingParameter.getName(), mutate(settings, index, mutatingParameter));
+			settings.mutate(mutatingParameter.getName(), mutate(index, mutatingParameter));
 			return MUTATING_FINISHED;
 		}
 		return index - size;
 	}
 
-	private int mutateDoubles(final AlgorithmSettings settings, final int index) {
+	private int mutateDoubles(final MutatingAlgorithmSettings settings, final int index) {
 		if (index < 0)
 			return index;
 		final ParameterList<Double, ?> list = parameters.getDoubles();
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<Double, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutate(mutatingParameter.getName(), mutate(settings, index, mutatingParameter));
+			settings.mutate(mutatingParameter.getName(), mutate(index, mutatingParameter));
 			return MUTATING_FINISHED;
 		}
 		return index - size;
 	}
 
-	private int mutateStrings(final AlgorithmSettings settings, final int index) {
+	private int mutateStrings(final MutatingAlgorithmSettings settings, final int index) {
 		if (index < 0)
 			return index;
 		final ParameterList<String, ?> list = parameters.getStrings();
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<String, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutate(mutatingParameter.getName(), mutate(settings, index, mutatingParameter));
+			settings.mutate(mutatingParameter.getName(), mutate(index, mutatingParameter));
 			return MUTATING_FINISHED;
 		}
 		return index - size;
 	}
 
-	private void mutateSubExecutions(final AlgorithmSettings settings, final int index) {
+	private void mutateSubExecutions(final MutatingAlgorithmSettings settings, final int index) {
 		if (index < 0)
 			return;
 		final ParameterList<String, ?> list = parameters.getSubExecutions();
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<String, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutateSubExecution(index, mutate(settings, index, mutatingParameter));
+			settings.mutateSubExecution(index, mutate(index, mutatingParameter));
 		}
 	}
 
-	private <T> T mutate(final AlgorithmSettings settings, int index, MpIterator<T, ?> iterator) {
+	private <T> T mutate(int index, MpIterator<T, ?> iterator) {
 		final int sizeOfValues = (int) iterator.size();
 		final int mutatedIndex = random.nextInt(sizeOfValues);
 		final T mutatedValue = iterator.parameter(mutatedIndex);
@@ -161,11 +159,11 @@ public class AlgorithmSettingsGeneticList {
 
 	// Merge methods
 
-	public AlgorithmSettings merge(AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
+	MutatingAlgorithmSettings merge(AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
 		return mergeParameters(leftSe, rightSe);
 	}
 
-	private AlgorithmSettings mergeParameters(AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
+	private MutatingAlgorithmSettings mergeParameters(AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
 		final AlgorithmSettingsImpl result = new AlgorithmSettingsImpl(period);
 		mergeIntegers(result, leftSe, rightSe);
 		mergeDouble(result, leftSe, rightSe);
