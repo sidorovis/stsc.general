@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import stsc.general.simulator.Simulator;
+import stsc.general.simulator.SimulatorImpl;
 import stsc.general.simulator.SimulatorSettings;
 import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
@@ -36,7 +37,7 @@ final class SimulatorCalculatingTask implements Callable<Boolean> {
 	private Optional<Metrics> simulate() {
 		Simulator simulator = null;
 		try {
-			simulator = new Simulator(settings);
+			simulator = new SimulatorImpl(settings);
 		} catch (Exception e) {
 			StrategyGeneticSearcher.logger.error("Error while calculating statistics: " + e.getMessage());
 			return Optional.empty();

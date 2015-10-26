@@ -40,7 +40,7 @@ public final class SimulatorTest {
 	@Test
 	public void testOneSideSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
-		Simulator.fromFile(resourceToPath("simulator_configs/one_side.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		SimulatorImpl.fromFile(resourceToPath("simulator_configs/one_side.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
 		Assert.assertEquals(541, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
@@ -53,7 +53,7 @@ public final class SimulatorTest {
 		executionsStorage.addEodExecution(execution);
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
-		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
+		Simulator simulator = new SimulatorImpl(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(18, metrics.getIntegerMetric(MetricType.period).intValue());
 		Assert.assertEquals(6.125517, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
@@ -67,7 +67,7 @@ public final class SimulatorTest {
 		executionsStorage.addEodExecution(execution);
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
-		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
+		Simulator simulator = new SimulatorImpl(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(39, metrics.getIntegerMetric(MetricType.period).intValue());
 		Assert.assertEquals(3.243971, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
@@ -81,7 +81,7 @@ public final class SimulatorTest {
 		executionsStorage.addEodExecution(execution);
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
-		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
+		Simulator simulator = new SimulatorImpl(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(18, metrics.getIntegerMetric(MetricType.period).intValue());
 		Assert.assertEquals(-6.125517, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
@@ -90,7 +90,7 @@ public final class SimulatorTest {
 	@Test
 	public void testSimpleSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
-		final Metrics metrics = Simulator.fromFile(resourceToPath("simulator_configs/simple.ini")).getMetrics();
+		final Metrics metrics = SimulatorImpl.fromFile(resourceToPath("simulator_configs/simple.ini")).getMetrics();
 		metrics.print(testOutputPath.resolve("statistics.csv").toString());
 		Assert.assertEquals(2096, metrics.getEquityCurveInMoney().size());
 		Assert.assertEquals(46132, testOutputPath.resolve("statistics.csv").toFile().length());
@@ -99,7 +99,7 @@ public final class SimulatorTest {
 
 	public void testPositiveNDaysSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
-		Simulator.fromFile(resourceToPath("simulator_configs/ndays.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		SimulatorImpl.fromFile(resourceToPath("simulator_configs/ndays.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
 		Assert.assertEquals(575 * 2 + 11165, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
@@ -107,7 +107,7 @@ public final class SimulatorTest {
 	@Test
 	public void testOpenWhileSignalAlgorithmSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
-		Simulator.fromFile(resourceToPath("simulator_configs/open_while_signal.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		SimulatorImpl.fromFile(resourceToPath("simulator_configs/open_while_signal.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
 		Assert.assertEquals(59322, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
@@ -121,7 +121,7 @@ public final class SimulatorTest {
 		final List<String> stockExecutions = init.generateOutForStocks();
 		Assert.assertEquals(2, stockExecutions.size());
 		Assert.assertEquals("Alg1", stockExecutions.get(1));
-		final Simulator simulator = new Simulator(new SimulatorSettings(0, init));
+		final Simulator simulator = new SimulatorImpl(new SimulatorSettings(0, init));
 		Assert.assertEquals(0.0, simulator.getMetrics().getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 		final SignalsStorage ss = simulator.getSignalsStorage();
 		final String en = AlgorithmNameGenerator.generateOutAlgorithmName("Alg1");

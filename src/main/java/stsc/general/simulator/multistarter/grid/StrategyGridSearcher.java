@@ -16,6 +16,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import stsc.common.BadSignalException;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.Simulator;
+import stsc.general.simulator.SimulatorImpl;
 import stsc.general.simulator.SimulatorSettings;
 import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
@@ -87,7 +88,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 			while (settings.isPresent()) {
 				Simulator simulator;
 				try {
-					simulator = new Simulator(settings.get());
+					simulator = new SimulatorImpl(settings.get());
 					final TradingStrategy strategy = new TradingStrategy(settings.get(), simulator.getMetrics());
 					selector.addStrategy(strategy);
 					settings = getNextSimulatorSettings();
