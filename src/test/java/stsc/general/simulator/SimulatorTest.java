@@ -55,8 +55,8 @@ public final class SimulatorTest {
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
-		Assert.assertEquals(19, metrics.getIntegerMetric(MetricType.period).intValue());
-		Assert.assertEquals(1.761237, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(18, metrics.getIntegerMetric(MetricType.period).intValue());
+		Assert.assertEquals(6.125517, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public final class SimulatorTest {
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(39, metrics.getIntegerMetric(MetricType.period).intValue());
-		Assert.assertEquals(3.218612, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(3.243971, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -83,8 +83,8 @@ public final class SimulatorTest {
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		Simulator simulator = new Simulator(new SimulatorSettings(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
-		Assert.assertEquals(19, metrics.getIntegerMetric(MetricType.period).intValue());
-		Assert.assertEquals(-1.761237, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(18, metrics.getIntegerMetric(MetricType.period).intValue());
+		Assert.assertEquals(-6.125517, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public final class SimulatorTest {
 		Assert.assertEquals(0.0, simulator.getMetrics().getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 		final SignalsStorage ss = simulator.getSignalsStorage();
 		final String en = AlgorithmNameGenerator.generateOutAlgorithmName("Alg1");
-		Assert.assertEquals(2515, ss.getIndexSize("aapl", en));
+		Assert.assertEquals(2514, ss.getIndexSize("aapl", en));
 	}
 
 }

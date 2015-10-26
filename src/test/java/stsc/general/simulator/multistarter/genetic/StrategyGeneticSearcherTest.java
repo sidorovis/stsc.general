@@ -25,8 +25,8 @@ public class StrategyGeneticSearcherTest {
 		final StrategySelector selector = sgs.waitAndGetSelector();
 		Assert.assertEquals(112, selector.getStrategies().size());
 		final Metrics metrics = selector.getStrategies().get(0).getMetrics();
-		Assert.assertEquals(100.0, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
-		Assert.assertEquals(0.5, metrics.getDoubleMetric(MetricType.winProb), Settings.doubleEpsilon);
+		Assert.assertEquals(30.492558, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(0.666666, metrics.getDoubleMetric(MetricType.winProb), Settings.doubleEpsilon);
 	}
 
 	@Test
