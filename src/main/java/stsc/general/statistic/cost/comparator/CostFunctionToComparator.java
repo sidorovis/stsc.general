@@ -16,7 +16,7 @@ public class CostFunctionToComparator implements MetricsComparator {
 
 	@Override
 	public int compare(Metrics o1, Metrics o2) {
-		return costFunction.calculate(o1).compareTo(costFunction.calculate(o2));
+		return Double.compare(costFunction.calculate(o1), costFunction.calculate(o2));
 	}
 
 }

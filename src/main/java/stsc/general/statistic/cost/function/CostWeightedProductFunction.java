@@ -31,7 +31,7 @@ public class CostWeightedProductFunction implements CostFunction {
 	}
 
 	@Override
-	public Double calculate(Metrics metrics) {
+	public double calculate(Metrics metrics) {
 		Double sum = 0.0;
 		for (Double d : parameters.values()) {
 			sum += d;
