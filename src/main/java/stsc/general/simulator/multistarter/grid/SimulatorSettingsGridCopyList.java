@@ -6,7 +6,7 @@ import java.util.List;
 
 import stsc.common.FromToPeriod;
 import stsc.common.storage.StockStorage;
-import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorSettingsImpl;
 
 public class SimulatorSettingsGridCopyList extends SimulatorSettingsGridList {
 
@@ -16,7 +16,7 @@ public class SimulatorSettingsGridCopyList extends SimulatorSettingsGridList {
 	}
 
 	@Override
-	public Iterator<SimulatorSettings> iterator() {
+	public Iterator<SimulatorSettingsImpl> iterator() {
 		final List<GridExecutionInitializer> stocks = new ArrayList<>(stockInitializers.size());
 		for (GridExecutionInitializer executionInitializer : stockInitializers) {
 			stocks.add(executionInitializer.clone());

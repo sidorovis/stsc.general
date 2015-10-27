@@ -20,22 +20,17 @@ import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 
 /**
- * This class implement complex {@link StrategySelector} storage that was
- * created for {@link TradingStrategy} Genetic Search.<br/>
- * Synopsis : the goal of this {@link StrategySelector} to store
- * {@link TradingStrategy} into clusters (using distance).
+ * This class implement complex {@link StrategySelector} storage that was created for {@link TradingStrategy} Genetic Search.<br/>
+ * Synopsis : the goal of this {@link StrategySelector} to store {@link TradingStrategy} into clusters (using distance).
  * <hr/>
  * Implementation:<br/>
- * a. <b>ClusterKey</b> - store head strategy and implement equals method (for
- * all distanceParameters we calculate summary of absolute value for linear
- * combination: <b>R = abs(a1 * m11 - a1 * m12) + abs(a2 * m21 - a2 * m22) ...
- * </b>; if R < {@link Settings#doubleEpsilon} then equals returns true.<br/>
- * b. <b>ClusterKeyComparator</b> implements {@link Comparator} interface for
- * ClusterKey. (for compare ClusterKeyComparator use algorithm that we just
+ * a. <b>ClusterKey</b> - store head strategy and implement equals method (for all distanceParameters we calculate summary of absolute value for linear
+ * combination: <b>R = abs(a1 * m11 - a1 * m12) + abs(a2 * m21 - a2 * m22) ... </b>; if R < {@link Settings#doubleEpsilon} then equals returns true.<br/>
+ * b. <b>ClusterKeyComparator</b> implements {@link Comparator} interface for ClusterKey. (for compare ClusterKeyComparator use algorithm that we just
  * described).<br/>
  * This selector never change center element of cluster.
  */
-public class StatisticsWithDistanceSelector implements StrategySelector {
+public class StatisticsWithDistanceSelector extends BorderedStrategySelector {
 
 	private final class ClusterKey {
 		private final TradingStrategy headStrategy;
@@ -93,10 +88,8 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	private final int clustersAmount;
 	private final int elementsInCluster;
 	/**
-	 * {@link #ratingCostFunction} is cost function to calculate rating of
-	 * {@link TradingStrategy} for sort clusters by rating.<br/>
-	 * We need sorted clusters to have possibility to delete strategies with
-	 * smallest rating.
+	 * {@link #ratingCostFunction} is cost function to calculate rating of {@link TradingStrategy} for sort clusters by rating.<br/>
+	 * We need sorted clusters to have possibility to delete strategies with smallest rating.
 	 */
 	private final CostFunction ratingCostFunction;
 	private final CostFunctionToComparator metricsComparator;
@@ -105,6 +98,7 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 	private final TreeMap<ClusterKey, SortedStrategies> clustersByKey;
 
 	public StatisticsWithDistanceSelector(int clustersAmount, int elementsInCluster, CostFunction ratingCostFunction) {
+		super(clustersAmount * elementsInCluster);
 		this.clusterKeyComparator = new ClusterKeyComparator();
 		this.clustersAmount = clustersAmount;
 		this.elementsInCluster = elementsInCluster;
@@ -121,11 +115,6 @@ public class StatisticsWithDistanceSelector implements StrategySelector {
 			result += strategies.size();
 		}
 		return result;
-	}
-
-	@Override
-	public int maxPossibleAmount() {
-		return clustersAmount * elementsInCluster;
 	}
 
 	public StatisticsWithDistanceSelector withDistanceParameter(MetricType key, Double value) {

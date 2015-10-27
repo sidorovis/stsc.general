@@ -17,7 +17,7 @@ import stsc.common.BadSignalException;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorImpl;
-import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorSettingsImpl;
 import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.strategy.TradingStrategy;
@@ -35,10 +35,10 @@ public class StrategyGridSearcher implements StrategySearcher {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/mt_strategy_grid_searcher_log4j2.xml");
 	}
 
-	static class IteratorProxy implements Iterator<SimulatorSettings> {
-		private final Iterator<SimulatorSettings> value;
+	static class IteratorProxy implements Iterator<SimulatorSettingsImpl> {
+		private final Iterator<SimulatorSettingsImpl> value;
 
-		IteratorProxy(Iterator<SimulatorSettings> value) {
+		IteratorProxy(Iterator<SimulatorSettingsImpl> value) {
 			this.value = value;
 		}
 
@@ -48,7 +48,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 		}
 
 		@Override
-		public synchronized SimulatorSettings next() {
+		public synchronized SimulatorSettingsImpl next() {
 			return value.next();
 		}
 
@@ -82,7 +82,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 
 		@Override
 		public void run() {
-			Optional<SimulatorSettings> settings = getNextSimulatorSettings();
+			Optional<SimulatorSettingsImpl> settings = getNextSimulatorSettings();
 
 			while (settings.isPresent()) {
 				try {
@@ -97,10 +97,10 @@ public class StrategyGridSearcher implements StrategySearcher {
 			}
 		}
 
-		private Optional<SimulatorSettings> getNextSimulatorSettings() {
+		private Optional<SimulatorSettingsImpl> getNextSimulatorSettings() {
 			synchronized (iterator) {
 				while (!stoppedByRequest && iterator.hasNext()) {
-					final SimulatorSettings nextValue = iterator.next();
+					final SimulatorSettingsImpl nextValue = iterator.next();
 					if (nextValue == null)
 						return Optional.empty();
 					final String hashCode = nextValue.stringHashCode();

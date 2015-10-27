@@ -29,7 +29,7 @@ public interface GeneticTaskController {
 
 	public boolean addTradingStrategy(final TradingStrategy strategy);
 
-	public Simulator getSimulator();
+	public Simulator createSimulator();
 
 	public Logger getLogger();
 

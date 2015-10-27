@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import stsc.general.simulator.Simulator;
-import stsc.general.simulator.SimulatorImpl;
 import stsc.general.simulator.SimulatorSettings;
 import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
@@ -12,11 +11,11 @@ import stsc.general.strategy.TradingStrategy;
 public final class SimulatorCalculatingTask implements Callable<Boolean> {
 
 	private final GeneticTaskController controller;
-	private final SimulatorSettings settings;
+	private final SimulatorSettings simulatorSettings;
 
 	public SimulatorCalculatingTask(GeneticTaskController controller, SimulatorSettings settings) {
 		this.controller = controller;
-		this.settings = settings;
+		this.simulatorSettings = settings;
 	}
 
 	@Override
@@ -25,7 +24,7 @@ public final class SimulatorCalculatingTask implements Callable<Boolean> {
 		try {
 			final Optional<Metrics> metrics = simulate();
 			if (metrics.isPresent()) {
-				final TradingStrategy strategy = new TradingStrategy(settings, metrics.get());
+				final TradingStrategy strategy = new TradingStrategy(simulatorSettings, metrics.get());
 				result = controller.addTradingStrategy(strategy);
 			}
 		} finally {
@@ -36,8 +35,8 @@ public final class SimulatorCalculatingTask implements Callable<Boolean> {
 
 	private Optional<Metrics> simulate() {
 		try {
-			final Simulator simulator = new SimulatorImpl();
-			simulator.simulateMarketTrading(settings);
+			final Simulator simulator = controller.createSimulator();
+			simulator.simulateMarketTrading(simulatorSettings);
 			return Optional.of(simulator.getMetrics());
 		} catch (Exception e) {
 			controller.getLogger().error("Error while calculating statistics: " + e.getMessage());
