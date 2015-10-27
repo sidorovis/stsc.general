@@ -10,6 +10,6 @@ import stsc.general.strategy.TradingStrategy;
  */
 public interface CostFunction {
 
-	public Double calculate(Metrics metrics);
+	public double calculate(Metrics metrics);
 
 }

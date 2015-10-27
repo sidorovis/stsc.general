@@ -8,8 +8,7 @@ import stsc.general.statistic.Metrics;
 
 /**
  * CostLexicographicalFunction is a cost function that calculated by next rules:<br/>
- * there is a multiplikator and ordered set of statistics parameters M for
- * multiplikator; <br/>
+ * there is a multiplikator and ordered set of statistics parameters M for multiplikator; <br/>
  * P[x] - for N parameters; <br/>
  * <b>CF = (((P[1] * M) + P[2]) * M + P[3]) * M + ... P[N]</b>;
  */
@@ -33,7 +32,7 @@ public class CostLexicographicalFunction implements CostFunction {
 	}
 
 	@Override
-	public Double calculate(Metrics metrics) {
+	public double calculate(Metrics metrics) {
 		Double result = 0.0;
 		for (MetricType metricName : order) {
 			final Double dMetric = metrics.getMetric(metricName);

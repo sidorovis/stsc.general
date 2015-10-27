@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import stsc.common.Settings;
 import stsc.general.simulator.SimulatorSettingsImpl;
 import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
@@ -39,7 +40,7 @@ public class StatisticsSelectorTest {
 
 		final List<TradingStrategy> strategies = statisticsSelector.getStrategies();
 		Assert.assertEquals(2, strategies.size());
-		Assert.assertEquals(values.get(0), compareMethod.calculate(strategies.get(0).getMetrics()));
-		Assert.assertEquals(values.get(1), compareMethod.calculate(strategies.get(1).getMetrics()));
+		Assert.assertEquals(values.get(0), compareMethod.calculate(strategies.get(0).getMetrics()), Settings.doubleEpsilon);
+		Assert.assertEquals(values.get(1), compareMethod.calculate(strategies.get(1).getMetrics()), Settings.doubleEpsilon);
 	}
 }

@@ -10,16 +10,13 @@ import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
- * Calculate Cost Function for {@link Metrics} using Bayesian Probability
- * methodology. <br/>
+ * Calculate Cost Function for {@link Metrics} using Bayesian Probability methodology. <br/>
  * Parameters are divided by layers with different coefficients for example: <br/>
  * we could have layer with next coefficients: <br/>
  * (getPeriod -> 2.0, getAvGain -> 4.0) <br/>
- * which provide us with information that cost function for such layer will be:
- * <b>max(Period * 2.0 and AvGain * 4.0)</b>; <br/>
+ * which provide us with information that cost function for such layer will be: <b>max(Period * 2.0 and AvGain * 4.0)</b>; <br/>
  * Result of function is minimum between all layers. <br/>
- * If there is no layers result is Double.MAX_VALUE layer with no fields lead to
- * get -Double.MAX_VALUE as layer value.
+ * If there is no layers result is Double.MAX_VALUE layer with no fields lead to get -Double.MAX_VALUE as layer value.
  */
 public class CostBayesianProbabilityFunction implements CostFunction {
 
@@ -36,7 +33,7 @@ public class CostBayesianProbabilityFunction implements CostFunction {
 	}
 
 	@Override
-	public Double calculate(Metrics metrics) {
+	public double calculate(Metrics metrics) {
 		Double min = Double.MAX_VALUE;
 		for (Map<MetricType, Double> layer : parameters) {
 			Double max = -Double.MAX_VALUE;

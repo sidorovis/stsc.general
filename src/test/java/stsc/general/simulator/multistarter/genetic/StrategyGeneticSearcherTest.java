@@ -21,7 +21,7 @@ import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
-import stsc.general.strategy.selector.StatisticsWithDistanceSelector;
+import stsc.general.strategy.selector.StatisticsWithMetricsDistanceSelector;
 import stsc.general.strategy.selector.StrategySelector;
 import stsc.general.trading.TradeProcessorInit;
 
@@ -180,7 +180,7 @@ public class StrategyGeneticSearcherTest {
 		final StrategyGeneticSearcher searcher = StrategyGeneticSearcher.getBuilder(). //
 				withPopulationCostFunction(new CostWeightedSumFunction()). //
 				withGeneticList(new TestGeneticList()). //
-				withStrategySelector(new StatisticsWithDistanceSelector(10, 10, new CostWeightedSumFunction())). //
+				withStrategySelector(new StatisticsWithMetricsDistanceSelector(10, 10, new CostWeightedSumFunction())). //
 				withSimulatorFactory(new TestSimulatorFactory()). //
 				withMaxPopulationsAmount(250). //
 				withPopulationSize(500). //

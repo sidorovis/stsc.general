@@ -30,7 +30,7 @@ import stsc.general.strategy.TradingStrategy;
  * described).<br/>
  * This selector never change center element of cluster.
  */
-public class StatisticsWithDistanceSelector extends BorderedStrategySelector {
+public final class StatisticsWithMetricsDistanceSelector extends BorderedStrategySelector {
 
 	private final class ClusterKey {
 		private final TradingStrategy headStrategy;
@@ -97,7 +97,7 @@ public class StatisticsWithDistanceSelector extends BorderedStrategySelector {
 
 	private final TreeMap<ClusterKey, SortedStrategies> clustersByKey;
 
-	public StatisticsWithDistanceSelector(int clustersAmount, int elementsInCluster, CostFunction ratingCostFunction) {
+	public StatisticsWithMetricsDistanceSelector(int clustersAmount, int elementsInCluster, CostFunction ratingCostFunction) {
 		super(clustersAmount * elementsInCluster);
 		this.clusterKeyComparator = new ClusterKeyComparator();
 		this.clustersAmount = clustersAmount;
@@ -117,7 +117,7 @@ public class StatisticsWithDistanceSelector extends BorderedStrategySelector {
 		return result;
 	}
 
-	public StatisticsWithDistanceSelector withDistanceParameter(MetricType key, Double value) {
+	public StatisticsWithMetricsDistanceSelector withDistanceParameter(MetricType key, Double value) {
 		distanceParameters.put(key, value);
 		return this;
 	}
