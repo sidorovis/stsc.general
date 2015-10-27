@@ -24,6 +24,7 @@ import stsc.general.simulator.SimulatorSettings;
 import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.simulator.multistarter.genetic.tasks.GenerateRandomPopulationsTask;
+import stsc.general.simulator.multistarter.genetic.tasks.GeneticTaskController;
 import stsc.general.simulator.multistarter.genetic.tasks.SimulatorCalculatingTask;
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
@@ -68,8 +69,8 @@ public final class StrategyGeneticSearcher implements StrategySearcher {
 
 	private final Random indexRandomizator = new Random();
 
-	private final GeneticTaskControllerImpl geneticTaskController;
-	private final SimulatorSettingsGeneticList simulatorSettingsGeneticList;
+	private final GeneticTaskController geneticTaskController;
+	private final GeneticList simulatorSettingsGeneticList;
 	private final StrategySelector strategySelector;
 	private final ExecutorService executor;
 	private final CostFunction populationCostFunction;
@@ -92,15 +93,16 @@ public final class StrategyGeneticSearcher implements StrategySearcher {
 	}
 
 	StrategyGeneticSearcher(final StrategyGeneticSearcherBuilder builder) {
-		Validate.notNull(builder.simulatorSettingsGeneticList);
-		Validate.notNull(builder.strategySelector);
-		Validate.notNull(builder.populationCostFunction);
+		Validate.notNull(builder.getGeneticList());
+		Validate.notNull(builder.getStrategySelector());
+		Validate.notNull(builder.getPopulationCostFunction());
+		Validate.notNull(builder.getSimulatorFactory());
 
-		this.geneticTaskController = new GeneticTaskControllerImpl(this);
-		this.simulatorSettingsGeneticList = builder.simulatorSettingsGeneticList;
-		this.strategySelector = builder.strategySelector;
+		this.geneticTaskController = new GeneticTaskControllerImpl(this, builder.getGeneticList(), builder.getSimulatorFactory());
+		this.simulatorSettingsGeneticList = builder.getGeneticList();
+		this.strategySelector = builder.getStrategySelector();
 		this.executor = Executors.newFixedThreadPool(builder.threadAmount);
-		this.populationCostFunction = builder.populationCostFunction;
+		this.populationCostFunction = builder.getPopulationCostFunction();
 		this.settings = new GeneticSearchSettings(builder);
 		this.populationCalculationTasksLatch = new CountDownLatch(settings.getPopulationSize());
 
@@ -140,10 +142,6 @@ public final class StrategyGeneticSearcher implements StrategySearcher {
 		indicatorProgressListeners.add(indicatorProgressListener);
 	}
 
-	SimulatorSettings getRandomSimulatorSettings() throws BadAlgorithmException {
-		return simulatorSettingsGeneticList.generateRandom();
-	}
-
 	private void waitResults() throws InterruptedException, BadAlgorithmException {
 		double lastCostSum = maxPopulationCost;
 		while (!stoppedByRequest && currentSelectionIndex < settings.getMaxPopulationsAmount()) {
@@ -156,7 +154,7 @@ public final class StrategyGeneticSearcher implements StrategySearcher {
 		final double newCostSum = calculateCostSum();
 		final List<TradingStrategy> currentPopulation = new ArrayList<>(population);
 
-		createNewPopulation(currentPopulation);
+		createNewPopulation();
 		crossover(currentPopulation);
 		mutation(currentPopulation);
 		final boolean shouldWeContinue = checkResult(newCostSum, lastCostSum);
@@ -206,7 +204,7 @@ public final class StrategyGeneticSearcher implements StrategySearcher {
 		}
 	}
 
-	private void createNewPopulation(List<TradingStrategy> currentPopulation) {
+	private void createNewPopulation() {
 		population.clear();
 		for (TradingStrategy strategy : strategySelector.getStrategies()) {
 			population.add(strategy);

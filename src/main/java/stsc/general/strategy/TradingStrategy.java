@@ -3,12 +3,12 @@ package stsc.general.strategy;
 import org.apache.commons.lang3.Validate;
 
 import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorSettingsImpl;
 import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
- * Represents pair {@link SimulatorSettings} -> {@link Metrics}.
- * {@link SimulatorSettings} could be null Only for Tests. Please call
+ * Represents pair {@link SimulatorSettingsImpl} -> {@link Metrics}. {@link SimulatorSettingsImpl} could be null Only for Tests. Please call
  * {@link #createTest(Metrics)} only for tests.
  */
 public final class TradingStrategy {
@@ -29,13 +29,6 @@ public final class TradingStrategy {
 		Validate.notNull(simulatorSettings);
 		this.simulatorSettings = simulatorSettings;
 		this.metrics = metrics;
-	}
-
-	/**
-	 * @return id from {@link SimulatorSettings}.
-	 */
-	public long getId() {
-		return simulatorSettings.getId();
 	}
 
 	public SimulatorSettings getSettings() {

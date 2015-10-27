@@ -17,7 +17,7 @@ final class GeneticSearchSettings {
 	private final int tasksSize;
 
 	GeneticSearchSettings(final StrategyGeneticSearcherBuilder builder) {
-		this(builder.maxPopulationsAmount, builder.populationSize, builder.bestPart, builder.crossoverPart, builder.strategySelector.maxPossibleAmount());
+		this(builder.maxPopulationsAmount, builder.populationSize, builder.bestPart, builder.crossoverPart, builder.getStrategySelector().maxPossibleAmount());
 	}
 
 	private GeneticSearchSettings(int maxPopulationsAmount, int populationSize, double bestPart, double crossoverPart, int selectorSize) {

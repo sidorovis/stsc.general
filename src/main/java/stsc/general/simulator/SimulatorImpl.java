@@ -55,13 +55,13 @@ public final class SimulatorImpl implements Simulator {
 	public static Simulator fromConfig(final StockStorage stockStorage, final FromToPeriod period, final String config)
 			throws BadAlgorithmException, BadSignalException, Exception {
 		final Simulator simulator = new SimulatorImpl();
-		simulator.simulateMarketTrading(new SimulatorSettings(0, new TradeProcessorInit(stockStorage, period, config)));
+		simulator.simulateMarketTrading(new SimulatorSettingsImpl(0, new TradeProcessorInit(stockStorage, period, config)));
 		return simulator;
 	}
 
 	public static Simulator fromFile(final File filePath) throws BadAlgorithmException, BadSignalException, Exception {
 		final Simulator simulator = new SimulatorImpl();
-		simulator.simulateMarketTrading(new SimulatorSettings(0, new TradeProcessorInit(filePath)));
+		simulator.simulateMarketTrading(new SimulatorSettingsImpl(0, new TradeProcessorInit(filePath)));
 		return simulator;
 	}
 

@@ -16,15 +16,16 @@ import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.common.algorithms.StockExecution;
 import stsc.common.storage.StockStorage;
 import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorSettingsImpl;
 import stsc.general.strategy.TradingStrategy;
 import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionsStorage;
 
 /**
- * Stores all possible values from {@link SimulatorSettings} for Genetic {@link TradingStrategy} Search.<br/>
+ * Stores all possible values from {@link SimulatorSettingsImpl} for Genetic {@link TradingStrategy} Search.<br/>
  * 
  */
-public final class SimulatorSettingsGeneticListImpl implements SimulatorSettingsGeneticList {
+public final class SimulatorSettingsGeneticListImpl implements ExternalizableGeneticList {
 
 	static {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/simulator_settings_genetic_list_log4j2.xml");
@@ -52,7 +53,7 @@ public final class SimulatorSettingsGeneticListImpl implements SimulatorSettings
 	}
 
 	@Override
-	public synchronized SimulatorSettings generateRandom() throws BadAlgorithmException {
+	public synchronized SimulatorSettingsImpl generateRandom() throws BadAlgorithmException {
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 
 		for (GeneticExecutionInitializer i : stockInitializers) {
@@ -64,7 +65,7 @@ public final class SimulatorSettingsGeneticListImpl implements SimulatorSettings
 			executionsStorage.addEodExecution(e);
 		}
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period, executionsStorage);
-		final SimulatorSettings ss = new SimulatorSettings(id.getAndIncrement(), init);
+		final SimulatorSettingsImpl ss = new SimulatorSettingsImpl(id.getAndIncrement(), init);
 		return ss;
 	}
 
@@ -92,7 +93,7 @@ public final class SimulatorSettingsGeneticListImpl implements SimulatorSettings
 		mergeStocks(resultEs, left, right);
 		mergeEods(resultEs, left, right);
 
-		return new SimulatorSettings(id.getAndIncrement(), init);
+		return new SimulatorSettingsImpl(id.getAndIncrement(), init);
 	}
 
 	private ExecutionsStorage mergeStocks(ExecutionsStorage result, SimulatorSettings left, SimulatorSettings right) {

@@ -2,10 +2,11 @@ package stsc.general.simulator.multistarter.genetic.tasks;
 
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorSettingsImpl;
 import stsc.general.statistic.Metrics;
 
 /**
- * This class generate initial genetic population of {@link SimulatorSettings}. Also it creates and starts {@link SimulatorCalculatingTask} (Trading Strategies
+ * This class generate initial genetic population of {@link SimulatorSettingsImpl}. Also it creates and starts {@link SimulatorCalculatingTask} (Trading Strategies
  * {@link Metrics} calculation procedures).
  */
 public final class GenerateRandomPopulationsTask implements Runnable {

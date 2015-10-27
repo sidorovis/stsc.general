@@ -5,7 +5,7 @@ import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.common.algorithms.StockExecution;
 import stsc.general.simulator.SimulatorSettings;
 
-public class GeneticExecutionInitializer {
+public final class GeneticExecutionInitializer {
 
 	public String executionName;
 	public String algorithmName;

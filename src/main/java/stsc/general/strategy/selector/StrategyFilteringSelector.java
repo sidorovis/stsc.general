@@ -11,13 +11,11 @@ import stsc.general.strategy.TradingStrategy;
 
 /**
  * Can be used only with original {@link StrategySelector}. <br/>
- * Provide possibility to not add {@link TradingStrategy} in case when it is
- * necessary to filter it out.<br/>
- * For example, if you like to not add strategies with low signals frequency you
- * can {@link #withIntegerMinFilter(String,Integer)}
+ * Provide possibility to not add {@link TradingStrategy} in case when it is necessary to filter it out.<br/>
+ * For example, if you like to not add strategies with low signals frequency you can {@link #withIntegerMinFilter(String,Integer)}
  * 
  */
-public final class StrategyFilteringSelector implements StrategySelector {
+public final class StrategyFilteringSelector extends BorderedStrategySelector {
 
 	private final StrategySelector originalStrategySelector;
 
@@ -27,8 +25,8 @@ public final class StrategyFilteringSelector implements StrategySelector {
 	private final HashMap<MetricType, Double> doubleMinFilters = new HashMap<>();
 	private final HashMap<MetricType, Double> doubleMaxFilters = new HashMap<>();
 
-	public StrategyFilteringSelector(StrategySelector originalStrategySelector) {
-		super();
+	public StrategyFilteringSelector(BorderedStrategySelector originalStrategySelector) {
+		super(originalStrategySelector.maxPossibleAmount());
 		this.originalStrategySelector = originalStrategySelector;
 	}
 
@@ -101,11 +99,6 @@ public final class StrategyFilteringSelector implements StrategySelector {
 	@Override
 	public int currentStrategiesAmount() {
 		return originalStrategySelector.currentStrategiesAmount();
-	}
-
-	@Override
-	public int maxPossibleAmount() {
-		return originalStrategySelector.maxPossibleAmount();
 	}
 
 }
