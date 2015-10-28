@@ -2,7 +2,6 @@ package stsc.general.strategy.selector;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -14,10 +13,10 @@ public final class StatisticsWithSettingsDistanceSelector extends BorderedStrate
 
 	private final SimulatorSettingsInterval simulatorSettingsInterval;
 	private final CostFunction costFunction;
-	private double epsilon = 2;
 
-	private final HashSet<TradingStrategy> strategies = new HashSet<>();
 	private final TreeMap<Double, TradingStrategy> strategiesByCost = new TreeMap<>(Collections.reverseOrder());
+
+	private double epsilon = 2;
 
 	public StatisticsWithSettingsDistanceSelector(int maxPossibleSize, final SimulatorSettingsInterval simulatorSettingsInterval, CostFunction costFunction) {
 		super(maxPossibleSize);
@@ -34,7 +33,7 @@ public final class StatisticsWithSettingsDistanceSelector extends BorderedStrate
 	public synchronized List<TradingStrategy> addStrategy(TradingStrategy strategy) {
 		final Double strategyCost = costFunction.calculate(strategy.getMetrics());
 		final List<TradingStrategy> deletedElements = new ArrayList<>();
-		for (TradingStrategy tradingStrategy : strategies) {
+		for (TradingStrategy tradingStrategy : strategiesByCost.values()) {
 			final double distance = simulatorSettingsInterval.calculateInterval(tradingStrategy.getSettings(), strategy.getSettings());
 			if (distance < epsilon) {
 				final Double storedStrategyCost = costFunction.calculate(strategy.getMetrics());
@@ -45,17 +44,14 @@ public final class StatisticsWithSettingsDistanceSelector extends BorderedStrate
 			}
 		}
 		if (!deletedElements.isEmpty()) {
-			if (strategies.remove(deletedElements.get(0))) {
-				final Double deletedStrategyCost = costFunction.calculate(deletedElements.get(0).getMetrics());
-				strategiesByCost.remove(deletedStrategyCost);
+			final Double deletingElementCost = costFunction.calculate(strategy.getMetrics());
+			if (strategiesByCost.remove(deletingElementCost) != null) {
 				addStrategy(strategyCost, strategy);
 			}
 		} else {
 			addStrategy(strategyCost, strategy);
-			if (strategies.size() > maxPossibleAmount()) {
-				final TradingStrategy deletingStrategy = strategiesByCost.pollLastEntry().getValue();
-				strategies.remove(deletingStrategy);
-				deletedElements.add(deletingStrategy);
+			if (strategiesByCost.size() > maxPossibleAmount()) {
+				deletedElements.add(strategiesByCost.pollLastEntry().getValue());
 			}
 		}
 		return deletedElements;
@@ -63,14 +59,14 @@ public final class StatisticsWithSettingsDistanceSelector extends BorderedStrate
 
 	private void addStrategy(double strategyCost, TradingStrategy strategy) {
 		if (!strategiesByCost.containsKey(strategyCost)) {
-			strategies.add(strategy);
 			strategiesByCost.put(strategyCost, strategy);
 		}
 	}
 
 	@Override
 	public synchronized boolean removeStrategy(TradingStrategy strategy) {
-		return strategies.remove(strategies);
+		final Double deletingElementCost = costFunction.calculate(strategy.getMetrics());
+		return strategiesByCost.remove(deletingElementCost) != null;
 	}
 
 	@Override
@@ -80,7 +76,7 @@ public final class StatisticsWithSettingsDistanceSelector extends BorderedStrate
 
 	@Override
 	public int currentStrategiesAmount() {
-		return strategies.size();
+		return strategiesByCost.size();
 	}
 
 }
