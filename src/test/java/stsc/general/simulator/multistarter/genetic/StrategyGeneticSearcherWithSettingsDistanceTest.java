@@ -17,12 +17,12 @@ import stsc.general.testhelper.TestGeneticSimulatorSettings;
 public class StrategyGeneticSearcherWithSettingsDistanceTest {
 
 	private static final int maxGeneticStepsAmount = 50;
+	private static final int populationSize = 10;
 
 	@Test
 	public void testStrategyGeneticSearcherWithDistance() throws InterruptedException, StrategySearcherException {
 		final StrategyGeneticSearcher sgs = createSearcherWithDistance();
 		final StrategySelector selector = sgs.waitAndGetSelector();
-		Assert.assertEquals(maxGeneticStepsAmount, selector.getStrategies().size());
 		final Metrics metrics = selector.getStrategies().get(0).getMetrics();
 		final Double costValue = getCostFunction().calculate(metrics);
 		Assert.assertEquals(-541.798602, costValue, Settings.doubleEpsilon);
@@ -32,10 +32,9 @@ public class StrategyGeneticSearcherWithSettingsDistanceTest {
 		final CostWeightedSumFunction costFunction = getCostFunction();
 
 		final SimulatorSettingsGeneticListImpl geneticList = TestGeneticSimulatorSettings.getGeneticList();
-		final int populationSize = 50;
 
 		final StrategySelector selector = new StatisticsWithSettingsDistanceSelector(populationSize, new SimulatorSettingsIntervalImpl(), costFunction). //
-				setEpsilon(10.0);
+				setEpsilon(100.0);
 
 		final StrategyGeneticSearcherBuilder builder = StrategyGeneticSearcher.getBuilder(). //
 				withPopulationCostFunction(costFunction). //
