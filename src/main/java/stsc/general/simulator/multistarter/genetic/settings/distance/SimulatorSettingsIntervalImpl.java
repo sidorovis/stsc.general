@@ -44,7 +44,13 @@ public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInt
 		double interval = 0.0;
 		for (Entry<String, Double> le : leftDoubles.entrySet()) {
 			final Double rightValue = rightDoubles.get(le.getKey());
-			interval += le.getValue() - rightValue;
+			interval += Math.abs(le.getValue() - rightValue);
+		}
+		final Map<String, Integer> leftIntegers = left.getIntegers();
+		final Map<String, Integer> rightIntegers = right.getIntegers();
+		for (Entry<String, Integer> le : leftIntegers.entrySet()) {
+			final Integer rightValue = rightIntegers.get(le.getKey());
+			interval += Math.abs(le.getValue() - rightValue);
 		}
 		return interval;
 	}

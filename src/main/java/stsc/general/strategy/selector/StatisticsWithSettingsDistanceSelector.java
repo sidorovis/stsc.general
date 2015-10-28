@@ -9,6 +9,9 @@ import stsc.general.simulator.multistarter.genetic.settings.distance.SimulatorSe
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 
+/**
+ * This algorithm require domen for each parameter.
+ */
 public final class StatisticsWithSettingsDistanceSelector extends BorderedStrategySelector {
 
 	private final SimulatorSettingsInterval simulatorSettingsInterval;
