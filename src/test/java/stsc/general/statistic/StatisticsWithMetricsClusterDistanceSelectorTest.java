@@ -9,9 +9,9 @@ import org.junit.Test;
 import stsc.common.Settings;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
-import stsc.general.strategy.selector.StatisticsWithMetricsDistanceSelector;
+import stsc.general.strategy.selector.StatisticsWithMetricsClusterDistanceSelector;
 
-public class StatisticsWithDistanceSelectorTest {
+public class StatisticsWithMetricsClusterDistanceSelectorTest {
 
 	TradingStrategy getStrategy(Double avGain) {
 		final Map<MetricType, Double> doubleList = new HashMap<>();
@@ -22,7 +22,7 @@ public class StatisticsWithDistanceSelectorTest {
 
 	@Test
 	public void testStatisticsWithDistanceSelector() {
-		final StatisticsWithMetricsDistanceSelector selector = new StatisticsWithMetricsDistanceSelector(3, 3, new CostWeightedSumFunction());
+		final StatisticsWithMetricsClusterDistanceSelector selector = new StatisticsWithMetricsClusterDistanceSelector(3, 3, new CostWeightedSumFunction());
 		selector.withDistanceParameter(MetricType.avGain, 0.8);
 		selector.addStrategy(getStrategy(1.0));
 		selector.addStrategy(getStrategy(2.0));
@@ -52,7 +52,7 @@ public class StatisticsWithDistanceSelectorTest {
 
 	@Test
 	public void testStatisticsWithDistanceSelectorAposterioryTest() {
-		final StatisticsWithMetricsDistanceSelector selector = new StatisticsWithMetricsDistanceSelector(10, 4, new CostWeightedSumFunction());
+		final StatisticsWithMetricsClusterDistanceSelector selector = new StatisticsWithMetricsClusterDistanceSelector(10, 4, new CostWeightedSumFunction());
 		selector.withDistanceParameter(MetricType.avGain, 0.3);
 		for (int i = 0; i < 100; ++i) {
 			selector.addStrategy(getStrategy(Double.valueOf(i)));
@@ -62,7 +62,7 @@ public class StatisticsWithDistanceSelectorTest {
 
 	@Test
 	public void testStatisticsWithDistanceSelectorDeleteClusterTest() {
-		final StatisticsWithMetricsDistanceSelector selector = new StatisticsWithMetricsDistanceSelector(1, 2, new CostWeightedSumFunction());
+		final StatisticsWithMetricsClusterDistanceSelector selector = new StatisticsWithMetricsClusterDistanceSelector(1, 2, new CostWeightedSumFunction());
 		selector.withDistanceParameter(MetricType.avGain, 1.0);
 		selector.addStrategy(getStrategy(1.0));
 		Assert.assertEquals(1.0, selector.addStrategy(getStrategy(1.0)).get(0).getAvGain(), Settings.doubleEpsilon);

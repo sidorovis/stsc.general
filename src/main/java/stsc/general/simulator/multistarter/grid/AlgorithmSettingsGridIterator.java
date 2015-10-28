@@ -3,7 +3,7 @@ package stsc.general.simulator.multistarter.grid;
 import stsc.algorithms.AlgorithmSettingsImpl;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.MutatingAlgorithmSettings;
-import stsc.general.simulator.multistarter.AlgorithmParameters;
+import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.ParameterList;
 import stsc.general.simulator.multistarter.ResetableIterable;
@@ -13,16 +13,16 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 
 	public class Element implements ResetableIterator<MutatingAlgorithmSettings>, Cloneable {
 
-		private final AlgorithmParameters parameters;
+		private final MultiAlgorithmParameters parameters;
 		private boolean finished;
 
-		public Element(AlgorithmParameters parameterList, boolean finished) {
+		public Element(MultiAlgorithmParameters parameterList, boolean finished) {
 			this.parameters = parameterList;
 			this.finished = finished;
 		}
 
 		public Element clone() {
-			final AlgorithmParameters copyParameters = new AlgorithmParameters(parameters);
+			final MultiAlgorithmParameters copyParameters = new MultiAlgorithmParameters(parameters);
 			return new Element(copyParameters, this.finished);
 		}
 
@@ -132,19 +132,19 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 			return parameters.size();
 		}
 
-		public AlgorithmParameters getParameters() {
+		public MultiAlgorithmParameters getParameters() {
 			return parameters;
 		}
 	}
 
 	private final FromToPeriod period;
-	private final AlgorithmParameters parameters;
+	private final MultiAlgorithmParameters parameters;
 
 	private boolean finished;
 
-	public AlgorithmSettingsGridIterator(final FromToPeriod period, final boolean finished, final AlgorithmParameters parameters) {
+	public AlgorithmSettingsGridIterator(final FromToPeriod period, final boolean finished, final MultiAlgorithmParameters parameters) {
 		this.period = period;
-		this.parameters = new AlgorithmParameters(parameters);
+		this.parameters = new MultiAlgorithmParameters(parameters);
 		this.finished = finished;
 	}
 

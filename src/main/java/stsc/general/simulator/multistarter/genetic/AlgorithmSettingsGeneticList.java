@@ -7,7 +7,7 @@ import stsc.algorithms.AlgorithmSettingsImpl;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.MutatingAlgorithmSettings;
-import stsc.general.simulator.multistarter.AlgorithmParameters;
+import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MpTextIterator;
 import stsc.general.simulator.multistarter.ParameterList;
@@ -24,13 +24,13 @@ public class AlgorithmSettingsGeneticList {
 	private static final int MUTATING_FINISHED = -1;
 
 	private final FromToPeriod period;
-	private final AlgorithmParameters parameters;
+	private final MultiAlgorithmParameters parameters;
 
 	final Random random = new Random();
 
-	public AlgorithmSettingsGeneticList(final FromToPeriod period, final AlgorithmParameters parameters) {
+	public AlgorithmSettingsGeneticList(final FromToPeriod period, final MultiAlgorithmParameters parameters) {
 		this.period = period;
-		this.parameters = new AlgorithmParameters(parameters);
+		this.parameters = new MultiAlgorithmParameters(parameters);
 	}
 
 	@Override
@@ -212,7 +212,7 @@ public class AlgorithmSettingsGeneticList {
 		return mutatedValue;
 	}
 
-	public AlgorithmParameters getParameters() {
+	public MultiAlgorithmParameters getParameters() {
 		return parameters;
 	}
 
