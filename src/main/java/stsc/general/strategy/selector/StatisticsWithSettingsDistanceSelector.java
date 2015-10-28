@@ -33,14 +33,17 @@ public final class StatisticsWithSettingsDistanceSelector extends BorderedStrate
 	public synchronized List<TradingStrategy> addStrategy(TradingStrategy strategy) {
 		final Double strategyCost = costFunction.calculate(strategy.getMetrics());
 		final List<TradingStrategy> deletedElements = new ArrayList<>();
+		boolean shouldWeAddStrategy = true;
 		for (TradingStrategy tradingStrategy : strategiesByCost.values()) {
 			final double distance = simulatorSettingsInterval.calculateInterval(tradingStrategy.getSettings(), strategy.getSettings());
 			if (distance < epsilon) {
 				final Double storedStrategyCost = costFunction.calculate(strategy.getMetrics());
 				if (storedStrategyCost > strategyCost) {
 					deletedElements.add(tradingStrategy);
-					break;
+				} else {
+					shouldWeAddStrategy = false;
 				}
+				break;
 			}
 		}
 		if (!deletedElements.isEmpty()) {
@@ -49,9 +52,11 @@ public final class StatisticsWithSettingsDistanceSelector extends BorderedStrate
 				addStrategy(strategyCost, strategy);
 			}
 		} else {
-			addStrategy(strategyCost, strategy);
-			if (strategiesByCost.size() > maxPossibleAmount()) {
-				deletedElements.add(strategiesByCost.pollLastEntry().getValue());
+			if (shouldWeAddStrategy) {
+				addStrategy(strategyCost, strategy);
+				if (strategiesByCost.size() > maxPossibleAmount()) {
+					deletedElements.add(strategiesByCost.pollLastEntry().getValue());
+				}
 			}
 		}
 		return deletedElements;

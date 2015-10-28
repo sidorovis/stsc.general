@@ -18,15 +18,19 @@ import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorFactory;
 import stsc.general.simulator.SimulatorSettings;
 import stsc.general.simulator.multistarter.StrategySearcherException;
+import stsc.general.simulator.multistarter.genetic.settings.distance.SimulatorSettingsInterval;
 import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
-import stsc.general.strategy.selector.StatisticsWithMetricsDistanceSelector;
+import stsc.general.strategy.TradingStrategy;
+import stsc.general.strategy.selector.StatisticsWithMetricsClusterDistanceSelector;
+import stsc.general.strategy.selector.StatisticsWithSettingsClusterDistanceSelector;
 import stsc.general.strategy.selector.StrategySelector;
 import stsc.general.trading.TradeProcessorInit;
 
 /**
- * This test search max of http://www.wolframalpha.com/input/?i=z+%3D+10.-%28-4+%28x%29%5E2%2Bx%5E4%29-%281%2By%29%5E2 function.
+ * This test search max of
+ * http://www.wolframalpha.com/input/?i=10-%28%28x%2B1%29%5E6+-+10+*+%28x%2B1%29%5E4+%2B+25+*+%28x%2B1%29%5E2+%29+-+%28%28y%29%5E4-6*%28y%29%5E2%29 function.
  */
 public class StrategyGeneticSearcherTest {
 
@@ -151,7 +155,7 @@ public class StrategyGeneticSearcherTest {
 		}
 
 		private double calculate(double x, double y) {
-			return 10.0 - (Math.pow(x, 4) - 4 * Math.pow(x, 2)) - Math.pow(y + 1, 2.0);
+			return 10.0 - (Math.pow(x + 1, 6) - 10 * Math.pow(x + 1, 4) + 25 * Math.pow(x + 1, 2)) - (Math.pow(y, 4) - 6 * Math.pow(y, 2));
 		}
 
 		@Override
@@ -175,12 +179,12 @@ public class StrategyGeneticSearcherTest {
 
 	}
 
-	@Test
+	// @Test
 	public void testStrategyGeneticSearcher() throws StrategySearcherException {
 		final StrategyGeneticSearcher searcher = StrategyGeneticSearcher.getBuilder(). //
 				withPopulationCostFunction(new CostWeightedSumFunction()). //
 				withGeneticList(new TestGeneticList()). //
-				withStrategySelector(new StatisticsWithMetricsDistanceSelector(10, 10, new CostWeightedSumFunction())). //
+				withStrategySelector(new StatisticsWithMetricsClusterDistanceSelector(10, 10, new CostWeightedSumFunction())). //
 				withSimulatorFactory(new TestSimulatorFactory()). //
 				withMaxPopulationsAmount(250). //
 				withPopulationSize(500). //
@@ -189,6 +193,64 @@ public class StrategyGeneticSearcherTest {
 		Assert.assertEquals(14, strategySelector.getStrategies().get(0).getAvGain(), 0.1);
 		Assert.assertEquals(1.41, Math.abs(TestSimulatorSettings.getX(strategySelector.getStrategies().get(0).getSettings())), 0.1);
 		Assert.assertEquals(-1, TestSimulatorSettings.getY(strategySelector.getStrategies().get(0).getSettings()), 0.1);
+	}
+
+	private static class TestSimulatorSettingsInterval implements SimulatorSettingsInterval {
+
+		@Override
+		public double calculateInterval(SimulatorSettings left, SimulatorSettings right) {
+			final double xDiff = Math.abs(TestSimulatorSettings.getX(left) - TestSimulatorSettings.getX(right));
+			final double yDiff = Math.abs(TestSimulatorSettings.getY(left) - TestSimulatorSettings.getY(right));
+			return xDiff + yDiff;
+		}
+
+	}
+
+	@Test
+	public void testStrategyGeneticSearcherWithDistanceOnSettings() throws StrategySearcherException {
+		final StrategyGeneticSearcher searcher = StrategyGeneticSearcher.getBuilder(). //
+				withPopulationCostFunction(new CostWeightedSumFunction()). //
+				withGeneticList(new TestGeneticList()). //
+				withStrategySelector( //
+						new StatisticsWithSettingsClusterDistanceSelector(50, 25, //
+								new TestSimulatorSettingsInterval(), //
+								new CostWeightedSumFunction()).setEpsilon(0.00001))
+				. //
+				withSimulatorFactory(new TestSimulatorFactory()). //
+				withMaxPopulationsAmount(100). //
+				withPopulationSize(300). //
+				withThreadAmount(16). //
+				build();
+		final StrategySelector strategySelector = searcher.waitAndGetSelector();
+		final StatisticsWithSettingsClusterDistanceSelector answer = //
+		new StatisticsWithSettingsClusterDistanceSelector(8, 1, new TestSimulatorSettingsInterval(), new CostWeightedSumFunction()). //
+				setEpsilon(1.5);
+		for (TradingStrategy ts : strategySelector.getStrategies()) {
+			answer.addStrategy(ts);
+		}
+		Assert.assertEquals(6, answer.getStrategies().size());
+		int result = 0;
+		for (TradingStrategy ts : answer.getStrategies()) {
+			if (Math.abs(TestSimulatorSettings.getX(ts.getSettings()) - (-1.0)) < 0.1 && Math.abs(TestSimulatorSettings.getY(ts.getSettings()) - (-1.73)) < 0.1) {
+				result += 1 << 0;
+			}
+			if (Math.abs(TestSimulatorSettings.getX(ts.getSettings()) - (-1.0)) < 0.1 && Math.abs(TestSimulatorSettings.getY(ts.getSettings()) - (1.73)) < 0.1) {
+				result += 1 << 1;
+			}
+			if (Math.abs(TestSimulatorSettings.getX(ts.getSettings()) - (-3.23)) < 0.1 && Math.abs(TestSimulatorSettings.getY(ts.getSettings()) - (-1.73)) < 0.1) {
+				result += 1 << 2;
+			}
+			if (Math.abs(TestSimulatorSettings.getX(ts.getSettings()) - (-3.23)) < 0.1 && Math.abs(TestSimulatorSettings.getY(ts.getSettings()) - (1.73)) < 0.1) {
+				result += 1 << 3;
+			}
+			if (Math.abs(TestSimulatorSettings.getX(ts.getSettings()) - (1.23)) < 0.1 && Math.abs(TestSimulatorSettings.getY(ts.getSettings()) - (-1.73)) < 0.1) {
+				result += 1 << 4;
+			}
+			if (Math.abs(TestSimulatorSettings.getX(ts.getSettings()) - (1.23)) < 0.1 && Math.abs(TestSimulatorSettings.getY(ts.getSettings()) - (1.73)) < 0.1) {
+				result += 1 << 5;
+			}
+		}
+		Assert.assertEquals(((1 << 6) - 1), result);
 	}
 
 }

@@ -2,7 +2,7 @@ package stsc.general.simulator.multistarter;
 
 import java.util.Iterator;
 
-public final class AlgorithmParameters {
+public final class MultiAlgorithmParameters {
 
 	private final ParameterList<Integer, MpNumberIterator<Integer>> integers;
 	private final ParameterList<Double, MpNumberIterator<Double>> doubles;
@@ -11,7 +11,7 @@ public final class AlgorithmParameters {
 
 	private final ParameterList<?, ?>[] parameters;
 
-	public AlgorithmParameters(final AlgorithmParameters copy) {
+	public MultiAlgorithmParameters(final MultiAlgorithmParameters copy) {
 		this.integers = copy.integers.clone();
 		this.doubles = copy.doubles.clone();
 		this.strings = copy.strings.clone();
@@ -19,7 +19,7 @@ public final class AlgorithmParameters {
 		this.parameters = new ParameterList<?, ?>[] { integers, doubles, strings, subExecutions };
 	}
 
-	public AlgorithmParameters() {
+	public MultiAlgorithmParameters() {
 		this.integers = new ParameterList<Integer, MpNumberIterator<Integer>>();
 		this.doubles = new ParameterList<Double, MpNumberIterator<Double>>();
 		this.strings = new ParameterList<String, MpTextIterator<String>>();
@@ -76,10 +76,6 @@ public final class AlgorithmParameters {
 
 	public ParameterList<String, MpTextIterator<String>> getSubExecutions() {
 		return subExecutions;
-	}
-
-	public ParameterList<?, ?>[] getParameters() {
-		return parameters;
 	}
 
 	public Iterator<MpTextIterator<String>> getSubExecutionIterator() {

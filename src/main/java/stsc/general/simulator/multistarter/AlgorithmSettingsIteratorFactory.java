@@ -7,12 +7,12 @@ import stsc.general.simulator.multistarter.grid.AlgorithmSettingsGridIterator;
 public class AlgorithmSettingsIteratorFactory {
 
 	private final FromToPeriod period;
-	private final AlgorithmParameters parameters;
+	private final MultiAlgorithmParameters parameters;
 	private boolean finished;
 
 	public AlgorithmSettingsIteratorFactory(final FromToPeriod period) {
 		this.period = period;
-		this.parameters = new AlgorithmParameters();
+		this.parameters = new MultiAlgorithmParameters();
 		this.finished = false;
 	}
 
