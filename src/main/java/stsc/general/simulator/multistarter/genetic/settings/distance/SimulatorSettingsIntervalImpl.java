@@ -16,6 +16,7 @@ public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInt
 	public SimulatorSettingsIntervalImpl() {
 	}
 
+	@Override
 	public double calculateInterval(final SimulatorSettings left, final SimulatorSettings right) {
 		final List<EodExecution> leftEods = left.getInit().getExecutionsStorage().getEodExecutions();
 		final List<EodExecution> rightEods = right.getInit().getExecutionsStorage().getEodExecutions();
