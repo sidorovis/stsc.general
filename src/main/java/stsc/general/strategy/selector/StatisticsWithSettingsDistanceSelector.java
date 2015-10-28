@@ -10,7 +10,7 @@ import stsc.general.simulator.multistarter.genetic.settings.distance.SimulatorSe
 import stsc.general.statistic.cost.function.CostFunction;
 import stsc.general.strategy.TradingStrategy;
 
-public class StatisticsWithSettingsDistanceSelector extends BorderedStrategySelector {
+public final class StatisticsWithSettingsDistanceSelector extends BorderedStrategySelector {
 
 	private final SimulatorSettingsInterval simulatorSettingsInterval;
 	private final CostFunction costFunction;
@@ -31,7 +31,7 @@ public class StatisticsWithSettingsDistanceSelector extends BorderedStrategySele
 	}
 
 	@Override
-	public List<TradingStrategy> addStrategy(TradingStrategy strategy) {
+	public synchronized List<TradingStrategy> addStrategy(TradingStrategy strategy) {
 		final Double strategyCost = costFunction.calculate(strategy.getMetrics());
 		final List<TradingStrategy> deletedElements = new ArrayList<>();
 		for (TradingStrategy tradingStrategy : strategies) {
@@ -48,34 +48,34 @@ public class StatisticsWithSettingsDistanceSelector extends BorderedStrategySele
 			if (strategies.remove(deletedElements.get(0))) {
 				final Double deletedStrategyCost = costFunction.calculate(deletedElements.get(0).getMetrics());
 				strategiesByCost.remove(deletedStrategyCost);
-
 				addStrategy(strategyCost, strategy);
 			}
 		} else {
 			addStrategy(strategyCost, strategy);
 			if (strategies.size() > maxPossibleAmount()) {
-				deletedElements.add(strategiesByCost.pollFirstEntry().getValue());
+				final TradingStrategy deletingStrategy = strategiesByCost.pollLastEntry().getValue();
+				strategies.remove(deletingStrategy);
+				deletedElements.add(deletingStrategy);
 			}
 		}
 		return deletedElements;
 	}
 
 	private void addStrategy(double strategyCost, TradingStrategy strategy) {
-		strategies.add(strategy);
-		final TradingStrategy deleted = strategiesByCost.put(strategyCost, strategy);
-		if (deleted != null) {
-			strategiesByCost.remove(costFunction.calculate(deleted.getMetrics()));
+		if (!strategiesByCost.containsKey(strategyCost)) {
+			strategies.add(strategy);
+			strategiesByCost.put(strategyCost, strategy);
 		}
 	}
 
 	@Override
-	public boolean removeStrategy(TradingStrategy strategy) {
+	public synchronized boolean removeStrategy(TradingStrategy strategy) {
 		return strategies.remove(strategies);
 	}
 
 	@Override
 	public List<TradingStrategy> getStrategies() {
-		return new ArrayList<>(strategies);
+		return new ArrayList<>(strategiesByCost.values());
 	}
 
 	@Override

@@ -55,14 +55,7 @@ public class StrategyGeneticSearcherIntegrationTest {
 	}
 
 	private StrategyGeneticSearcher createSearcher() throws InterruptedException {
-		final CostWeightedSumFunction costFunction = new CostWeightedSumFunction();
-		costFunction.withParameter(MetricType.winProb, 1.2);
-		costFunction.withParameter(MetricType.kelly, 0.6);
-		costFunction.withParameter(MetricType.ddDurationAvGain, 0.4);
-		costFunction.withParameter(MetricType.freq, 0.3);
-		costFunction.withParameter(MetricType.sharpeRatio, 0.2);
-		costFunction.withParameter(MetricType.maxLoss, -0.3);
-		costFunction.withParameter(MetricType.avLoss, -0.5);
+		final CostWeightedSumFunction costFunction = getCostFunction();
 
 		final StrategySelector selector = new StatisticsByCostSelector(112, costFunction, new MetricsSameComparator());
 
@@ -82,5 +75,17 @@ public class StrategyGeneticSearcherIntegrationTest {
 				withCrossoverPart(0.86);
 
 		return builder.build();
+	}
+
+	private CostWeightedSumFunction getCostFunction() {
+		final CostWeightedSumFunction costFunction = new CostWeightedSumFunction();
+		costFunction.withParameter(MetricType.winProb, 1.2);
+		costFunction.withParameter(MetricType.kelly, 0.6);
+		costFunction.withParameter(MetricType.ddDurationAvGain, 0.4);
+		costFunction.withParameter(MetricType.freq, 0.3);
+		costFunction.withParameter(MetricType.sharpeRatio, 0.2);
+		costFunction.withParameter(MetricType.maxLoss, -0.3);
+		costFunction.withParameter(MetricType.avLoss, -0.5);
+		return costFunction;
 	}
 }
