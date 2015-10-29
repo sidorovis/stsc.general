@@ -46,18 +46,14 @@ public final class TradeProcessorInit implements Cloneable {
 	}
 
 	/**
-	 * This constructor requires several configuration files on file system:
-	 * <br/>
-	 * 1. <Data.filter.folder> folder where stock data is placed (for
-	 * StockStorage). <br/>
-	 * 2. <Executions.path> (./algs.ini by default). This settings should point
-	 * to the file with execution plan settings.
+	 * This constructor requires several configuration files on file system: <br/>
+	 * 1. <Data.filter.folder> folder where stock data is placed (for StockStorage). <br/>
+	 * 2. <Executions.path> (./algs.ini by default). This settings should point to the file with execution plan settings.
 	 * 
 	 * @param configPath
 	 *            - path to the configuration file
 	 * @throws BadAlgorithmException
-	 *             - this exception appears when algorithm settings are not
-	 *             appropriate for algorithm.
+	 *             - this exception appears when algorithm settings are not appropriate for algorithm.
 	 */
 	public TradeProcessorInit(final File configPath) throws BadAlgorithmException {
 		try {
@@ -67,7 +63,7 @@ public final class TradeProcessorInit implements Cloneable {
 
 			final Path algsConfig = resolveAbsoluteDataPath(configPath.toPath().getParent(), p.getProperty("Executions.path", "./algs.ini"));
 			final FromToPeriod period = new FromToPeriod(p);
-			final ExecutionsLoader executionsLoader = new ExecutionsLoader(algsConfig.toFile(), period);
+			final ExecutionsLoader executionsLoader = new ExecutionsLoader(algsConfig.toFile());
 			final ExecutionsStorage executionsStorage = executionsLoader.getExecutionsStorage();
 
 			this.broker = new BrokerImpl(stockStorage);

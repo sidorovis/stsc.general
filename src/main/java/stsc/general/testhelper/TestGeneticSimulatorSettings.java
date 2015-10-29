@@ -47,7 +47,7 @@ public final class TestGeneticSimulatorSettings {
 		try {
 			final FromToPeriod period = new FromToPeriod("01-01-2000", periodTo);
 			final SimulatorSettingsGeneticFactory factory = new SimulatorSettingsGeneticFactory(stockStorage, period);
-			fillFactory(factory, period, openTypes, 4.0, 10, 10, 50000.0);
+			fillFactory(factory, openTypes, 4.0, 10, 10, 50000.0);
 			return factory;
 		} catch (BadParameterException | BadAlgorithmException | ParseException e) {
 		}
@@ -62,22 +62,22 @@ public final class TestGeneticSimulatorSettings {
 		try {
 			final FromToPeriod period = new FromToPeriod("01-01-2000", periodTo);
 			final SimulatorSettingsGeneticFactory factory = new SimulatorSettingsGeneticFactory(stockStorage, period);
-			fillFactory(factory, period, openTypes, 0.1, 1, 1, 1.0);
+			fillFactory(factory, openTypes, 0.1, 1, 1, 1.0);
 			return factory;
 		} catch (BadParameterException | BadAlgorithmException | ParseException e) {
 		}
 		return new SimulatorSettingsGeneticFactory(stockStorage, new FromToPeriod(new Date(), new Date()));
 	}
 
-	private static void fillFactory(SimulatorSettingsGeneticFactory settings, FromToPeriod period, final List<String> openTypes, double fStep, int nSide, int mSide, double psSide)
+	private static void fillFactory(SimulatorSettingsGeneticFactory settings, final List<String> openTypes, double fStep, int nSide, int mSide, double psSide)
 			throws BadParameterException, BadAlgorithmException {
 		settings.addStock("in", algoStockName("Input"), "e", openTypes);
-		settings.addStock("ema", algoStockName("Ema"), new AlgorithmSettingsIteratorFactory(period).add(new MpDouble("P", 0.1, 0.6, 0.4)).add(new MpSubExecution("", "in")));
+		settings.addStock("ema", algoStockName("Ema"), new AlgorithmSettingsIteratorFactory().add(new MpDouble("P", 0.1, 0.6, 0.4)).add(new MpSubExecution("", "in")));
 		settings.addStock("level", algoStockName(".Level"),
-				new AlgorithmSettingsIteratorFactory(period).add(new MpDouble("f", 15.0, 20.0, fStep)).add(new MpSubExecution("", Arrays.asList(new String[] { "ema", "in" }))));
+				new AlgorithmSettingsIteratorFactory().add(new MpDouble("f", 15.0, 20.0, fStep)).add(new MpSubExecution("", Arrays.asList(new String[] { "ema", "in" }))));
 		settings.addEod("os", algoEodName("OneSideOpenAlgorithm"), "side", Arrays.asList(new String[] { "long", "short" }));
 
-		final AlgorithmSettingsIteratorFactory factoryPositionSide = new AlgorithmSettingsIteratorFactory(period);
+		final AlgorithmSettingsIteratorFactory factoryPositionSide = new AlgorithmSettingsIteratorFactory();
 		factoryPositionSide.add(new MpSubExecution("", Arrays.asList(new String[] { "ema", "level", "in" })));
 		factoryPositionSide.add(new MpSubExecution("", Arrays.asList(new String[] { "level", "ema" })));
 		factoryPositionSide.add(new MpInteger("n", 1, 32, nSide));

@@ -16,7 +16,7 @@ public abstract class SimulatorSettingsFactory<SimulatorSettingsList> {
 	}
 
 	public AlgorithmSettingsIteratorFactory createAlgorithmSettingsFactory() {
-		return new AlgorithmSettingsIteratorFactory(period);
+		return new AlgorithmSettingsIteratorFactory();
 	}
 
 	public abstract SimulatorSettingsFactory<SimulatorSettingsList> addStock(String eName, String aName, AlgorithmSettingsIteratorFactory factory);
@@ -35,7 +35,7 @@ public abstract class SimulatorSettingsFactory<SimulatorSettingsList> {
 		return stockStorage;
 	}
 
-	public FromToPeriod getPeriod() {
+	protected FromToPeriod getPeriod() {
 		return period;
 	}
 

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import stsc.common.FromToPeriod;
 import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
@@ -16,7 +15,6 @@ import stsc.general.simulator.multistarter.MpDouble;
 import stsc.general.simulator.multistarter.MpInteger;
 import stsc.general.simulator.multistarter.MpString;
 import stsc.general.simulator.multistarter.MpSubExecution;
-import stsc.general.testhelper.TestMetricsHelper;
 
 public class AlgorithmSettingsGridIteratorTest {
 
@@ -28,8 +26,7 @@ public class AlgorithmSettingsGridIteratorTest {
 
 	@Test
 	public void testAlgorithmSettingsGridSearcher() throws ParseException, BadParameterException, BadAlgorithmException {
-		final FromToPeriod period = TestMetricsHelper.getPeriod();
-		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(period);
+		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpInteger("n", 1, 3, 1));
 		factory.add(new MpInteger("m", -4, -1, 2));
 		factory.add(new MpString("l", Arrays.asList(new String[] { "asd", "ibm" })));
@@ -53,16 +50,14 @@ public class AlgorithmSettingsGridIteratorTest {
 
 	@Test
 	public void testStockExecutionGridSearcherALotOfParameters() throws ParseException, BadParameterException, BadAlgorithmException {
-		final FromToPeriod period = TestMetricsHelper.getPeriod();
-		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(period);
+		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpInteger("q", 0, 5, 1));
 		factory.add(new MpInteger("w", -4, 1, 1));
 		factory.add(new MpDouble("a", 0.0, 100.0, 7.0));
 		factory.add(new MpDouble("s", -100.0, 101.0, 25.0));
 		factory.add(new MpString("z", Arrays.asList(new String[] { "asd", "ibm", "yhoo" })));
 		factory.add(new MpString("z", Arrays.asList(new String[] { "vokrug", "fileName" })));
-		factory.add(new MpSubExecution("p", Arrays.asList(new String[] { "12313-432423", "234535-23424", "35345-234234135",
-				"24454-65462245" })));
+		factory.add(new MpSubExecution("p", Arrays.asList(new String[] { "12313-432423", "234535-23424", "35345-234234135", "24454-65462245" })));
 		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
 
 		final ArrayList<AlgorithmSettings> settings = new ArrayList<>();
@@ -86,9 +81,8 @@ public class AlgorithmSettingsGridIteratorTest {
 
 	@Test
 	public void testGridSearcherStockWithStrings() throws BadParameterException {
-		final FromToPeriod period = TestMetricsHelper.getPeriod();
 		final String[] arr = new String[] { "asd", "ibm" };
-		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(period);
+		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpString("z", Arrays.asList(arr)));
 		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
 

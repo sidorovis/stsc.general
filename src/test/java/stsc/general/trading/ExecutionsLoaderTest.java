@@ -18,7 +18,7 @@ public class ExecutionsLoaderTest {
 	private final static StockStorage stockStorage = StockStorageMock.getStockStorage();
 
 	private ExecutionsStorage helperForSuccessLoadTests(File filename) throws Exception {
-		final ExecutionsLoader el = new ExecutionsLoader(filename, TestMetricsHelper.getPeriod());
+		final ExecutionsLoader el = new ExecutionsLoader(filename);
 		Assert.assertNotNull(el.getExecutionsStorage());
 		final ExecutionsStorage executions = el.getExecutionsStorage();
 		executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
@@ -74,7 +74,7 @@ public class ExecutionsLoaderTest {
 	private void throwTesthelper(File file, String message) throws Exception {
 		boolean throwed = false;
 		try {
-			ExecutionsLoader loader = new ExecutionsLoader(file, TestMetricsHelper.getPeriod());
+			ExecutionsLoader loader = new ExecutionsLoader(file);
 			loader.getExecutionsStorage().initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 		} catch (BadAlgorithmException e) {
 			Assert.assertEquals(message, e.getMessage());

@@ -20,11 +20,11 @@ public class TestStstGeneralHelper {
 	}
 
 	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName) {
-		return getEodAlgorithmInit(broker, executionName, getSettings());
+		return getEodAlgorithmInit(broker, executionName, new AlgorithmSettingsImpl());
 	}
 
 	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName, AlgorithmSettings settings) {
-		return getEodAlgorithmInit(broker, executionName, getSettings(), new SignalsStorageImpl());
+		return getEodAlgorithmInit(broker, executionName, new AlgorithmSettingsImpl(), new SignalsStorageImpl());
 	}
 
 	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName, AlgorithmSettings settings, SignalsStorage signalsStorage) {
@@ -40,14 +40,11 @@ public class TestStstGeneralHelper {
 	}
 
 	public static StockAlgorithmInit getStockAlgorithmInit(String executionName) {
-		return getStockAlgorithmInit(executionName, "sName", getSettings());
+		return getStockAlgorithmInit(executionName, "sName", new AlgorithmSettingsImpl());
 	}
 
 	public static StockAlgorithmInit getStockAlgorithmInit() {
 		return getStockAlgorithmInit("eName");
 	}
 
-	public static AlgorithmSettingsImpl getSettings() {
-		return new AlgorithmSettingsImpl(TestMetricsHelper.getPeriod());
-	}
 }

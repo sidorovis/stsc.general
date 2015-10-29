@@ -12,13 +12,12 @@ import stsc.general.simulator.multistarter.MpDouble;
 import stsc.general.simulator.multistarter.MpInteger;
 import stsc.general.simulator.multistarter.MpString;
 import stsc.general.simulator.multistarter.MpSubExecution;
-import stsc.general.testhelper.TestMetricsHelper;
 
 public class GridExecutionInitializerTest {
 
 	@Test
 	public void testExecutionInitializer() throws BadParameterException {
-		AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(TestMetricsHelper.getPeriod());
+		AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpInteger("n", 1, 10, 2));
 		factory.add(new MpDouble("d", 0.1, 1.0, 0.2));
 		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
@@ -50,7 +49,7 @@ public class GridExecutionInitializerTest {
 
 	@Test
 	public void testExecutionInitializerWithStrings() throws BadParameterException {
-		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(TestMetricsHelper.getPeriod());
+		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpString("n", Arrays.asList(new String[] { "asd" })));
 		factory.add(new MpString("d", Arrays.asList(new String[] { "asd", "dfg", "rty" })));
 		factory.add(new MpString("o", Arrays.asList(new String[] { "hello", "world", "my", "dear" })));
@@ -66,7 +65,7 @@ public class GridExecutionInitializerTest {
 
 	@Test
 	public void testExecutionInitializerWithEverything() throws BadParameterException {
-		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(TestMetricsHelper.getPeriod());
+		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpString("n", Arrays.asList(new String[] { "asd" })));
 		factory.add(new MpString("d", Arrays.asList(new String[] { "asd", "dfg", "rty" })));
 		factory.add(new MpString("o", Arrays.asList(new String[] { "hello", "world", "my", "dear" })));

@@ -4,12 +4,11 @@ import java.util.Iterator;
 import java.util.Random;
 
 import stsc.algorithms.AlgorithmSettingsImpl;
-import stsc.common.FromToPeriod;
 import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.MutatingAlgorithmSettings;
-import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MpTextIterator;
+import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.ParameterList;
 
 /**
@@ -23,25 +22,23 @@ public class AlgorithmSettingsGeneticList {
 
 	private static final int MUTATING_FINISHED = -1;
 
-	private final FromToPeriod period;
 	private final MultiAlgorithmParameters parameters;
 
 	final Random random = new Random();
 
-	public AlgorithmSettingsGeneticList(final FromToPeriod period, final MultiAlgorithmParameters parameters) {
-		this.period = period;
+	public AlgorithmSettingsGeneticList(final MultiAlgorithmParameters parameters) {
 		this.parameters = new MultiAlgorithmParameters(parameters);
 	}
 
 	@Override
 	public String toString() {
-		return period.toString() + parameters.toString();
+		return parameters.toString();
 	}
 
 	// Random generate methods
 
 	MutatingAlgorithmSettings generateRandom() {
-		final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl(period);
+		final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl();
 		generateRandomIntegers(algoSettings);
 		generateRandomDoubles(algoSettings);
 		generateRandomStrings(algoSettings);
@@ -164,7 +161,7 @@ public class AlgorithmSettingsGeneticList {
 	}
 
 	private MutatingAlgorithmSettings mergeParameters(AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
-		final AlgorithmSettingsImpl result = new AlgorithmSettingsImpl(period);
+		final AlgorithmSettingsImpl result = new AlgorithmSettingsImpl();
 		mergeIntegers(result, leftSe, rightSe);
 		mergeDouble(result, leftSe, rightSe);
 		mergeStrings(result, leftSe, rightSe);

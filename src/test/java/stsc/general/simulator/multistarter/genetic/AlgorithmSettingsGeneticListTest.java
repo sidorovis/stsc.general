@@ -8,7 +8,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import stsc.common.FromToPeriod;
 import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.MutatingAlgorithmSettings;
@@ -18,13 +17,11 @@ import stsc.general.simulator.multistarter.MpDouble;
 import stsc.general.simulator.multistarter.MpInteger;
 import stsc.general.simulator.multistarter.MpString;
 import stsc.general.simulator.multistarter.MpSubExecution;
-import stsc.general.testhelper.TestMetricsHelper;
 
 public class AlgorithmSettingsGeneticListTest {
 
 	private AlgorithmSettingsGeneticList getList() throws BadParameterException {
-		final FromToPeriod period = TestMetricsHelper.getPeriod();
-		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory(period);
+		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpInteger("q", -20, 100, 1));
 		factory.add(new MpInteger("w", -40, 15, 1));
 		factory.add(new MpDouble("a", -60.0, 100.0, 0.15));

@@ -72,21 +72,21 @@ final class ExecutionsLoader {
 	final private HashMap<String, String> namedEodExecutions = new HashMap<>();
 
 	ExecutionsLoader(FromToPeriod period, String config) throws BadAlgorithmException {
-		this.settings = new AlgorithmSettingsImpl(period);
+		this.settings = new AlgorithmSettingsImpl();
 		this.algorithmsStorage = AlgorithmsStorage.getInstance();
 		loadAlgorithms(config);
 	}
 
-	ExecutionsLoader(File configPath, FromToPeriod period) throws BadAlgorithmException {
+	ExecutionsLoader(File configPath) throws BadAlgorithmException {
 		this.configPath = configPath;
-		this.settings = new AlgorithmSettingsImpl(period);
+		this.settings = new AlgorithmSettingsImpl();
 		this.algorithmsStorage = AlgorithmsStorage.getInstance();
 		loadAlgorithms();
 	}
 
-	ExecutionsLoader(File configPath, FromToPeriod period, String algoPackageName) throws BadAlgorithmException {
+	ExecutionsLoader(File configPath, String algoPackageName) throws BadAlgorithmException {
 		this.configPath = configPath;
-		this.settings = new AlgorithmSettingsImpl(period);
+		this.settings = new AlgorithmSettingsImpl();
 		this.algorithmsStorage = AlgorithmsStorage.getInstance(algoPackageName);
 		loadAlgorithms();
 	}
