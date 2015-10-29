@@ -44,7 +44,7 @@ public final class TradeProcessorTest {
 		csvReaderHelper(ss, "no30");
 
 		final FromToPeriod period = new FromToPeriod("30-10-2013", "06-11-2013");
-		final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl(period);
+		final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl();
 		algoSettings.setInteger("size", 10000);
 
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
@@ -93,7 +93,7 @@ public final class TradeProcessorTest {
 		final StockStorage ss = StockStorageMock.getStockStorage();
 		final FromToPeriod period = new FromToPeriod("02-09-2013", "06-11-2013");
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
-		final MutatingAlgorithmSettings algoSettings = new AlgorithmSettingsImpl(period);
+		final MutatingAlgorithmSettings algoSettings = new AlgorithmSettingsImpl();
 
 		executionsStorage.addEodExecution(new EodExecution("e1", TestingEodAlgorithm.class.getName(), algoSettings));
 		final TradeProcessorInit init = new TradeProcessorInit(ss, period, executionsStorage);

@@ -1,10 +1,9 @@
 package stsc.general.simulator.multistarter.grid;
 
 import stsc.algorithms.AlgorithmSettingsImpl;
-import stsc.common.FromToPeriod;
 import stsc.common.algorithms.MutatingAlgorithmSettings;
-import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.MpIterator;
+import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.ParameterList;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
@@ -91,7 +90,7 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 		}
 
 		protected AlgorithmSettingsImpl generateSettings() {
-			final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl(period);
+			final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl();
 
 			final ParameterList<Integer, ?> integers = parameters.getIntegers();
 			for (MpIterator<Integer, ?> p : integers.getParams()) {
@@ -137,15 +136,13 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 		}
 	}
 
-	private final FromToPeriod period;
 	private final MultiAlgorithmParameters parameters;
 
 	private boolean finished;
 
-	public AlgorithmSettingsGridIterator(final FromToPeriod period, final boolean finished, final MultiAlgorithmParameters parameters) {
-		this.period = period;
+	public AlgorithmSettingsGridIterator(final MultiAlgorithmParameters parameters) {
 		this.parameters = new MultiAlgorithmParameters(parameters);
-		this.finished = finished;
+		this.finished = false;
 	}
 
 	@Override
@@ -163,7 +160,7 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 
 	@Override
 	public String toString() {
-		return period.toString() + parameters.toString();
+		return parameters.toString();
 	}
 
 	public long size() {
