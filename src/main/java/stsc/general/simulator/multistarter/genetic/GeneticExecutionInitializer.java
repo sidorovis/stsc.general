@@ -1,7 +1,7 @@
 package stsc.general.simulator.multistarter.genetic;
 
 import stsc.common.algorithms.EodExecution;
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.algorithms.StockExecution;
 import stsc.general.simulator.SimulatorSettings;
 
@@ -31,31 +31,31 @@ public final class GeneticExecutionInitializer {
 		return executionName + "(" + algorithmName + ")\n" + geneticAlgorithmSettings + "\n";
 	}
 
-	public MutatingAlgorithmConfiguration generateRandom() {
+	public MutableAlgorithmConfiguration generateRandom() {
 		return geneticAlgorithmSettings.generateRandom();
 	}
 
 	public void mutateStock(int mutateSettingIndex, SimulatorSettings copy) {
 		final StockExecution execution = copy.getInit().getExecutionsStorage().getStockExecutions().get(mutateSettingIndex);
-		final MutatingAlgorithmConfiguration algorithmSettings = execution.getSettings();
+		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
 
 	public void mutateEod(int eodIndex, SimulatorSettings copy) {
 		final EodExecution execution = copy.getInit().getExecutionsStorage().getEodExecutions().get(eodIndex);
-		final MutatingAlgorithmConfiguration algorithmSettings = execution.getSettings();
+		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
 
-	private void mutateAlgorithmSettings(final MutatingAlgorithmConfiguration algorithmSettings) {
+	private void mutateAlgorithmSettings(final MutableAlgorithmConfiguration algorithmSettings) {
 		geneticAlgorithmSettings.mutate(algorithmSettings);
 	}
 
-	public MutatingAlgorithmConfiguration mergeStock(StockExecution leftSe, StockExecution rightSe) {
+	public MutableAlgorithmConfiguration mergeStock(StockExecution leftSe, StockExecution rightSe) {
 		return geneticAlgorithmSettings.merge(leftSe.getSettings(), rightSe.getSettings());
 	}
 
-	public MutatingAlgorithmConfiguration mergeEod(EodExecution leftSe, EodExecution rightSe) {
+	public MutableAlgorithmConfiguration mergeEod(EodExecution leftSe, EodExecution rightSe) {
 		return geneticAlgorithmSettings.merge(leftSe.getSettings(), rightSe.getSettings());
 	}
 

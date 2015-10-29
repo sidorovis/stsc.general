@@ -1,6 +1,6 @@
 package stsc.general.simulator.multistarter.grid;
 
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
@@ -8,9 +8,9 @@ import stsc.general.simulator.multistarter.ParameterList;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
 
-public class AlgorithmSettingsGridIterator implements ResetableIterable<MutatingAlgorithmConfiguration> {
+public class AlgorithmSettingsGridIterator implements ResetableIterable<MutableAlgorithmConfiguration> {
 
-	public class Element implements ResetableIterator<MutatingAlgorithmConfiguration>, Cloneable {
+	public class Element implements ResetableIterator<MutableAlgorithmConfiguration>, Cloneable {
 
 		private final MultiAlgorithmParameters parameters;
 		private boolean finished;
@@ -51,7 +51,7 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 		public void remove() {
 		}
 
-		public MutatingAlgorithmConfiguration current() {
+		public MutableAlgorithmConfiguration current() {
 			return generateSettings();
 		}
 

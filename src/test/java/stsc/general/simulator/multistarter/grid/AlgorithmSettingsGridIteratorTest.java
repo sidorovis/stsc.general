@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import stsc.common.algorithms.AlgorithmConfiguration;
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
 import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpDouble;
@@ -19,7 +19,7 @@ import stsc.general.simulator.multistarter.MpSubExecution;
 
 public class AlgorithmSettingsGridIteratorTest {
 
-	private void testHelperNlmParameters(Integer n, String l, Integer m, MutatingAlgorithmConfiguration s) {
+	private void testHelperNlmParameters(Integer n, String l, Integer m, MutableAlgorithmConfiguration s) {
 		Assert.assertEquals(n, s.getIntegerSetting("n", Integer.MAX_VALUE));
 		Assert.assertEquals(m, s.getIntegerSetting("m", Integer.MAX_VALUE));
 		Assert.assertEquals(l, s.getStringSetting("l", "unknown unexpected value"));
@@ -33,9 +33,9 @@ public class AlgorithmSettingsGridIteratorTest {
 		factory.add(new MpString("l", Arrays.asList(new String[] { "asd", "ibm" })));
 		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
 
-		final ArrayList<MutatingAlgorithmConfiguration> settings = new ArrayList<>();
+		final ArrayList<MutableAlgorithmConfiguration> settings = new ArrayList<>();
 
-		for (MutatingAlgorithmConfiguration se : mas) {
+		for (MutableAlgorithmConfiguration se : mas) {
 			settings.add(se);
 		}
 		Assert.assertEquals(8, settings.size());
@@ -90,7 +90,7 @@ public class AlgorithmSettingsGridIteratorTest {
 		AlgorithmSettingsGridIterator.Element i = mas.iterator();
 		int sum = 0;
 		while (i.hasNext()) {
-			MutatingAlgorithmConfiguration as = i.next();
+			MutableAlgorithmConfiguration as = i.next();
 			Assert.assertEquals(as.getStringSetting("z", "unexpected"), arr[sum]);
 			sum += 1;
 		}
