@@ -20,7 +20,7 @@ public class GridExecutionInitializerTest {
 		AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpInteger("n", 1, 10, 2));
 		factory.add(new MpDouble("d", 0.1, 1.0, 0.2));
-		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
+		final AlgorithmConfigurationSetGridGenerator mas = factory.getGridIterator();
 		final GridExecutionInitializer ei = new GridExecutionInitializer("e", "a", mas);
 		int count = 0;
 		for (AlgorithmConfiguration algorithmSettings : ei) {
@@ -53,7 +53,7 @@ public class GridExecutionInitializerTest {
 		factory.add(new MpString("n", Arrays.asList(new String[] { "asd" })));
 		factory.add(new MpString("d", Arrays.asList(new String[] { "asd", "dfg", "rty" })));
 		factory.add(new MpString("o", Arrays.asList(new String[] { "hello", "world", "my", "dear" })));
-		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
+		final AlgorithmConfigurationSetGridGenerator mas = factory.getGridIterator();
 		final GridExecutionInitializer ei = new GridExecutionInitializer("e", "a", mas);
 		int count = 0;
 		while (ei.hasNext()) {
@@ -70,7 +70,7 @@ public class GridExecutionInitializerTest {
 		factory.add(new MpString("d", Arrays.asList(new String[] { "asd", "dfg", "rty" })));
 		factory.add(new MpString("o", Arrays.asList(new String[] { "hello", "world", "my", "dear" })));
 		factory.add(new MpSubExecution("execution", Arrays.asList(new String[] { "name1", "name2", "name3", "name4" })));
-		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
+		final AlgorithmConfigurationSetGridGenerator mas = factory.getGridIterator();
 		final GridExecutionInitializer ei = new GridExecutionInitializer("e", "a", mas);
 		int count = 0;
 		while (ei.hasNext()) {

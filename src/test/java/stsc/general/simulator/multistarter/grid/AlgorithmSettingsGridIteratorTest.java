@@ -16,6 +16,7 @@ import stsc.general.simulator.multistarter.MpDouble;
 import stsc.general.simulator.multistarter.MpInteger;
 import stsc.general.simulator.multistarter.MpString;
 import stsc.general.simulator.multistarter.MpSubExecution;
+import stsc.general.simulator.multistarter.ResetableIterator;
 
 public class AlgorithmSettingsGridIteratorTest {
 
@@ -31,7 +32,7 @@ public class AlgorithmSettingsGridIteratorTest {
 		factory.add(new MpInteger("n", 1, 3, 1));
 		factory.add(new MpInteger("m", -4, -1, 2));
 		factory.add(new MpString("l", Arrays.asList(new String[] { "asd", "ibm" })));
-		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
+		final AlgorithmConfigurationSetGridGenerator mas = factory.getGridIterator();
 
 		final ArrayList<MutableAlgorithmConfiguration> settings = new ArrayList<>();
 
@@ -59,11 +60,11 @@ public class AlgorithmSettingsGridIteratorTest {
 		factory.add(new MpString("z", Arrays.asList(new String[] { "asd", "ibm", "yhoo" })));
 		factory.add(new MpString("z", Arrays.asList(new String[] { "vokrug", "fileName" })));
 		factory.add(new MpSubExecution("p", Arrays.asList(new String[] { "12313-432423", "234535-23424", "35345-234234135", "24454-65462245" })));
-		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
+		final AlgorithmConfigurationSetGridGenerator mas = factory.getGridIterator();
 
 		final ArrayList<AlgorithmConfiguration> settings = new ArrayList<>();
 
-		AlgorithmSettingsGridIterator.Element i = mas.iterator();
+		final ResetableIterator<MutableAlgorithmConfiguration> i = mas.iterator();
 		int sum = 0;
 		while (i.hasNext()) {
 			i.next();
@@ -85,9 +86,9 @@ public class AlgorithmSettingsGridIteratorTest {
 		final String[] arr = new String[] { "asd", "ibm" };
 		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpString("z", Arrays.asList(arr)));
-		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
+		final AlgorithmConfigurationSetGridGenerator mas = factory.getGridIterator();
 
-		AlgorithmSettingsGridIterator.Element i = mas.iterator();
+		ResetableIterator<MutableAlgorithmConfiguration> i = mas.iterator();
 		int sum = 0;
 		while (i.hasNext()) {
 			MutableAlgorithmConfiguration as = i.next();
@@ -98,7 +99,7 @@ public class AlgorithmSettingsGridIteratorTest {
 		i.reset();
 
 		factory.add(new MpString("y", Arrays.asList(new String[] { "asd", "ibm", "yhoo" })));
-		final AlgorithmSettingsGridIterator newMas = factory.getGridIterator();
+		final AlgorithmConfigurationSetGridGenerator newMas = factory.getGridIterator();
 		i = newMas.iterator();
 
 		while (i.hasNext()) {
