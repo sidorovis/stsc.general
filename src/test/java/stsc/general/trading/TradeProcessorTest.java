@@ -16,7 +16,7 @@ import stsc.common.FromToPeriod;
 import stsc.common.algorithms.EodExecution;
 import stsc.common.algorithms.MutatingAlgorithmConfiguration;
 import stsc.common.signals.SerieSignal;
-import stsc.common.stocks.UnitedFormatStock;
+import stsc.common.stocks.united.format.UnitedFormatStock;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
 import stsc.storage.ExecutionStarter;

@@ -15,7 +15,7 @@ import org.junit.rules.TemporaryFolder;
 
 import stsc.common.Day;
 import stsc.common.Side;
-import stsc.common.stocks.UnitedFormatStock;
+import stsc.common.stocks.united.format.UnitedFormatStock;
 import stsc.storage.ThreadSafeStockStorage;
 
 public class BrokerTest {

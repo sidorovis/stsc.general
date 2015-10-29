@@ -14,8 +14,8 @@ import java.util.Set;
 
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.common.stocks.UnitedFormatHelper;
-import stsc.common.stocks.UnitedFormatStock;
+import stsc.common.stocks.united.format.UnitedFormatHelper;
+import stsc.common.stocks.united.format.UnitedFormatStock;
 import stsc.common.storage.StockStorage;
 import stsc.storage.ExecutionsStorage;
 import stsc.storage.ThreadSafeStockStorage;
