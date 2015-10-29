@@ -3,7 +3,15 @@ package stsc.general.simulator.multistarter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParameterList<Type, MpIteratorType extends MpIterator<Type, MpIteratorType>> implements Cloneable {
+/**
+ * Generic parameter list.
+ * 
+ * @author isidarau
+ *
+ * @param <Type>
+ * @param <MpIteratorType>
+ */
+public final class ParameterList<Type, MpIteratorType extends MpIterator<Type, MpIteratorType>> implements Cloneable {
 
 	private final List<MpIteratorType> params;
 	private int index;

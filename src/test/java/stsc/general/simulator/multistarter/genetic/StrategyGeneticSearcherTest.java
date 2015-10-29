@@ -16,7 +16,7 @@ import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.storage.SignalsStorage;
 import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorFactory;
-import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorConfiguration;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.simulator.multistarter.genetic.settings.distance.SimulatorSettingsInterval;
 import stsc.general.statistic.MetricType;
@@ -36,7 +36,7 @@ public class StrategyGeneticSearcherTest {
 	private static double FROM = -10.0;
 	private static double TO = 10.0;
 
-	private static final class TestSimulatorSettings implements SimulatorSettings {
+	private static final class TestSimulatorSettings implements SimulatorConfiguration {
 
 		private double x;
 		private double y;
@@ -57,7 +57,7 @@ public class StrategyGeneticSearcherTest {
 		}
 
 		@Override
-		public SimulatorSettings clone() {
+		public SimulatorConfiguration clone() {
 			return new TestSimulatorSettings(x, y);
 		}
 
@@ -71,11 +71,11 @@ public class StrategyGeneticSearcherTest {
 			return 0;
 		}
 
-		public static double getX(SimulatorSettings ss) {
+		public static double getX(SimulatorConfiguration ss) {
 			return Double.valueOf(ss.stringHashCode().split(" ")[0]);
 		}
 
-		public static double getY(SimulatorSettings ss) {
+		public static double getY(SimulatorConfiguration ss) {
 			return Double.valueOf(ss.stringHashCode().split(" ")[1]);
 		}
 
@@ -100,14 +100,14 @@ public class StrategyGeneticSearcherTest {
 		}
 
 		@Override
-		public SimulatorSettings generateRandom() throws BadAlgorithmException {
+		public SimulatorConfiguration generateRandom() throws BadAlgorithmException {
 			final double x = generateRandomDouble();
 			final double y = generateRandomDouble();
 			return new TestSimulatorSettings(x, y);
 		}
 
 		@Override
-		public SimulatorSettings mutate(SimulatorSettings settings) {
+		public SimulatorConfiguration mutate(SimulatorConfiguration settings) {
 			final boolean shouldMutateX = r.nextBoolean();
 			if (shouldMutateX) {
 				return new TestSimulatorSettings(mutate(TestSimulatorSettings.getX(settings)), TestSimulatorSettings.getY(settings));
@@ -131,7 +131,7 @@ public class StrategyGeneticSearcherTest {
 		}
 
 		@Override
-		public SimulatorSettings merge(SimulatorSettings left, SimulatorSettings right) {
+		public SimulatorConfiguration merge(SimulatorConfiguration left, SimulatorConfiguration right) {
 			final double x = generateRandomDouble(TestSimulatorSettings.getX(left), TestSimulatorSettings.getX(right));
 			final double y = generateRandomDouble(TestSimulatorSettings.getY(left), TestSimulatorSettings.getY(right));
 			return new TestSimulatorSettings(x, y);
@@ -144,7 +144,7 @@ public class StrategyGeneticSearcherTest {
 		private Metrics metrics;
 
 		@Override
-		public void simulateMarketTrading(SimulatorSettings simulatorSettings) throws BadAlgorithmException, BadSignalException {
+		public void simulateMarketTrading(SimulatorConfiguration simulatorSettings) throws BadAlgorithmException, BadSignalException {
 			final double x = TestSimulatorSettings.getX(simulatorSettings);
 			final double y = TestSimulatorSettings.getY(simulatorSettings);
 			final double v = calculate(x, y);
@@ -181,7 +181,7 @@ public class StrategyGeneticSearcherTest {
 	private static class TestSimulatorSettingsInterval implements SimulatorSettingsInterval {
 
 		@Override
-		public double calculateInterval(SimulatorSettings left, SimulatorSettings right) {
+		public double calculateInterval(SimulatorConfiguration left, SimulatorConfiguration right) {
 			final double xDiff = Math.abs(TestSimulatorSettings.getX(left) - TestSimulatorSettings.getX(right));
 			final double yDiff = Math.abs(TestSimulatorSettings.getY(left) - TestSimulatorSettings.getY(right));
 			return xDiff + yDiff;

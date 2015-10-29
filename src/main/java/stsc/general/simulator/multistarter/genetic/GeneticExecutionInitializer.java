@@ -3,15 +3,15 @@ package stsc.general.simulator.multistarter.genetic;
 import stsc.common.algorithms.EodExecution;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.algorithms.StockExecution;
-import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorConfiguration;
 
 public final class GeneticExecutionInitializer {
 
-	public String executionName;
+	private final String executionName;
 	public String algorithmName;
-	public AlgorithmSettingsGeneticList geneticAlgorithmSettings;
+	public AlgorithmConfigurationSetGeneticGenerator geneticAlgorithmSettings;
 
-	public GeneticExecutionInitializer(String eName, String algorithmName, AlgorithmSettingsGeneticList algorithmSettings) {
+	public GeneticExecutionInitializer(String eName, String algorithmName, AlgorithmConfigurationSetGeneticGenerator algorithmSettings) {
 		super();
 		this.executionName = eName;
 		this.algorithmName = algorithmName;
@@ -35,13 +35,13 @@ public final class GeneticExecutionInitializer {
 		return geneticAlgorithmSettings.generateRandom();
 	}
 
-	public void mutateStock(int mutateSettingIndex, SimulatorSettings copy) {
+	public void mutateStock(int mutateSettingIndex, SimulatorConfiguration copy) {
 		final StockExecution execution = copy.getInit().getExecutionsStorage().getStockExecutions().get(mutateSettingIndex);
 		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
 
-	public void mutateEod(int eodIndex, SimulatorSettings copy) {
+	public void mutateEod(int eodIndex, SimulatorConfiguration copy) {
 		final EodExecution execution = copy.getInit().getExecutionsStorage().getEodExecutions().get(eodIndex);
 		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);

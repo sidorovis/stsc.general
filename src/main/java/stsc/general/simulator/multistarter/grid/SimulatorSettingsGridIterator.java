@@ -13,7 +13,7 @@ import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.EodExecution;
 import stsc.common.algorithms.StockExecution;
 import stsc.common.storage.StockStorage;
-import stsc.general.simulator.SimulatorSettingsImpl;
+import stsc.general.simulator.SimulatorConfigurationImpl;
 import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionsStorage;
 
@@ -21,7 +21,7 @@ import stsc.storage.ExecutionsStorage;
  * This iterator could be created only one for each list, so all iterators will
  * iterate like singleton will do
  */
-public class SimulatorSettingsGridIterator implements Iterator<SimulatorSettingsImpl> {
+public class SimulatorSettingsGridIterator implements Iterator<SimulatorConfigurationImpl> {
 
 	static {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/simulator_settings_iterator_log4j2.xml");
@@ -53,13 +53,13 @@ public class SimulatorSettingsGridIterator implements Iterator<SimulatorSettings
 	}
 
 	@Override
-	public synchronized SimulatorSettingsImpl next() {
-		SimulatorSettingsImpl result = null;
+	public synchronized SimulatorConfigurationImpl next() {
+		SimulatorConfigurationImpl result = null;
 		try {
 			result = generateSimulatorSettings();
 		} catch (BadAlgorithmException e) {
 			logger.error("Problem with generating SimulatorSettings: " + e.getMessage());
-			result = new SimulatorSettingsImpl(-1, new TradeProcessorInit(stockStorage, period));
+			result = new SimulatorConfigurationImpl(-1, new TradeProcessorInit(stockStorage, period));
 			finished = true;
 		}
 		generateNext();
@@ -107,7 +107,7 @@ public class SimulatorSettingsGridIterator implements Iterator<SimulatorSettings
 		return index;
 	}
 
-	private SimulatorSettingsImpl generateSimulatorSettings() throws BadAlgorithmException {
+	private SimulatorConfigurationImpl generateSimulatorSettings() throws BadAlgorithmException {
 		ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		for (GridExecutionInitializer i : stockInitializers) {
 			final StockExecution e = new StockExecution(i.executionName, i.algorithmName, i.current());
@@ -119,7 +119,7 @@ public class SimulatorSettingsGridIterator implements Iterator<SimulatorSettings
 		}
 
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period, executionsStorage);
-		final SimulatorSettingsImpl ss = new SimulatorSettingsImpl(ssId.getAndIncrement(), init);
+		final SimulatorConfigurationImpl ss = new SimulatorConfigurationImpl(ssId.getAndIncrement(), init);
 		return ss;
 	}
 

@@ -2,7 +2,7 @@ package stsc.general.simulator.multistarter;
 
 import java.util.Iterator;
 
-public final class MultiAlgorithmParameters {
+public final class AlgorithmConfigurationSetImpl implements AlgorithmConfigurationSet {
 
 	private final ParameterList<Integer, MpNumberIterator<Integer>> integers;
 	private final ParameterList<Double, MpNumberIterator<Double>> doubles;
@@ -11,7 +11,7 @@ public final class MultiAlgorithmParameters {
 
 	private final ParameterList<?, ?>[] parameters;
 
-	public MultiAlgorithmParameters(final MultiAlgorithmParameters copy) {
+	private AlgorithmConfigurationSetImpl(final AlgorithmConfigurationSetImpl copy) {
 		this.integers = copy.integers.clone();
 		this.doubles = copy.doubles.clone();
 		this.strings = copy.strings.clone();
@@ -19,7 +19,7 @@ public final class MultiAlgorithmParameters {
 		this.parameters = new ParameterList<?, ?>[] { integers, doubles, strings, subExecutions };
 	}
 
-	public MultiAlgorithmParameters() {
+	public AlgorithmConfigurationSetImpl() {
 		this.integers = new ParameterList<Integer, MpNumberIterator<Integer>>();
 		this.doubles = new ParameterList<Double, MpNumberIterator<Double>>();
 		this.strings = new ParameterList<String, MpTextIterator<String>>();
@@ -33,6 +33,7 @@ public final class MultiAlgorithmParameters {
 		}
 	}
 
+	@Override
 	public long size() {
 		long result = 1;
 		for (ParameterList<?, ?> pl : parameters) {
@@ -41,6 +42,7 @@ public final class MultiAlgorithmParameters {
 		return result;
 	}
 
+	@Override
 	public int parametersSize() {
 		int size = 0;
 		for (ParameterList<?, ?> i : parameters) {
@@ -56,10 +58,6 @@ public final class MultiAlgorithmParameters {
 			result += "\n" + p.toString();
 		}
 		return result;
-	}
-
-	public ParameterList<?, ?> getParamsFor(int i) {
-		return parameters[i];
 	}
 
 	public ParameterList<Integer, MpNumberIterator<Integer>> getIntegers() {
@@ -80,6 +78,11 @@ public final class MultiAlgorithmParameters {
 
 	public Iterator<MpTextIterator<String>> getSubExecutionIterator() {
 		return getSubExecutions().getParams().iterator();
+	}
+
+	@Override
+	public AlgorithmConfigurationSetImpl clone() {
+		return new AlgorithmConfigurationSetImpl(this);
 	}
 
 }

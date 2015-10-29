@@ -2,26 +2,26 @@ package stsc.general.simulator.multistarter.grid;
 
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.general.algorithm.AlgorithmConfigurationImpl;
+import stsc.general.simulator.multistarter.AlgorithmConfigurationSet;
 import stsc.general.simulator.multistarter.MpIterator;
-import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.ParameterList;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
 
-public class AlgorithmSettingsGridIterator implements ResetableIterable<MutableAlgorithmConfiguration> {
+public final class AlgorithmSettingsGridIterator implements ResetableIterable<MutableAlgorithmConfiguration> {
 
 	public class Element implements ResetableIterator<MutableAlgorithmConfiguration>, Cloneable {
 
-		private final MultiAlgorithmParameters parameters;
+		private final AlgorithmConfigurationSet parameters;
 		private boolean finished;
 
-		public Element(MultiAlgorithmParameters parameterList, boolean finished) {
+		public Element(AlgorithmConfigurationSet parameterList, boolean finished) {
 			this.parameters = parameterList;
 			this.finished = finished;
 		}
 
 		public Element clone() {
-			final MultiAlgorithmParameters copyParameters = new MultiAlgorithmParameters(parameters);
+			final AlgorithmConfigurationSet copyParameters = parameters.clone();
 			return new Element(copyParameters, this.finished);
 		}
 
@@ -94,7 +94,6 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<MutableA
 
 			final ParameterList<Integer, ?> integers = parameters.getIntegers();
 			for (MpIterator<Integer, ?> p : integers.getParams()) {
-				p.currentParameter();
 				final String name = p.currentParameter().getName();
 				final Integer value = p.currentParameter().getValue();
 				algoSettings.setInteger(name, value);
@@ -131,17 +130,17 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<MutableA
 			return parameters.size();
 		}
 
-		public MultiAlgorithmParameters getParameters() {
+		public AlgorithmConfigurationSet getParameters() {
 			return parameters;
 		}
 	}
 
-	private final MultiAlgorithmParameters parameters;
+	private final AlgorithmConfigurationSet parameters;
 
 	private boolean finished;
 
-	public AlgorithmSettingsGridIterator(final MultiAlgorithmParameters parameters) {
-		this.parameters = new MultiAlgorithmParameters(parameters);
+	public AlgorithmSettingsGridIterator(final AlgorithmConfigurationSet parameters) {
+		this.parameters = parameters.clone();
 		this.finished = false;
 	}
 

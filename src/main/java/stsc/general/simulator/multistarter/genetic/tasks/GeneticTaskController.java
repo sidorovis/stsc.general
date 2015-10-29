@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.Simulator;
-import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorConfiguration;
 import stsc.general.strategy.TradingStrategy;
 
 /**
@@ -16,7 +16,7 @@ public interface GeneticTaskController {
 
 	// generate random
 
-	public SimulatorSettings getRandomSimulatorSettings() throws BadAlgorithmException;
+	public SimulatorConfiguration getRandomSimulatorSettings() throws BadAlgorithmException;
 
 	public void addTaskToExecutor(Callable<Boolean> callableTask);
 

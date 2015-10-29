@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.common.Settings;
-import stsc.general.simulator.SimulatorSettingsImpl;
+import stsc.general.simulator.SimulatorConfigurationImpl;
 import stsc.general.statistic.cost.comparator.MetricsSameComparator;
 import stsc.general.statistic.cost.function.CostWeightedSumFunction;
 import stsc.general.strategy.TradingStrategy;
@@ -32,7 +32,7 @@ public class StatisticsSelectorTest {
 		values.add(compareMethod.calculate(TestMetricsHelper.getMetrics(150, 210)));
 		Collections.sort(values, Collections.reverseOrder());
 
-		Iterator<SimulatorSettingsImpl> testSettings = TestGridSimulatorSettings.getGridList().iterator();
+		Iterator<SimulatorConfigurationImpl> testSettings = TestGridSimulatorSettings.getGridList().iterator();
 
 		statisticsSelector.addStrategy(new TradingStrategy(testSettings.next(), TestMetricsHelper.getMetrics(100, 200)));
 		statisticsSelector.addStrategy(new TradingStrategy(testSettings.next(), TestMetricsHelper.getMetrics(200, 250)));
