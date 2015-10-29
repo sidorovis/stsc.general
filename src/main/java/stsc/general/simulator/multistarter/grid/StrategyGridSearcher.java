@@ -17,7 +17,7 @@ import stsc.common.BadSignalException;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorImpl;
-import stsc.general.simulator.SimulatorSettingsImpl;
+import stsc.general.simulator.SimulatorConfigurationImpl;
 import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.strategy.TradingStrategy;
@@ -35,10 +35,10 @@ public class StrategyGridSearcher implements StrategySearcher {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/mt_strategy_grid_searcher_log4j2.xml");
 	}
 
-	static class IteratorProxy implements Iterator<SimulatorSettingsImpl> {
-		private final Iterator<SimulatorSettingsImpl> value;
+	static class IteratorProxy implements Iterator<SimulatorConfigurationImpl> {
+		private final Iterator<SimulatorConfigurationImpl> value;
 
-		IteratorProxy(Iterator<SimulatorSettingsImpl> value) {
+		IteratorProxy(Iterator<SimulatorConfigurationImpl> value) {
 			this.value = value;
 		}
 
@@ -48,7 +48,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 		}
 
 		@Override
-		public synchronized SimulatorSettingsImpl next() {
+		public synchronized SimulatorConfigurationImpl next() {
 			return value.next();
 		}
 
@@ -82,7 +82,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 
 		@Override
 		public void run() {
-			Optional<SimulatorSettingsImpl> settings = getNextSimulatorSettings();
+			Optional<SimulatorConfigurationImpl> settings = getNextSimulatorSettings();
 
 			while (settings.isPresent()) {
 				try {
@@ -97,10 +97,10 @@ public class StrategyGridSearcher implements StrategySearcher {
 			}
 		}
 
-		private Optional<SimulatorSettingsImpl> getNextSimulatorSettings() {
+		private Optional<SimulatorConfigurationImpl> getNextSimulatorSettings() {
 			synchronized (iterator) {
 				while (!stoppedByRequest && iterator.hasNext()) {
-					final SimulatorSettingsImpl nextValue = iterator.next();
+					final SimulatorConfigurationImpl nextValue = iterator.next();
 					if (nextValue == null)
 						return Optional.empty();
 					final String hashCode = nextValue.stringHashCode();

@@ -15,14 +15,14 @@ import stsc.common.algorithms.EodExecution;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.algorithms.StockExecution;
 import stsc.common.storage.StockStorage;
-import stsc.general.simulator.SimulatorSettings;
-import stsc.general.simulator.SimulatorSettingsImpl;
+import stsc.general.simulator.SimulatorConfiguration;
+import stsc.general.simulator.SimulatorConfigurationImpl;
 import stsc.general.strategy.TradingStrategy;
 import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionsStorage;
 
 /**
- * Stores all possible values from {@link SimulatorSettingsImpl} for Genetic {@link TradingStrategy} Search.<br/>
+ * Stores all possible values from {@link SimulatorConfigurationImpl} for Genetic {@link TradingStrategy} Search.<br/>
  * 
  */
 public final class SimulatorSettingsGeneticListImpl implements ExternalizableGeneticList {
@@ -53,27 +53,27 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 	}
 
 	@Override
-	public synchronized SimulatorSettingsImpl generateRandom() throws BadAlgorithmException {
+	public synchronized SimulatorConfigurationImpl generateRandom() throws BadAlgorithmException {
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 
 		for (GeneticExecutionInitializer i : stockInitializers) {
-			final StockExecution e = new StockExecution(i.executionName, i.algorithmName, i.generateRandom());
+			final StockExecution e = new StockExecution(i.getExecutionName(), i.algorithmName, i.generateRandom());
 			executionsStorage.addStockExecution(e);
 		}
 		for (GeneticExecutionInitializer i : eodInitializers) {
-			final EodExecution e = new EodExecution(i.executionName, i.algorithmName, i.generateRandom());
+			final EodExecution e = new EodExecution(i.getExecutionName(), i.algorithmName, i.generateRandom());
 			executionsStorage.addEodExecution(e);
 		}
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period, executionsStorage);
-		final SimulatorSettingsImpl ss = new SimulatorSettingsImpl(id.getAndIncrement(), init);
+		final SimulatorConfigurationImpl ss = new SimulatorConfigurationImpl(id.getAndIncrement(), init);
 		return ss;
 	}
 
 	@Override
-	public SimulatorSettings mutate(SimulatorSettings settings) {
+	public SimulatorConfiguration mutate(SimulatorConfiguration settings) {
 		final int initializersAmount = stockInitializers.size() + eodInitializers.size();
 		final int mutateSettingIndex = randomizer.nextInt(initializersAmount);
-		final SimulatorSettings copy = settings.clone();
+		final SimulatorConfiguration copy = settings.clone();
 		if (stockInitializers.size() > mutateSettingIndex) {
 			final GeneticExecutionInitializer init = stockInitializers.get(mutateSettingIndex);
 			init.mutateStock(mutateSettingIndex, copy);
@@ -86,17 +86,17 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 	}
 
 	@Override
-	public SimulatorSettings merge(SimulatorSettings left, SimulatorSettings right) {
+	public SimulatorConfiguration merge(SimulatorConfiguration left, SimulatorConfiguration right) {
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period);
 		final ExecutionsStorage resultEs = init.getExecutionsStorage();
 
 		mergeStocks(resultEs, left, right);
 		mergeEods(resultEs, left, right);
 
-		return new SimulatorSettingsImpl(id.getAndIncrement(), init);
+		return new SimulatorConfigurationImpl(id.getAndIncrement(), init);
 	}
 
-	private ExecutionsStorage mergeStocks(ExecutionsStorage result, SimulatorSettings left, SimulatorSettings right) {
+	private ExecutionsStorage mergeStocks(ExecutionsStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
 		final List<StockExecution> leftList = left.getInit().getExecutionsStorage().getStockExecutions();
 		final List<StockExecution> rightList = right.getInit().getExecutionsStorage().getStockExecutions();
 
@@ -123,7 +123,7 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 		return result;
 	}
 
-	private ExecutionsStorage mergeEods(ExecutionsStorage result, SimulatorSettings left, SimulatorSettings right) {
+	private ExecutionsStorage mergeEods(ExecutionsStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
 		final List<EodExecution> leftList = left.getInit().getExecutionsStorage().getEodExecutions();
 		final List<EodExecution> rightList = right.getInit().getExecutionsStorage().getEodExecutions();
 

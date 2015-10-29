@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorFactory;
-import stsc.general.simulator.SimulatorSettings;
+import stsc.general.simulator.SimulatorConfiguration;
 import stsc.general.simulator.multistarter.genetic.tasks.GeneticTaskController;
 import stsc.general.strategy.TradingStrategy;
 
@@ -24,7 +24,7 @@ final class GeneticTaskControllerImpl implements GeneticTaskController {
 	}
 
 	@Override
-	public SimulatorSettings getRandomSimulatorSettings() throws BadAlgorithmException {
+	public SimulatorConfiguration getRandomSimulatorSettings() throws BadAlgorithmException {
 		return simulatorSettingsGeneticList.generateRandom();
 	}
 

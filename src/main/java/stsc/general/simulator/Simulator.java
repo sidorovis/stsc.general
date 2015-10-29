@@ -10,7 +10,7 @@ import stsc.general.statistic.Metrics;
  */
 public interface Simulator {
 
-	public void simulateMarketTrading(final SimulatorSettings simulatorSettings) throws BadAlgorithmException, BadSignalException;
+	public void simulateMarketTrading(final SimulatorConfiguration simulatorSettings) throws BadAlgorithmException, BadSignalException;
 
 	public Metrics getMetrics();
 

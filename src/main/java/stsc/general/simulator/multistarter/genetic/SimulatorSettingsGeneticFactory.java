@@ -21,7 +21,7 @@ public final class SimulatorSettingsGeneticFactory extends SimulatorSettingsFact
 
 	// add sub-algorithms
 
-	public SimulatorSettingsGeneticFactory addStock(String eName, String aName, AlgorithmSettingsGeneticList multiAlgorithmSettings) {
+	public SimulatorSettingsGeneticFactory addStock(String eName, String aName, AlgorithmConfigurationSetGeneticGenerator multiAlgorithmSettings) {
 		synchronized (stockInitializers) {
 			addInitializer(stockInitializers, new GeneticExecutionInitializer(eName, aName, multiAlgorithmSettings));
 		}
@@ -40,7 +40,7 @@ public final class SimulatorSettingsGeneticFactory extends SimulatorSettingsFact
 		return addStock(eName, aName, factory.getGeneticList());
 	}
 
-	public SimulatorSettingsGeneticFactory addEod(String eName, String aName, AlgorithmSettingsGeneticList multiAlgorithmSettings) {
+	public SimulatorSettingsGeneticFactory addEod(String eName, String aName, AlgorithmConfigurationSetGeneticGenerator multiAlgorithmSettings) {
 		synchronized (eodInitializers) {
 			addInitializer(eodInitializers, new GeneticExecutionInitializer(eName, aName, multiAlgorithmSettings));
 		}

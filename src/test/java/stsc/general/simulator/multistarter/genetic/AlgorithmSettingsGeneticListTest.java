@@ -19,7 +19,7 @@ import stsc.general.simulator.multistarter.MpSubExecution;
 
 public class AlgorithmSettingsGeneticListTest {
 
-	private AlgorithmSettingsGeneticList getList() throws BadParameterException {
+	private AlgorithmConfigurationSetGeneticGenerator getGeneticGenerator() throws BadParameterException {
 		final AlgorithmSettingsIteratorFactory factory = new AlgorithmSettingsIteratorFactory();
 		factory.add(new MpInteger("q", -20, 100, 1));
 		factory.add(new MpInteger("w", -40, 15, 1));
@@ -28,13 +28,13 @@ public class AlgorithmSettingsGeneticListTest {
 		factory.add(new MpString("z", Arrays.asList(new String[] { "asd", "ibm", "yhoo" })));
 		factory.add(new MpString("z", Arrays.asList(new String[] { "vokrug", "fileName" })));
 		factory.add(new MpSubExecution("p", Arrays.asList(new String[] { "12313-432423", "234535-23424", "35345-234234135", "24454-65462245" })));
-		final AlgorithmSettingsGeneticList mas = factory.getGeneticList();
+		final AlgorithmConfigurationSetGeneticGenerator mas = factory.getGeneticList();
 		return mas;
 	}
 
 	@Test
 	public void testAlgorithmSettingsGeneticListGenerateRandom() throws ParseException, BadParameterException, BadAlgorithmException {
-		final AlgorithmSettingsGeneticList mas = getList();
+		final AlgorithmConfigurationSetGeneticGenerator mas = getGeneticGenerator();
 
 		final Set<String> codes = new HashSet<>();
 		final int TEST_SIZE = 50000;
@@ -50,7 +50,7 @@ public class AlgorithmSettingsGeneticListTest {
 
 	@Test
 	public void testAlgorithmSettingsGeneticListSize() throws ParseException, BadParameterException, BadAlgorithmException {
-		final AlgorithmSettingsGeneticList mas = getList();
+		final AlgorithmConfigurationSetGeneticGenerator mas = getGeneticGenerator();
 		Assert.assertEquals(17070292800L, mas.size());
 	}
 
@@ -65,7 +65,7 @@ public class AlgorithmSettingsGeneticListTest {
 	}
 
 	private boolean amountOfMutations() throws BadParameterException {
-		final AlgorithmSettingsGeneticList mas = getList();
+		final AlgorithmConfigurationSetGeneticGenerator mas = getGeneticGenerator();
 		final MutableAlgorithmConfiguration original = mas.generateRandom();
 		final MutableAlgorithmConfiguration copy = original.clone();
 		int i = 0;
@@ -84,7 +84,7 @@ public class AlgorithmSettingsGeneticListTest {
 
 	@Test
 	public void testAlgorithmSettingsGeneticListMerge() throws ParseException, BadParameterException, BadAlgorithmException {
-		final AlgorithmSettingsGeneticList mas = getList();
+		final AlgorithmConfigurationSetGeneticGenerator mas = getGeneticGenerator();
 		final MutableAlgorithmConfiguration original = mas.generateRandom();
 		final MutableAlgorithmConfiguration copy = original.clone();
 
