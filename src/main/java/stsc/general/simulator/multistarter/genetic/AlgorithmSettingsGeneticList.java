@@ -156,11 +156,11 @@ public class AlgorithmSettingsGeneticList {
 
 	// Merge methods
 
-	MutatingAlgorithmSettings merge(AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
+	MutatingAlgorithmSettings merge(MutatingAlgorithmSettings leftSe, MutatingAlgorithmSettings rightSe) {
 		return mergeParameters(leftSe, rightSe);
 	}
 
-	private MutatingAlgorithmSettings mergeParameters(AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
+	private MutatingAlgorithmSettings mergeParameters(MutatingAlgorithmSettings leftSe, MutatingAlgorithmSettings rightSe) {
 		final AlgorithmSettingsImpl result = new AlgorithmSettingsImpl();
 		mergeIntegers(result, leftSe, rightSe);
 		mergeDouble(result, leftSe, rightSe);
@@ -169,7 +169,7 @@ public class AlgorithmSettingsGeneticList {
 		return result;
 	}
 
-	private void mergeIntegers(final AlgorithmSettingsImpl result, final AlgorithmSettings leftSe, final AlgorithmSettings rightSe) {
+	private void mergeIntegers(final AlgorithmSettingsImpl result, final MutatingAlgorithmSettings leftSe, final MutatingAlgorithmSettings rightSe) {
 		for (MpIterator<Integer, ?> p : parameters.getIntegers().getParams()) {
 			final String settingName = p.getName();
 			final Integer resultValue = p.merge(leftSe.getInteger(settingName), rightSe.getInteger(settingName));
@@ -177,7 +177,7 @@ public class AlgorithmSettingsGeneticList {
 		}
 	}
 
-	private void mergeDouble(AlgorithmSettingsImpl result, AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
+	private void mergeDouble(AlgorithmSettingsImpl result, MutatingAlgorithmSettings leftSe, MutatingAlgorithmSettings rightSe) {
 		for (MpIterator<Double, ?> p : parameters.getDoubles().getParams()) {
 			final String settingName = p.getName();
 			final Double resultValue = mutate(p, leftSe.getDouble(settingName), rightSe.getDouble(settingName));
@@ -185,7 +185,7 @@ public class AlgorithmSettingsGeneticList {
 		}
 	}
 
-	private void mergeStrings(AlgorithmSettingsImpl result, AlgorithmSettings leftSe, AlgorithmSettings rightSe) {
+	private void mergeStrings(AlgorithmSettingsImpl result, MutatingAlgorithmSettings leftSe, MutatingAlgorithmSettings rightSe) {
 		for (MpIterator<String, ?> p : parameters.getStrings().getParams()) {
 			final String settingName = p.getName();
 			final String mutatedValue = p.merge(leftSe.getString(settingName), rightSe.getString(settingName));

@@ -1,11 +1,10 @@
 package stsc.general.simulator.multistarter.grid;
 
-import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
 
-public class GridExecutionInitializer implements ResetableIterator<AlgorithmSettings>, ResetableIterable<AlgorithmSettings>, Cloneable {
+public class GridExecutionInitializer implements ResetableIterator<MutatingAlgorithmSettings>, ResetableIterable<MutatingAlgorithmSettings>, Cloneable {
 	public String executionName;
 	public String algorithmName;
 	public AlgorithmSettingsGridIterator.Element iterator;
@@ -38,7 +37,7 @@ public class GridExecutionInitializer implements ResetableIterator<AlgorithmSett
 	}
 
 	@Override
-	public AlgorithmSettings next() {
+	public MutatingAlgorithmSettings next() {
 		return iterator.next();
 	}
 
@@ -58,7 +57,7 @@ public class GridExecutionInitializer implements ResetableIterator<AlgorithmSett
 	}
 
 	@Override
-	public ResetableIterator<AlgorithmSettings> iterator() {
+	public ResetableIterator<MutatingAlgorithmSettings> iterator() {
 		return this;
 	}
 

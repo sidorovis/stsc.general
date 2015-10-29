@@ -8,7 +8,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
@@ -86,10 +85,10 @@ public class AlgorithmSettingsGeneticListTest {
 	@Test
 	public void testAlgorithmSettingsGeneticListMerge() throws ParseException, BadParameterException, BadAlgorithmException {
 		final AlgorithmSettingsGeneticList mas = getList();
-		final AlgorithmSettings original = mas.generateRandom();
-		final AlgorithmSettings copy = original.clone();
+		final MutatingAlgorithmSettings original = mas.generateRandom();
+		final MutatingAlgorithmSettings copy = original.clone();
 
-		final AlgorithmSettings merge = mas.merge(original, copy);
+		final MutatingAlgorithmSettings merge = mas.merge(original, copy);
 		Assert.assertEquals(merge.getSubExecutions().size(), original.getSubExecutions().size());
 		Assert.assertEquals(merge.getSubExecutions().get(0), original.getSubExecutions().get(0));
 		Assert.assertEquals(merge.getInteger("q"), original.getInteger("q"));

@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import stsc.common.algorithms.AlgorithmSettings;
 import stsc.common.algorithms.BadAlgorithmException;
+import stsc.common.algorithms.MutatingAlgorithmSettings;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
 import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpDouble;
@@ -18,7 +19,7 @@ import stsc.general.simulator.multistarter.MpSubExecution;
 
 public class AlgorithmSettingsGridIteratorTest {
 
-	private void testHelperNlmParameters(Integer n, String l, Integer m, AlgorithmSettings s) {
+	private void testHelperNlmParameters(Integer n, String l, Integer m, MutatingAlgorithmSettings s) {
 		Assert.assertEquals(n, s.getInteger("n"));
 		Assert.assertEquals(m, s.getInteger("m"));
 		Assert.assertEquals(l, s.getString("l"));
@@ -32,9 +33,9 @@ public class AlgorithmSettingsGridIteratorTest {
 		factory.add(new MpString("l", Arrays.asList(new String[] { "asd", "ibm" })));
 		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
 
-		final ArrayList<AlgorithmSettings> settings = new ArrayList<>();
+		final ArrayList<MutatingAlgorithmSettings> settings = new ArrayList<>();
 
-		for (AlgorithmSettings se : mas) {
+		for (MutatingAlgorithmSettings se : mas) {
 			settings.add(se);
 		}
 		Assert.assertEquals(8, settings.size());
@@ -89,7 +90,7 @@ public class AlgorithmSettingsGridIteratorTest {
 		AlgorithmSettingsGridIterator.Element i = mas.iterator();
 		int sum = 0;
 		while (i.hasNext()) {
-			AlgorithmSettings as = i.next();
+			MutatingAlgorithmSettings as = i.next();
 			Assert.assertEquals(as.getString("z"), arr[sum]);
 			sum += 1;
 		}
