@@ -9,7 +9,6 @@ import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import stsc.algorithms.AlgorithmConfigurationImpl;
 import stsc.algorithms.primitive.eod.TestingEodAlgorithm;
 import stsc.algorithms.primitive.eod.TestingEodAlgorithmSignal;
 import stsc.common.FromToPeriod;
@@ -19,6 +18,7 @@ import stsc.common.signals.SerieSignal;
 import stsc.common.stocks.united.format.UnitedFormatStock;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
+import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.storage.ExecutionStarter;
 import stsc.storage.ExecutionsStorage;
 import stsc.storage.ThreadSafeStockStorage;

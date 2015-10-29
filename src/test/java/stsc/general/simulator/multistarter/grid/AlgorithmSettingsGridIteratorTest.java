@@ -20,9 +20,9 @@ import stsc.general.simulator.multistarter.MpSubExecution;
 public class AlgorithmSettingsGridIteratorTest {
 
 	private void testHelperNlmParameters(Integer n, String l, Integer m, MutatingAlgorithmConfiguration s) {
-		Assert.assertEquals(n, s.getInteger("n"));
-		Assert.assertEquals(m, s.getInteger("m"));
-		Assert.assertEquals(l, s.getString("l"));
+		Assert.assertEquals(n, s.getIntegerSetting("n", Integer.MAX_VALUE));
+		Assert.assertEquals(m, s.getIntegerSetting("m", Integer.MAX_VALUE));
+		Assert.assertEquals(l, s.getStringSetting("l", "unknown unexpected value"));
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class AlgorithmSettingsGridIteratorTest {
 		int sum = 0;
 		while (i.hasNext()) {
 			MutatingAlgorithmConfiguration as = i.next();
-			Assert.assertEquals(as.getString("z"), arr[sum]);
+			Assert.assertEquals(as.getStringSetting("z", "unexpected"), arr[sum]);
 			sum += 1;
 		}
 		Assert.assertEquals(2, sum);

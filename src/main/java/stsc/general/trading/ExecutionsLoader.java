@@ -20,7 +20,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
 
-import stsc.algorithms.AlgorithmConfigurationImpl;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.EodAlgorithm;
@@ -28,6 +27,7 @@ import stsc.common.algorithms.EodExecution;
 import stsc.common.algorithms.MutatingAlgorithmConfiguration;
 import stsc.common.algorithms.StockAlgorithm;
 import stsc.common.algorithms.StockExecution;
+import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.storage.AlgorithmsStorage;
 import stsc.storage.ExecutionsStorage;
 

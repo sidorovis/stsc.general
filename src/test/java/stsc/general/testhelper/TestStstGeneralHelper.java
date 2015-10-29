@@ -1,11 +1,11 @@
 package stsc.general.testhelper;
 
-import stsc.algorithms.AlgorithmConfigurationImpl;
 import stsc.common.algorithms.AlgorithmConfiguration;
 import stsc.common.algorithms.EodAlgorithmInit;
 import stsc.common.algorithms.StockAlgorithmInit;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.trading.Broker;
+import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.general.trading.BrokerImpl;
 import stsc.storage.SignalsStorageImpl;
 import stsc.storage.ThreadSafeStockStorage;
