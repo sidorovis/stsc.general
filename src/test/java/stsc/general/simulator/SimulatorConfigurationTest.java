@@ -11,14 +11,14 @@ import org.junit.Test;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.trading.TradeProcessorInit;
 
-public class SimulatorSettingsTest {
+public class SimulatorConfigurationTest {
 
 	final private String resourceToPath(final String resourcePath) throws URISyntaxException {
-		return new File(SimulatorSettingsTest.class.getResource(resourcePath).toURI()).getAbsolutePath();
+		return new File(SimulatorConfigurationTest.class.getResource(resourcePath).toURI()).getAbsolutePath();
 	}
 
 	@Test
-	public void testSimulatorSettings() throws BadAlgorithmException, URISyntaxException {
+	public void testSimulatorConfiguration() throws BadAlgorithmException, URISyntaxException {
 		final TradeProcessorInit init = new TradeProcessorInit(new File(resourceToPath("simulator_configs/ndays.ini")));
 		final SimulatorConfiguration ss = new SimulatorConfigurationImpl(0, init);
 
@@ -35,7 +35,7 @@ public class SimulatorSettingsTest {
 	}
 
 	@Test
-	public void testSimulatorSettingsToString() throws BadAlgorithmException, URISyntaxException {
+	public void testSimulatorConfigurationToString() throws BadAlgorithmException, URISyntaxException {
 		final TradeProcessorInit init = new TradeProcessorInit(new File(resourceToPath("simulator_configs/ndays.ini")));
 		final SimulatorConfiguration ss = new SimulatorConfigurationImpl(0, init);
 		Assert.assertEquals(10, ss.toString().split("\n").length);
