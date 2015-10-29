@@ -91,10 +91,10 @@ public class AlgorithmSettingsGeneticListTest {
 		final MutatingAlgorithmConfiguration merge = mas.merge(original, copy);
 		Assert.assertEquals(merge.getSubExecutions().size(), original.getSubExecutions().size());
 		Assert.assertEquals(merge.getSubExecutions().get(0), original.getSubExecutions().get(0));
-		Assert.assertEquals(merge.getInteger("q"), original.getInteger("q"));
-		Assert.assertEquals(merge.getInteger("w"), original.getInteger("w"));
-		Assert.assertEquals(merge.getDouble("a"), original.getDouble("a"));
-		Assert.assertEquals(merge.getDouble("s"), original.getDouble("s"));
-		Assert.assertEquals(merge.getString("z"), original.getString("z"));
+		Assert.assertEquals(merge.getIntegerSetting("q", 100), original.getIntegerSetting("q", 200));
+		Assert.assertEquals(merge.getIntegerSetting("w", 400), original.getIntegerSetting("w", 300));
+		Assert.assertEquals(merge.getDoubleSetting("a", 142.4), original.getDoubleSetting("a", 5454.6));
+		Assert.assertEquals(merge.getDoubleSetting("s", 343.54), original.getDoubleSetting("s", 56.4));
+		Assert.assertEquals(merge.getStringSetting("z", "vrr"), original.getStringSetting("z", "v"));
 	}
 }

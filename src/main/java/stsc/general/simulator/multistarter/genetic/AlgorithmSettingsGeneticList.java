@@ -3,9 +3,9 @@ package stsc.general.simulator.multistarter.genetic;
 import java.util.Iterator;
 import java.util.Random;
 
-import stsc.algorithms.AlgorithmConfigurationImpl;
 import stsc.common.algorithms.AlgorithmConfiguration;
 import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MpTextIterator;
 import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
@@ -104,7 +104,7 @@ public class AlgorithmSettingsGeneticList {
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<Integer, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutate(mutatingParameter.getName(), mutate(index, mutatingParameter));
+			settings.setInteger(mutatingParameter.getName(), mutate(index, mutatingParameter));
 			return MUTATING_FINISHED;
 		}
 		return index - size;
@@ -117,7 +117,7 @@ public class AlgorithmSettingsGeneticList {
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<Double, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutate(mutatingParameter.getName(), mutate(index, mutatingParameter));
+			settings.setDouble(mutatingParameter.getName(), mutate(index, mutatingParameter));
 			return MUTATING_FINISHED;
 		}
 		return index - size;
@@ -130,7 +130,7 @@ public class AlgorithmSettingsGeneticList {
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<String, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutate(mutatingParameter.getName(), mutate(index, mutatingParameter));
+			settings.setString(mutatingParameter.getName(), mutate(index, mutatingParameter));
 			return MUTATING_FINISHED;
 		}
 		return index - size;
@@ -143,7 +143,7 @@ public class AlgorithmSettingsGeneticList {
 		final int size = list.getParams().size();
 		if (size != 0 && size > index) {
 			final MpIterator<String, ?> mutatingParameter = list.getParams().get(index);
-			settings.mutateSubExecution(index, mutate(index, mutatingParameter));
+			settings.setSubExecutionName(index, mutate(index, mutatingParameter));
 		}
 	}
 
@@ -172,7 +172,7 @@ public class AlgorithmSettingsGeneticList {
 	private void mergeIntegers(final AlgorithmConfigurationImpl result, final MutatingAlgorithmConfiguration leftSe, final MutatingAlgorithmConfiguration rightSe) {
 		for (MpIterator<Integer, ?> p : parameters.getIntegers().getParams()) {
 			final String settingName = p.getName();
-			final Integer resultValue = p.merge(leftSe.getInteger(settingName), rightSe.getInteger(settingName));
+			final Integer resultValue = p.merge(leftSe.getIntegerSetting(settingName, Integer.MAX_VALUE), rightSe.getIntegerSetting(settingName, Integer.MAX_VALUE));
 			result.setInteger(settingName, resultValue);
 		}
 	}
@@ -180,7 +180,7 @@ public class AlgorithmSettingsGeneticList {
 	private void mergeDouble(AlgorithmConfigurationImpl result, MutatingAlgorithmConfiguration leftSe, MutatingAlgorithmConfiguration rightSe) {
 		for (MpIterator<Double, ?> p : parameters.getDoubles().getParams()) {
 			final String settingName = p.getName();
-			final Double resultValue = mutate(p, leftSe.getDouble(settingName), rightSe.getDouble(settingName));
+			final Double resultValue = mutate(p, leftSe.getDoubleSetting(settingName, Double.MAX_VALUE), rightSe.getDoubleSetting(settingName, Double.MAX_VALUE));
 			result.setDouble(settingName, resultValue);
 		}
 	}
@@ -188,7 +188,7 @@ public class AlgorithmSettingsGeneticList {
 	private void mergeStrings(AlgorithmConfigurationImpl result, MutatingAlgorithmConfiguration leftSe, MutatingAlgorithmConfiguration rightSe) {
 		for (MpIterator<String, ?> p : parameters.getStrings().getParams()) {
 			final String settingName = p.getName();
-			final String mutatedValue = p.merge(leftSe.getString(settingName), rightSe.getString(settingName));
+			final String mutatedValue = p.merge(leftSe.getStringSetting(settingName, ""), rightSe.getStringSetting(settingName, ""));
 			result.setString(settingName, mutatedValue);
 		}
 	}

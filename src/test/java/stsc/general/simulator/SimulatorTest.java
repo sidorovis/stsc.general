@@ -11,7 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import stsc.algorithms.AlgorithmConfigurationImpl;
 import stsc.algorithms.primitive.eod.OneSideOpenAlgorithm;
 import stsc.common.FromToPeriod;
 import stsc.common.Settings;
@@ -19,6 +18,7 @@ import stsc.common.algorithms.AlgorithmNameGenerator;
 import stsc.common.algorithms.EodExecution;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
+import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 import stsc.general.testhelper.TestMetricsHelper;

@@ -1,7 +1,7 @@
 package stsc.general.simulator.multistarter.grid;
 
-import stsc.algorithms.AlgorithmConfigurationImpl;
 import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.ParameterList;
