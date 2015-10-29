@@ -8,9 +8,9 @@ import stsc.general.simulator.multistarter.ParameterList;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
 
-public final class AlgorithmSettingsGridIterator implements ResetableIterable<MutableAlgorithmConfiguration> {
+public final class AlgorithmConfigurationSetGridGenerator implements ResetableIterable<MutableAlgorithmConfiguration>, ResetableIterator<MutableAlgorithmConfiguration> {
 
-	public class Element implements ResetableIterator<MutableAlgorithmConfiguration>, Cloneable {
+	private static class Element implements ResetableIterator<MutableAlgorithmConfiguration>, Cloneable {
 
 		private final AlgorithmConfigurationSet parameters;
 		private boolean finished;
@@ -126,44 +126,68 @@ public final class AlgorithmSettingsGridIterator implements ResetableIterable<Mu
 			parameters.reset();
 		}
 
-		public long size() {
-			return parameters.size();
-		}
-
 		public AlgorithmConfigurationSet getParameters() {
 			return parameters;
 		}
+
+		public long size() {
+			return parameters.size();
+		}
 	}
 
-	private final AlgorithmConfigurationSet parameters;
-
+	private final Element iterator;
 	private boolean finished;
 
-	public AlgorithmSettingsGridIterator(final AlgorithmConfigurationSet parameters) {
-		this.parameters = parameters.clone();
+	public AlgorithmConfigurationSetGridGenerator(final AlgorithmConfigurationSet parameters) {
 		this.finished = false;
-	}
-
-	@Override
-	public Element iterator() {
-		return new Element(this.parameters, this.finished);
+		this.iterator = new Element(parameters.clone(), this.finished);
 	}
 
 	public Element getResetIterator() {
-		return new Element(this.parameters, this.finished);
-	}
-
-	public boolean getFinished() {
-		return this.finished;
+		return new Element(iterator.getParameters().clone(), this.finished);
 	}
 
 	@Override
 	public String toString() {
-		return parameters.toString();
+		return iterator.toString();
 	}
 
 	public long size() {
-		return parameters.size();
+		return iterator.size();
+	}
+
+	public AlgorithmConfigurationSet getParameters() {
+		return iterator.getParameters();
+	}
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
+
+	@Override
+	public MutableAlgorithmConfiguration next() {
+		return iterator.next();
+	}
+
+	@Override
+	public MutableAlgorithmConfiguration current() {
+		return iterator.current();
+	}
+
+	@Override
+	public void reset() {
+		iterator.reset();
+	}
+
+	@Override
+	public AlgorithmConfigurationSetGridGenerator clone() {
+		return new AlgorithmConfigurationSetGridGenerator(getParameters().clone());
+	}
+
+	@Override
+	public ResetableIterator<MutableAlgorithmConfiguration> iterator() {
+		return new AlgorithmConfigurationSetGridGenerator(getParameters().clone());
 	}
 
 }

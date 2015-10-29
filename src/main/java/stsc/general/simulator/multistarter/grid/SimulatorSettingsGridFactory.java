@@ -24,7 +24,7 @@ public class SimulatorSettingsGridFactory extends SimulatorSettingsFactory<Simul
 
 	// add sub-algorithms
 
-	public SimulatorSettingsGridFactory addStock(String eName, String aName, AlgorithmSettingsGridIterator multiAlgorithmSettings) {
+	public SimulatorSettingsGridFactory addStock(String eName, String aName, AlgorithmConfigurationSetGridGenerator multiAlgorithmSettings) {
 		synchronized (stockInitializers) {
 			addInitializer(stockInitializers, new GridExecutionInitializer(eName, aName, multiAlgorithmSettings));
 		}
@@ -43,7 +43,7 @@ public class SimulatorSettingsGridFactory extends SimulatorSettingsFactory<Simul
 		return addStock(eName, aName, factory.getGridIterator());
 	}
 
-	public SimulatorSettingsGridFactory addEod(String eName, String aName, AlgorithmSettingsGridIterator multiAlgorithmSettings) {
+	public SimulatorSettingsGridFactory addEod(String eName, String aName, AlgorithmConfigurationSetGridGenerator multiAlgorithmSettings) {
 		synchronized (eodInitializers) {
 			addInitializer(eodInitializers, new GridExecutionInitializer(eName, aName, multiAlgorithmSettings));
 		}

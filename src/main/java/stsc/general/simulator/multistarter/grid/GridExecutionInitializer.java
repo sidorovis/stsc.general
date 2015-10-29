@@ -7,20 +7,13 @@ import stsc.general.simulator.multistarter.ResetableIterator;
 public class GridExecutionInitializer implements ResetableIterator<MutableAlgorithmConfiguration>, ResetableIterable<MutableAlgorithmConfiguration>, Cloneable {
 	public String executionName;
 	public String algorithmName;
-	public AlgorithmSettingsGridIterator.Element iterator;
+	public AlgorithmConfigurationSetGridGenerator iterator;
 
-	public GridExecutionInitializer(String eName, String algorithmName, AlgorithmSettingsGridIterator mas) {
+	public GridExecutionInitializer(String eName, String algorithmName, AlgorithmConfigurationSetGridGenerator mas) {
 		super();
 		this.executionName = eName;
 		this.algorithmName = algorithmName;
-		this.iterator = mas.iterator();
-	}
-
-	private GridExecutionInitializer(String eName, String algorithmName, AlgorithmSettingsGridIterator.Element iterator) {
-		super();
-		this.executionName = eName;
-		this.algorithmName = algorithmName;
-		this.iterator = iterator;
+		this.iterator = mas;
 	}
 
 	public GridExecutionInitializer clone() {

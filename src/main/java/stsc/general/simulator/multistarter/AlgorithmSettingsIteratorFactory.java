@@ -1,10 +1,10 @@
 package stsc.general.simulator.multistarter;
 
 import stsc.general.simulator.multistarter.genetic.AlgorithmConfigurationSetGeneticGenerator;
-import stsc.general.simulator.multistarter.grid.AlgorithmSettingsGridIterator;
+import stsc.general.simulator.multistarter.grid.AlgorithmConfigurationSetGridGenerator;
 
 /**
- * Factory for {@link AlgorithmSettingsGridIterator}, {@link AlgorithmConfigurationSetGeneticGenerator}.
+ * Factory for {@link AlgorithmConfigurationSetGridGenerator}, {@link AlgorithmConfigurationSetGeneticGenerator}.
  * 
  * @author isidarau
  *
@@ -37,8 +37,8 @@ public final class AlgorithmSettingsIteratorFactory {
 		return this;
 	}
 
-	public AlgorithmSettingsGridIterator getGridIterator() {
-		return new AlgorithmSettingsGridIterator(parameters);
+	public AlgorithmConfigurationSetGridGenerator getGridIterator() {
+		return new AlgorithmConfigurationSetGridGenerator(parameters);
 	}
 
 	public AlgorithmConfigurationSetGeneticGenerator getGeneticList() {
