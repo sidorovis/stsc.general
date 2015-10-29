@@ -1,7 +1,7 @@
 package stsc.general.testhelper;
 
-import stsc.algorithms.AlgorithmSettingsImpl;
-import stsc.common.algorithms.AlgorithmSettings;
+import stsc.algorithms.AlgorithmConfigurationImpl;
+import stsc.common.algorithms.AlgorithmConfiguration;
 import stsc.common.algorithms.EodAlgorithmInit;
 import stsc.common.algorithms.StockAlgorithmInit;
 import stsc.common.storage.SignalsStorage;
@@ -20,27 +20,27 @@ public class TestStstGeneralHelper {
 	}
 
 	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName) {
-		return getEodAlgorithmInit(broker, executionName, new AlgorithmSettingsImpl());
+		return getEodAlgorithmInit(broker, executionName, new AlgorithmConfigurationImpl());
 	}
 
-	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName, AlgorithmSettings settings) {
-		return getEodAlgorithmInit(broker, executionName, new AlgorithmSettingsImpl(), new SignalsStorageImpl());
+	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName, AlgorithmConfiguration settings) {
+		return getEodAlgorithmInit(broker, executionName, new AlgorithmConfigurationImpl(), new SignalsStorageImpl());
 	}
 
-	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName, AlgorithmSettings settings, SignalsStorage signalsStorage) {
+	public static EodAlgorithmInit getEodAlgorithmInit(Broker broker, String executionName, AlgorithmConfiguration settings, SignalsStorage signalsStorage) {
 		return new EodAlgorithmInit(executionName, signalsStorage, settings, broker);
 	}
 
-	public static StockAlgorithmInit getStockAlgorithmInit(String executionName, String stockName, SignalsStorage storage, AlgorithmSettings settings) {
+	public static StockAlgorithmInit getStockAlgorithmInit(String executionName, String stockName, SignalsStorage storage, AlgorithmConfiguration settings) {
 		return new StockAlgorithmInit(executionName, storage, stockName, settings);
 	}
 
-	public static StockAlgorithmInit getStockAlgorithmInit(String executionName, String stockName, AlgorithmSettings settings) {
+	public static StockAlgorithmInit getStockAlgorithmInit(String executionName, String stockName, AlgorithmConfiguration settings) {
 		return getStockAlgorithmInit(executionName, stockName, new SignalsStorageImpl(), settings);
 	}
 
 	public static StockAlgorithmInit getStockAlgorithmInit(String executionName) {
-		return getStockAlgorithmInit(executionName, "sName", new AlgorithmSettingsImpl());
+		return getStockAlgorithmInit(executionName, "sName", new AlgorithmConfigurationImpl());
 	}
 
 	public static StockAlgorithmInit getStockAlgorithmInit() {

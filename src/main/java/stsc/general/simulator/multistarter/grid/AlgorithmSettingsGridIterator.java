@@ -1,16 +1,16 @@
 package stsc.general.simulator.multistarter.grid;
 
-import stsc.algorithms.AlgorithmSettingsImpl;
-import stsc.common.algorithms.MutatingAlgorithmSettings;
+import stsc.algorithms.AlgorithmConfigurationImpl;
+import stsc.common.algorithms.MutatingAlgorithmConfiguration;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MultiAlgorithmParameters;
 import stsc.general.simulator.multistarter.ParameterList;
 import stsc.general.simulator.multistarter.ResetableIterable;
 import stsc.general.simulator.multistarter.ResetableIterator;
 
-public class AlgorithmSettingsGridIterator implements ResetableIterable<MutatingAlgorithmSettings> {
+public class AlgorithmSettingsGridIterator implements ResetableIterable<MutatingAlgorithmConfiguration> {
 
-	public class Element implements ResetableIterator<MutatingAlgorithmSettings>, Cloneable {
+	public class Element implements ResetableIterator<MutatingAlgorithmConfiguration>, Cloneable {
 
 		private final MultiAlgorithmParameters parameters;
 		private boolean finished;
@@ -41,8 +41,8 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 		}
 
 		@Override
-		public AlgorithmSettingsImpl next() {
-			final AlgorithmSettingsImpl result = generateSettings();
+		public AlgorithmConfigurationImpl next() {
+			final AlgorithmConfigurationImpl result = generateSettings();
 			generateNext();
 			return result;
 		}
@@ -51,7 +51,7 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 		public void remove() {
 		}
 
-		public MutatingAlgorithmSettings current() {
+		public MutatingAlgorithmConfiguration current() {
 			return generateSettings();
 		}
 
@@ -89,8 +89,8 @@ public class AlgorithmSettingsGridIterator implements ResetableIterable<Mutating
 			}
 		}
 
-		protected AlgorithmSettingsImpl generateSettings() {
-			final AlgorithmSettingsImpl algoSettings = new AlgorithmSettingsImpl();
+		protected AlgorithmConfigurationImpl generateSettings() {
+			final AlgorithmConfigurationImpl algoSettings = new AlgorithmConfigurationImpl();
 
 			final ParameterList<Integer, ?> integers = parameters.getIntegers();
 			for (MpIterator<Integer, ?> p : integers.getParams()) {
