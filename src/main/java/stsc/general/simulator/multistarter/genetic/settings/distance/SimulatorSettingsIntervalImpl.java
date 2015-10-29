@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import stsc.common.algorithms.EodExecution;
 import stsc.common.algorithms.Execution;
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.general.simulator.SimulatorSettings;
 
 public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInterval {
@@ -35,7 +35,7 @@ public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInt
 		return result;
 	}
 
-	private double calculateExecutionInterval(final MutatingAlgorithmConfiguration left, final MutatingAlgorithmConfiguration right) {
+	private double calculateExecutionInterval(final MutableAlgorithmConfiguration left, final MutableAlgorithmConfiguration right) {
 		final Map<String, Double> leftDoubles = left.getDoubles();
 		final Map<String, Double> rightDoubles = right.getDoubles();
 		if (leftDoubles.size() != rightDoubles.size()) {

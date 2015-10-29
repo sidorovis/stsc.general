@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import stsc.common.algorithms.AlgorithmConfiguration;
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MpTextIterator;
@@ -37,7 +37,7 @@ public class AlgorithmSettingsGeneticList {
 
 	// Random generate methods
 
-	MutatingAlgorithmConfiguration generateRandom() {
+	MutableAlgorithmConfiguration generateRandom() {
 		final AlgorithmConfigurationImpl algoSettings = new AlgorithmConfigurationImpl();
 		generateRandomIntegers(algoSettings);
 		generateRandomDoubles(algoSettings);
@@ -76,7 +76,7 @@ public class AlgorithmSettingsGeneticList {
 
 	// Mutate methods
 
-	void mutate(final MutatingAlgorithmConfiguration settings) {
+	void mutate(final MutableAlgorithmConfiguration settings) {
 		final int parametersAmount = parameters.parametersSize();
 		if (parametersAmount > 0) {
 			int indexOfMutatingParameter = random.nextInt(parametersAmount);
@@ -97,7 +97,7 @@ public class AlgorithmSettingsGeneticList {
 		return indexOfMutatingParameter < 0;
 	}
 
-	private int mutateIntegers(final MutatingAlgorithmConfiguration settings, final int index) {
+	private int mutateIntegers(final MutableAlgorithmConfiguration settings, final int index) {
 		if (index < 0)
 			return index;
 		final ParameterList<Integer, ?> list = parameters.getIntegers();
@@ -110,7 +110,7 @@ public class AlgorithmSettingsGeneticList {
 		return index - size;
 	}
 
-	private int mutateDoubles(final MutatingAlgorithmConfiguration settings, final int index) {
+	private int mutateDoubles(final MutableAlgorithmConfiguration settings, final int index) {
 		if (index < 0)
 			return index;
 		final ParameterList<Double, ?> list = parameters.getDoubles();
@@ -123,7 +123,7 @@ public class AlgorithmSettingsGeneticList {
 		return index - size;
 	}
 
-	private int mutateStrings(final MutatingAlgorithmConfiguration settings, final int index) {
+	private int mutateStrings(final MutableAlgorithmConfiguration settings, final int index) {
 		if (index < 0)
 			return index;
 		final ParameterList<String, ?> list = parameters.getStrings();
@@ -136,7 +136,7 @@ public class AlgorithmSettingsGeneticList {
 		return index - size;
 	}
 
-	private void mutateSubExecutions(final MutatingAlgorithmConfiguration settings, final int index) {
+	private void mutateSubExecutions(final MutableAlgorithmConfiguration settings, final int index) {
 		if (index < 0)
 			return;
 		final ParameterList<String, ?> list = parameters.getSubExecutions();
@@ -156,11 +156,11 @@ public class AlgorithmSettingsGeneticList {
 
 	// Merge methods
 
-	MutatingAlgorithmConfiguration merge(MutatingAlgorithmConfiguration leftSe, MutatingAlgorithmConfiguration rightSe) {
+	MutableAlgorithmConfiguration merge(MutableAlgorithmConfiguration leftSe, MutableAlgorithmConfiguration rightSe) {
 		return mergeParameters(leftSe, rightSe);
 	}
 
-	private MutatingAlgorithmConfiguration mergeParameters(MutatingAlgorithmConfiguration leftSe, MutatingAlgorithmConfiguration rightSe) {
+	private MutableAlgorithmConfiguration mergeParameters(MutableAlgorithmConfiguration leftSe, MutableAlgorithmConfiguration rightSe) {
 		final AlgorithmConfigurationImpl result = new AlgorithmConfigurationImpl();
 		mergeIntegers(result, leftSe, rightSe);
 		mergeDouble(result, leftSe, rightSe);
@@ -169,7 +169,7 @@ public class AlgorithmSettingsGeneticList {
 		return result;
 	}
 
-	private void mergeIntegers(final AlgorithmConfigurationImpl result, final MutatingAlgorithmConfiguration leftSe, final MutatingAlgorithmConfiguration rightSe) {
+	private void mergeIntegers(final AlgorithmConfigurationImpl result, final MutableAlgorithmConfiguration leftSe, final MutableAlgorithmConfiguration rightSe) {
 		for (MpIterator<Integer, ?> p : parameters.getIntegers().getParams()) {
 			final String settingName = p.getName();
 			final Integer resultValue = p.merge(leftSe.getIntegerSetting(settingName, Integer.MAX_VALUE), rightSe.getIntegerSetting(settingName, Integer.MAX_VALUE));
@@ -177,7 +177,7 @@ public class AlgorithmSettingsGeneticList {
 		}
 	}
 
-	private void mergeDouble(AlgorithmConfigurationImpl result, MutatingAlgorithmConfiguration leftSe, MutatingAlgorithmConfiguration rightSe) {
+	private void mergeDouble(AlgorithmConfigurationImpl result, MutableAlgorithmConfiguration leftSe, MutableAlgorithmConfiguration rightSe) {
 		for (MpIterator<Double, ?> p : parameters.getDoubles().getParams()) {
 			final String settingName = p.getName();
 			final Double resultValue = mutate(p, leftSe.getDoubleSetting(settingName, Double.MAX_VALUE), rightSe.getDoubleSetting(settingName, Double.MAX_VALUE));
@@ -185,7 +185,7 @@ public class AlgorithmSettingsGeneticList {
 		}
 	}
 
-	private void mergeStrings(AlgorithmConfigurationImpl result, MutatingAlgorithmConfiguration leftSe, MutatingAlgorithmConfiguration rightSe) {
+	private void mergeStrings(AlgorithmConfigurationImpl result, MutableAlgorithmConfiguration leftSe, MutableAlgorithmConfiguration rightSe) {
 		for (MpIterator<String, ?> p : parameters.getStrings().getParams()) {
 			final String settingName = p.getName();
 			final String mutatedValue = p.merge(leftSe.getStringSetting(settingName, ""), rightSe.getStringSetting(settingName, ""));

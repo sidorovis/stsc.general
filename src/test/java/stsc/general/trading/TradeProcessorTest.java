@@ -13,7 +13,7 @@ import stsc.algorithms.primitive.eod.TestingEodAlgorithm;
 import stsc.algorithms.primitive.eod.TestingEodAlgorithmSignal;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.EodExecution;
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.signals.SerieSignal;
 import stsc.common.stocks.united.format.UnitedFormatStock;
 import stsc.common.storage.SignalsStorage;
@@ -93,7 +93,7 @@ public final class TradeProcessorTest {
 		final StockStorage ss = StockStorageMock.getStockStorage();
 		final FromToPeriod period = new FromToPeriod("02-09-2013", "06-11-2013");
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
-		final MutatingAlgorithmConfiguration algoSettings = new AlgorithmConfigurationImpl();
+		final MutableAlgorithmConfiguration algoSettings = new AlgorithmConfigurationImpl();
 
 		executionsStorage.addEodExecution(new EodExecution("e1", TestingEodAlgorithm.class.getName(), algoSettings));
 		final TradeProcessorInit init = new TradeProcessorInit(ss, period, executionsStorage);

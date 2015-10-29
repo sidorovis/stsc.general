@@ -24,7 +24,7 @@ import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.EodAlgorithm;
 import stsc.common.algorithms.EodExecution;
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.algorithms.StockAlgorithm;
 import stsc.common.algorithms.StockExecution;
 import stsc.general.algorithm.AlgorithmConfigurationImpl;
@@ -186,7 +186,7 @@ final class ExecutionsLoader {
 		final Class<? extends StockAlgorithm> stockAlgorithm = algorithmsStorage.getStock(algorithmName);
 		if (stockAlgorithm == null)
 			throw new BadAlgorithmException("there is no such algorithm like " + algorithmName);
-		final MutatingAlgorithmConfiguration algorithmSettings = generateStockAlgorithmSettings(params);
+		final MutableAlgorithmConfiguration algorithmSettings = generateStockAlgorithmSettings(params);
 		final String executionName = algorithmName + "(" + algorithmSettings.toString() + ")";
 		final String oldRealExecutionName = registeredStockExecutions.get(executionName);
 		if (oldRealExecutionName != null)
@@ -200,7 +200,7 @@ final class ExecutionsLoader {
 		final Class<? extends StockAlgorithm> stockAlgorithm = algorithmsStorage.getStock(algorithmName);
 		if (stockAlgorithm == null)
 			throw new BadAlgorithmException("there is no such algorithm like " + algorithmName);
-		final MutatingAlgorithmConfiguration algorithmSettings = generateStockAlgorithmSettings(params);
+		final MutableAlgorithmConfiguration algorithmSettings = generateStockAlgorithmSettings(params);
 		final String executionName = algorithmName + "(" + algorithmSettings.toString() + ")";
 		final String oldRealExecutionName = registeredStockExecutions.get(executionName);
 		if (oldRealExecutionName != null)
@@ -253,7 +253,7 @@ final class ExecutionsLoader {
 		final Class<? extends EodAlgorithm> eodAlgorithm = algorithmsStorage.getEod(algorithmName);
 		if (eodAlgorithm == null)
 			throw new BadAlgorithmException("there is no such algorithm like " + algorithmName);
-		final MutatingAlgorithmConfiguration algorithmSettings = generateEodAlgorithmSettings(params);
+		final MutableAlgorithmConfiguration algorithmSettings = generateEodAlgorithmSettings(params);
 		final String executionName = algorithmName + "(" + algorithmSettings.toString() + ")";
 		final String oldRealExecutionName = registeredEodExecutions.get(executionName);
 		if (oldRealExecutionName != null)
@@ -267,7 +267,7 @@ final class ExecutionsLoader {
 		final Class<? extends EodAlgorithm> eodAlgorithm = algorithmsStorage.getEod(algorithmName);
 		if (eodAlgorithm == null)
 			return Optional.empty();
-		final MutatingAlgorithmConfiguration algorithmSettings = generateEodAlgorithmSettings(params);
+		final MutableAlgorithmConfiguration algorithmSettings = generateEodAlgorithmSettings(params);
 		final String executionName = algorithmName + "(" + algorithmSettings.toString() + ")";
 		final String oldRealExecutionName = registeredEodExecutions.get(executionName);
 		if (oldRealExecutionName != null)
@@ -277,7 +277,7 @@ final class ExecutionsLoader {
 		return Optional.of(executionName);
 	}
 
-	private MutatingAlgorithmConfiguration generateStockAlgorithmSettings(final List<String> params) throws BadAlgorithmException {
+	private MutableAlgorithmConfiguration generateStockAlgorithmSettings(final List<String> params) throws BadAlgorithmException {
 		final AlgorithmConfigurationImpl algorithmSettings = settings.clone();
 
 		for (final String parameter : params) {
@@ -311,7 +311,7 @@ final class ExecutionsLoader {
 		return algorithmSettings;
 	}
 
-	private MutatingAlgorithmConfiguration generateEodAlgorithmSettings(final List<String> params) throws BadAlgorithmException {
+	private MutableAlgorithmConfiguration generateEodAlgorithmSettings(final List<String> params) throws BadAlgorithmException {
 		final AlgorithmConfigurationImpl algorithmSettings = settings.clone();
 
 		for (final String parameter : params) {

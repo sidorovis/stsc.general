@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import stsc.common.algorithms.MutatingAlgorithmConfiguration;
+import stsc.common.algorithms.MutableAlgorithmConfiguration;
 
 /**
  * This is an implementation for collection of {@link AlgorithmSetting} for typed elements. Supported / expected types are: <br/>
@@ -17,7 +17,7 @@ import stsc.common.algorithms.MutatingAlgorithmConfiguration;
  * 4. sub-execution (string like but store order). <br/>
  * Also implements writeExternal / read (external).
  */
-public final class AlgorithmConfigurationImpl implements MutatingAlgorithmConfiguration {
+public final class AlgorithmConfigurationImpl implements MutableAlgorithmConfiguration {
 
 	private final HashMap<String, Integer> integers;
 	private final HashMap<String, Double> doubles;
