@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.common.algorithms.MutatingAlgorithmSettings;
+import stsc.common.algorithms.MutatingAlgorithmConfiguration;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
 import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpDouble;
@@ -66,8 +66,8 @@ public class AlgorithmSettingsGeneticListTest {
 
 	private boolean amountOfMutations() throws BadParameterException {
 		final AlgorithmSettingsGeneticList mas = getList();
-		final MutatingAlgorithmSettings original = mas.generateRandom();
-		final MutatingAlgorithmSettings copy = original.clone();
+		final MutatingAlgorithmConfiguration original = mas.generateRandom();
+		final MutatingAlgorithmConfiguration copy = original.clone();
 		int i = 0;
 		while (true) {
 			final StringBuilder originalSb = new StringBuilder();
@@ -85,10 +85,10 @@ public class AlgorithmSettingsGeneticListTest {
 	@Test
 	public void testAlgorithmSettingsGeneticListMerge() throws ParseException, BadParameterException, BadAlgorithmException {
 		final AlgorithmSettingsGeneticList mas = getList();
-		final MutatingAlgorithmSettings original = mas.generateRandom();
-		final MutatingAlgorithmSettings copy = original.clone();
+		final MutatingAlgorithmConfiguration original = mas.generateRandom();
+		final MutatingAlgorithmConfiguration copy = original.clone();
 
-		final MutatingAlgorithmSettings merge = mas.merge(original, copy);
+		final MutatingAlgorithmConfiguration merge = mas.merge(original, copy);
 		Assert.assertEquals(merge.getSubExecutions().size(), original.getSubExecutions().size());
 		Assert.assertEquals(merge.getSubExecutions().get(0), original.getSubExecutions().get(0));
 		Assert.assertEquals(merge.getInteger("q"), original.getInteger("q"));

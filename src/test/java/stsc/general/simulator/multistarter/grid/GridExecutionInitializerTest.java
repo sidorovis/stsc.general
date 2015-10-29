@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import stsc.common.algorithms.AlgorithmSettings;
+import stsc.common.algorithms.AlgorithmConfiguration;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
 import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpDouble;
@@ -23,13 +23,13 @@ public class GridExecutionInitializerTest {
 		final AlgorithmSettingsGridIterator mas = factory.getGridIterator();
 		final GridExecutionInitializer ei = new GridExecutionInitializer("e", "a", mas);
 		int count = 0;
-		for (AlgorithmSettings algorithmSettings : ei) {
+		for (AlgorithmConfiguration algorithmSettings : ei) {
 			Assert.assertNotNull(algorithmSettings);
 			count += 1;
 		}
 		Assert.assertEquals(25, count);
 		ei.reset();
-		for (AlgorithmSettings algorithmSettings : ei) {
+		for (AlgorithmConfiguration algorithmSettings : ei) {
 			Assert.assertNotNull(algorithmSettings);
 			count += 1;
 		}

@@ -12,7 +12,7 @@ import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.EodExecution;
-import stsc.common.algorithms.MutatingAlgorithmSettings;
+import stsc.common.algorithms.MutatingAlgorithmConfiguration;
 import stsc.common.algorithms.StockExecution;
 import stsc.common.storage.StockStorage;
 import stsc.general.simulator.SimulatorSettings;
@@ -117,7 +117,7 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 			final StockExecution leftSe = leftIterator.next();
 			final StockExecution rightSe = rightIterator.next();
 
-			final MutatingAlgorithmSettings settings = geneticInitializer.mergeStock(leftSe, rightSe);
+			final MutatingAlgorithmConfiguration settings = geneticInitializer.mergeStock(leftSe, rightSe);
 			result.addStockExecution(new StockExecution(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
 		}
 		return result;
@@ -144,7 +144,7 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 			final EodExecution leftSe = leftIterator.next();
 			final EodExecution rightSe = rightIterator.next();
 
-			final MutatingAlgorithmSettings settings = geneticInitializer.mergeEod(leftSe, rightSe);
+			final MutatingAlgorithmConfiguration settings = geneticInitializer.mergeEod(leftSe, rightSe);
 			result.addEodExecution(new EodExecution(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
 		}
 		return result;

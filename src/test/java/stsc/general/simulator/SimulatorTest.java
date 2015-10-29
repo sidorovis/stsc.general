@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import stsc.algorithms.AlgorithmSettingsImpl;
+import stsc.algorithms.AlgorithmConfigurationImpl;
 import stsc.algorithms.primitive.eod.OneSideOpenAlgorithm;
 import stsc.common.FromToPeriod;
 import stsc.common.Settings;
@@ -49,7 +49,7 @@ public final class SimulatorTest {
 	public void testLongSideOnAppl() throws Exception {
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-09-2002");
-		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl());
+		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmConfigurationImpl());
 		executionsStorage.addEodExecution(execution);
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
@@ -64,7 +64,7 @@ public final class SimulatorTest {
 	public void testLongSideOnApplForTwoMonths() throws Exception {
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-10-2002");
-		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl());
+		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmConfigurationImpl());
 		executionsStorage.addEodExecution(execution);
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
@@ -79,7 +79,7 @@ public final class SimulatorTest {
 	public void testShortSideOnAppl() throws Exception {
 		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
 		final FromToPeriod period = new FromToPeriod("01-09-2002", "27-09-2002");
-		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmSettingsImpl().setString("side", "short"));
+		final EodExecution execution = new EodExecution("eName", OneSideOpenAlgorithm.class, new AlgorithmConfigurationImpl().setString("side", "short"));
 		executionsStorage.addEodExecution(execution);
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
