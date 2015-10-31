@@ -287,7 +287,7 @@ public class StatisticsProcessorTest {
 	public void testStatisticsOnLastClose() throws IOException, IllegalArgumentException, IllegalAccessException {
 		final Path testPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
 		final Metrics stats = testTradingHelper(3, false);
-		stats.print(testPath.resolve("out.csv").toString());
+		stats.print(testPath.resolve("out.csv"));
 
 		Assert.assertEquals(0.0, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 		final File file = testPath.resolve("out.csv").toFile();

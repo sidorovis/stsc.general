@@ -3,6 +3,7 @@ package stsc.general.statistic;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -12,66 +13,13 @@ import stsc.general.statistic.EquityCurve.Element;
 import stsc.general.strategy.TradingStrategy;
 
 /**
- * {@link Metrics} is a class that store comparable (double like) values that
- * describe {@link TradingStrategy}. <br/>
+ * {@link Metrics} is a class that store comparable (double like) values that describe {@link TradingStrategy}. <br/>
  * There is two type of Metrics: Integer and Double types.
  */
 public final class Metrics {
 
-	static class Builder {
-
-		public EquityCurve equityCurve = new EquityCurve();
-		public EquityCurve equityCurveInMoney;
-
-		public int period = 0;
-
-		public int count = 0;
-
-		public int winCount = 0;
-		public int lossCount = 0;
-
-		public double winSum = 0.0;
-		public double lossSum = 0.0;
-
-		public double maxWin = 0.0;
-		public double maxLoss = 0.0;
-
-		public double sharpeRatio = 0.0;
-
-		public double startMonthAvGain = 0.0;
-		public double startMonthStDevGain = 0.0;
-		public double startMonthMin = 0.0;
-		public double startMonthMax = 0.0;
-
-		public double month12AvGain = 0.0;
-		public double month12StDevGain = 0.0;
-		public double month12Min = 0.0;
-		public double month12Max = 0.0;
-
-		public double ddDurationAvGain = 0.0;
-		public double ddDurationMax = 0.0;
-
-		public double ddValueAvGain = 0.0;
-		public double ddValueMax = 0.0;
-
-		double getAvGain() {
-			if (equityCurve.size() == 0) {
-				return 0.0;
-			}
-			return equityCurve.getLastElement().value;
-		}
-
-		public String toString() {
-			return "curve(" + equityCurve.toString() + ")";
-		}
-
-		void copyMoneyEquityCurve() {
-			equityCurveInMoney = equityCurve.clone();
-		}
-	}
-
-	static public Builder getBuilder() {
-		return new Builder();
+	static public MetricsBuilder getBuilder() {
+		return new MetricsBuilder();
 	}
 
 	private final Map<MetricType, Double> doubleMetrics = new HashMap<>();
@@ -79,10 +27,14 @@ public final class Metrics {
 
 	private final EquityCurve equityCurveInMoney;
 
-	public Metrics(final Builder init) {
+	Metrics(final MetricsBuilder init) {
 		calculateProbabilityStatistics(init);
 		calculateEquityStatistics(init);
 		this.equityCurveInMoney = init.equityCurveInMoney;
+	}
+
+	public static Metrics createEmpty() {
+		return Metrics.getBuilder().build();
 	}
 
 	public Metrics(Map<MetricType, Double> doubleList, Map<MetricType, Integer> integerList) {
@@ -91,7 +43,7 @@ public final class Metrics {
 		this.equityCurveInMoney = new EquityCurve();
 	}
 
-	private void calculateProbabilityStatistics(Builder init) {
+	private void calculateProbabilityStatistics(MetricsBuilder init) {
 		setDoubleMetric(MetricType.avGain, init.getAvGain());
 		setIntegerMetric(MetricType.period, init.period);
 
@@ -107,11 +59,12 @@ public final class Metrics {
 		if (getDoubleMetric(MetricType.avWinAvLoss) == 0.0)
 			setDoubleMetric(MetricType.kelly, 0.0);
 		else
-			setDoubleMetric(MetricType.kelly, getDoubleMetric(MetricType.winProb) - (1 - getDoubleMetric(MetricType.winProb)) / getDoubleMetric(MetricType.avWinAvLoss));
+			setDoubleMetric(MetricType.kelly,
+					getDoubleMetric(MetricType.winProb) - (1 - getDoubleMetric(MetricType.winProb)) / getDoubleMetric(MetricType.avWinAvLoss));
 
 	}
 
-	private void calculateEquityStatistics(Builder init) {
+	private void calculateEquityStatistics(MetricsBuilder init) {
 		setDoubleMetric(MetricType.sharpeRatio, init.sharpeRatio);
 		setDoubleMetric(MetricType.startMonthAvGain, init.startMonthAvGain);
 		setDoubleMetric(MetricType.startMonthStDevGain, init.startMonthStDevGain);
@@ -145,8 +98,7 @@ public final class Metrics {
 	}
 
 	/**
-	 * Try to return by double metric; if double value is not there -> try to
-	 * return integer
+	 * Try to return by double metric; if double value is not there -> try to return integer
 	 */
 	public Double getMetric(MetricType name) {
 		Double r = getDoubleMetric(name);
@@ -177,9 +129,11 @@ public final class Metrics {
 		return integerMetrics;
 	}
 
-	// TODO move to {@link Path} class
-	public void print(final String outputFile) throws IOException, IllegalArgumentException, IllegalAccessException {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+	/**
+	 * Print out {@link Metrics} to a text file.
+	 */
+	public void print(final Path outputFilepath) throws IOException, IllegalArgumentException, IllegalAccessException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilepath.toFile()))) {
 			print(writer);
 		}
 	}

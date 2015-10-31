@@ -38,7 +38,7 @@ final class EquityProcessor {
 	private ArrayList<Double> elementsInStartMonths = new ArrayList<>();
 	private ArrayList<Integer> startMonthsIndexes = new ArrayList<>();
 
-	private final Metrics.Builder builder = Metrics.getBuilder();
+	private final MetricsBuilder builder = Metrics.getBuilder();
 
 	EquityProcessor(StatisticsProcessor statisticsProcessor,
 			TradingLog tradingLog) {
@@ -219,7 +219,7 @@ final class EquityProcessor {
 	}
 
 	private void calculateDrawDownStatistics() {
-		final Metrics.Builder init = builder;
+		final MetricsBuilder init = builder;
 		final int equityCurveSize = init.equityCurve.size();
 
 		Element ddStart = init.equityCurve.get(0);
@@ -291,7 +291,7 @@ final class EquityProcessor {
 	}
 
 	private void collectElementsInStartMonths() {
-		final Metrics.Builder init = builder;
+		final MetricsBuilder init = builder;
 
 		LocalDate nextMonthBegin = new LocalDate(init.equityCurve.get(0).date)
 				.plusMonths(1).withDayOfMonth(1);
@@ -318,7 +318,7 @@ final class EquityProcessor {
 	}
 
 	private void calculate12MonthsStatistics() {
-		final Metrics.Builder init = builder;
+		final MetricsBuilder init = builder;
 		final int MONTHS_PER_YEAR = 12;
 		final int startMonthsIndexesSize = startMonthsIndexes.size()
 				- MONTHS_PER_YEAR;
@@ -346,7 +346,7 @@ final class EquityProcessor {
 	}
 
 	private void calculateStartMonthsStatistics() {
-		final Metrics.Builder init = builder;
+		final MetricsBuilder init = builder;
 		final int startMonthsIndexesSize = startMonthsIndexes.size();
 
 		double lastValue = init.equityCurve.get(0).value;
@@ -371,7 +371,7 @@ final class EquityProcessor {
 	}
 
 	private void calculateMonthsStatistics() {
-		final Metrics.Builder init = builder;
+		final MetricsBuilder init = builder;
 
 		int index = 0;
 
