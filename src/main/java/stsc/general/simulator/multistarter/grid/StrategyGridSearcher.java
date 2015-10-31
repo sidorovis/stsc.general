@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
@@ -24,18 +25,15 @@ import stsc.general.strategy.TradingStrategy;
 import stsc.general.strategy.selector.StrategySelector;
 
 /**
- * Multithread Strategy Grid Searcher
- * 
- * @author rilley_elf
- * 
+ * Multi-thread Strategy Grid Searcher.
  */
-public class StrategyGridSearcher implements StrategySearcher {
+public final class StrategyGridSearcher implements StrategySearcher {
 
 	static {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/mt_strategy_grid_searcher_log4j2.xml");
 	}
 
-	static class IteratorProxy implements Iterator<SimulatorConfigurationImpl> {
+	private static class IteratorProxy implements Iterator<SimulatorConfigurationImpl> {
 		private final Iterator<SimulatorConfigurationImpl> value;
 
 		IteratorProxy(Iterator<SimulatorConfigurationImpl> value) {
@@ -51,7 +49,6 @@ public class StrategyGridSearcher implements StrategySearcher {
 		public synchronized SimulatorConfigurationImpl next() {
 			return value.next();
 		}
-
 	}
 
 	private static Logger logger = LogManager.getLogger("StrategyGridSearcher");
@@ -61,7 +58,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 	private final double fullSize;
 	private final AtomicDouble processedSize = new AtomicDouble(1.0);
 
-	private class StatisticsCalculationThread extends Thread {
+	private final class StatisticsCalculationThread extends Thread {
 
 		private IndicatorProgressListener progressListener = null;
 
@@ -72,7 +69,7 @@ public class StrategyGridSearcher implements StrategySearcher {
 		private final StrategySelector selector;
 		private boolean stoppedByRequest;
 
-		public StatisticsCalculationThread(double fullSize, AtomicDouble processedSize, final IteratorProxy iterator, final StrategySelector selector) {
+		StatisticsCalculationThread(double fullSize, AtomicDouble processedSize, final IteratorProxy iterator, final StrategySelector selector) {
 			this.fullSize = fullSize;
 			this.processedSize = processedSize;
 			this.iterator = iterator;
@@ -131,19 +128,26 @@ public class StrategyGridSearcher implements StrategySearcher {
 
 	final List<StatisticsCalculationThread> threads = new ArrayList<>();
 
-	public StrategyGridSearcher(final SimulatorSettingsGridList iterable, final StrategySelector selector, int threadAmount) {
-		this.selector = selector;
-		this.fullSize = (double) iterable.size();
-		final IteratorProxy iteratorProxy = new IteratorProxy(iterable.iterator());
+	public static StrategyGridSearcherBuilder getBuilder() {
+		return new StrategyGridSearcherBuilder();
+	}
+
+	StrategyGridSearcher(StrategyGridSearcherBuilder builder) {
+		Validate.notNull(builder.getSimulatorSettingsGridList(), "SimulatorSettingsGridList should not be null");
+
+		this.selector = builder.getSelector();
+		this.fullSize = (double) builder.getSimulatorSettingsGridList().size();
+		final IteratorProxy iteratorProxy = new IteratorProxy(builder.getSimulatorSettingsGridList().iterator());
 		logger.debug("Starting");
 
-		for (int i = 0; i < threadAmount; ++i) {
+		for (int i = 0; i < builder.getThreadAmount(); ++i) {
 			threads.add(new StatisticsCalculationThread(fullSize, processedSize, iteratorProxy, selector));
 		}
 		for (Thread t : threads) {
 			t.start();
 		}
 		logger.debug("Finishing");
+
 	}
 
 	@Override

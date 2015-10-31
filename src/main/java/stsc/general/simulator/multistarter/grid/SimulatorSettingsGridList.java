@@ -7,7 +7,7 @@ import stsc.common.FromToPeriod;
 import stsc.common.storage.StockStorage;
 import stsc.general.simulator.SimulatorConfigurationImpl;
 
-public class SimulatorSettingsGridList implements Iterable<SimulatorConfigurationImpl> {
+public final class SimulatorSettingsGridList implements Iterable<SimulatorConfigurationImpl> {
 
 	protected final List<GridExecutionInitializer> stockInitializers;
 	protected final List<GridExecutionInitializer> eodInitializers;
