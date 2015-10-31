@@ -40,7 +40,7 @@ public final class SimulatorTest {
 	@Test
 	public void testOneSideSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
-		SimulatorImpl.fromFile(resourceToPath("simulator_configs/one_side.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		SimulatorImpl.fromFile(resourceToPath("simulator_configs/one_side.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv"));
 		Assert.assertEquals(541, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
@@ -94,7 +94,7 @@ public final class SimulatorTest {
 	public void testSimpleSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
 		final Metrics metrics = SimulatorImpl.fromFile(resourceToPath("simulator_configs/simple.ini")).getMetrics();
-		metrics.print(testOutputPath.resolve("statistics.csv").toString());
+		metrics.print(testOutputPath.resolve("statistics.csv"));
 		Assert.assertEquals(2096, metrics.getEquityCurveInMoney().size());
 		Assert.assertEquals(46132, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
@@ -102,7 +102,7 @@ public final class SimulatorTest {
 
 	public void testPositiveNDaysSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
-		SimulatorImpl.fromFile(resourceToPath("simulator_configs/ndays.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		SimulatorImpl.fromFile(resourceToPath("simulator_configs/ndays.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv"));
 		Assert.assertEquals(575 * 2 + 11165, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
@@ -110,7 +110,7 @@ public final class SimulatorTest {
 	@Test
 	public void testOpenWhileSignalAlgorithmSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
-		SimulatorImpl.fromFile(resourceToPath("simulator_configs/open_while_signal.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv").toString());
+		SimulatorImpl.fromFile(resourceToPath("simulator_configs/open_while_signal.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv"));
 		Assert.assertEquals(59322, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
