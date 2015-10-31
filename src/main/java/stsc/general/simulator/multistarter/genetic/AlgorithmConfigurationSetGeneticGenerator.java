@@ -7,7 +7,6 @@ import stsc.common.algorithms.AlgorithmConfiguration;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.general.simulator.multistarter.AlgorithmConfigurationSet;
-import stsc.general.simulator.multistarter.AlgorithmConfigurationSetImpl;
 import stsc.general.simulator.multistarter.MpIterator;
 import stsc.general.simulator.multistarter.MpTextIterator;
 import stsc.general.simulator.multistarter.ParameterList;
@@ -19,15 +18,15 @@ import stsc.general.simulator.multistarter.ParameterList;
  * 3. Merge {@link AlgorithmConfiguration} (left with right);<br/>
  * We need {@link AlgorithmCGeneticList} for mutate / merge operations because we require algorithm setting domens.
  */
-public class AlgorithmConfigurationSetGeneticGenerator {
+public final class AlgorithmConfigurationSetGeneticGenerator {
 
 	private static final int MUTATING_FINISHED = -1;
 
 	private final AlgorithmConfigurationSet algorithmConfigurationSet;
 
-	final Random random = new Random();
+	private final Random random = new Random();
 
-	public AlgorithmConfigurationSetGeneticGenerator(final AlgorithmConfigurationSetImpl parameters) {
+	public AlgorithmConfigurationSetGeneticGenerator(final AlgorithmConfigurationSet parameters) {
 		this.algorithmConfigurationSet = parameters.clone();
 	}
 
@@ -170,10 +169,12 @@ public class AlgorithmConfigurationSetGeneticGenerator {
 		return result;
 	}
 
-	private void mergeIntegers(final AlgorithmConfigurationImpl result, final MutableAlgorithmConfiguration leftSe, final MutableAlgorithmConfiguration rightSe) {
+	private void mergeIntegers(final AlgorithmConfigurationImpl result, final MutableAlgorithmConfiguration leftSe,
+			final MutableAlgorithmConfiguration rightSe) {
 		for (MpIterator<Integer, ?> p : algorithmConfigurationSet.getIntegers().getParams()) {
 			final String settingName = p.getName();
-			final Integer resultValue = p.merge(leftSe.getIntegerSetting(settingName, Integer.MAX_VALUE), rightSe.getIntegerSetting(settingName, Integer.MAX_VALUE));
+			final Integer resultValue = p.merge(leftSe.getIntegerSetting(settingName, Integer.MAX_VALUE),
+					rightSe.getIntegerSetting(settingName, Integer.MAX_VALUE));
 			result.setInteger(settingName, resultValue);
 		}
 	}
@@ -181,7 +182,8 @@ public class AlgorithmConfigurationSetGeneticGenerator {
 	private void mergeDouble(AlgorithmConfigurationImpl result, MutableAlgorithmConfiguration leftSe, MutableAlgorithmConfiguration rightSe) {
 		for (MpIterator<Double, ?> p : algorithmConfigurationSet.getDoubles().getParams()) {
 			final String settingName = p.getName();
-			final Double resultValue = mutate(p, leftSe.getDoubleSetting(settingName, Double.MAX_VALUE), rightSe.getDoubleSetting(settingName, Double.MAX_VALUE));
+			final Double resultValue = mutate(p, leftSe.getDoubleSetting(settingName, Double.MAX_VALUE),
+					rightSe.getDoubleSetting(settingName, Double.MAX_VALUE));
 			result.setDouble(settingName, resultValue);
 		}
 	}
