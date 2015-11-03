@@ -210,9 +210,10 @@ public class StatisticsProcessorTest {
 		final double spyDiff = -spyShortOut * 30 * (1 - c) + spyShortIn * 30 * (1 + c);
 
 		final double lastResult = aaplDiff + admDiff + spyDiff;
+		final double expectedAvGain = 100.0 * lastResult / metrics.getMetric(MetricType.maxSpentMoney);
 		Assert.assertEquals(4.0, metrics.getMetric(MetricType.period), Settings.doubleEpsilon);
 		Assert.assertEquals(lastResult, metrics.getEquityCurveInMoney().getLastElement().value, Settings.doubleEpsilon);
-		Assert.assertEquals(-0.168527, metrics.getMetric(MetricType.avGain), Settings.doubleEpsilon);
+		Assert.assertEquals(expectedAvGain, metrics.getMetric(MetricType.avGain), Settings.doubleEpsilon);
 
 		Assert.assertEquals(0.75, metrics.getMetric(MetricType.freq), Settings.doubleEpsilon);
 		Assert.assertEquals(0.333333, metrics.getMetric(MetricType.winProb), Settings.doubleEpsilon);

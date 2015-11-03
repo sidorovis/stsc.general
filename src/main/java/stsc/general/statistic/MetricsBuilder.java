@@ -42,6 +42,9 @@ class MetricsBuilder {
 		if (equityCurve.size() == 0) {
 			return 0.0;
 		}
+		if (equityCurve.getLastElement().value >= 100.0) {
+			return 100.0;
+		}
 		return equityCurve.getLastElement().value;
 	}
 
