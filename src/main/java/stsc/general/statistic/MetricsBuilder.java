@@ -36,6 +36,8 @@ class MetricsBuilder {
 	public double ddValueAvGain = 0.0;
 	public double ddValueMax = 0.0;
 
+	private double maximumSpentMoney;
+
 	double getAvGain() {
 		if (equityCurve.size() == 0) {
 			return 0.0;
@@ -56,4 +58,14 @@ class MetricsBuilder {
 	public Metrics build() {
 		return new Metrics(this);
 	}
+
+	public MetricsBuilder setMaximumSpentMoney(double maximumSpentMoney) {
+		this.maximumSpentMoney = maximumSpentMoney;
+		return this;
+	}
+
+	public double getMaximumSpentMoney() {
+		return this.maximumSpentMoney;
+	}
+
 }

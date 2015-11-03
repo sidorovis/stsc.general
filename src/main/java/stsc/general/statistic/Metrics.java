@@ -80,6 +80,8 @@ public final class Metrics {
 		setDoubleMetric(MetricType.ddDurationMax, init.ddDurationMax);
 		setDoubleMetric(MetricType.ddValueAvGain, init.ddValueAvGain);
 		setDoubleMetric(MetricType.ddValueMax, init.ddValueMax);
+
+		// TODO setDoubleMetric(MetricType.maxSpentMoney, init.getMaximumSpentMoney());
 	}
 
 	static private double division(double a, double b) {

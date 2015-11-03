@@ -29,22 +29,17 @@ final class EquityProcessor {
 	private double spentLongCash = 0;
 	private double spentShortCash = 0;
 
-	final private Positions longPositions;
-	final private Positions shortPositions;
+	final private PositionCollection longPositions;
+	final private PositionCollection shortPositions;
 
 	private double maximumSpentMoney = 0.0;
-	private double sumOfStartMonths = 0.0;
-
-	private ArrayList<Double> elementsInStartMonths = new ArrayList<>();
-	private ArrayList<Integer> startMonthsIndexes = new ArrayList<>();
 
 	private final MetricsBuilder builder = Metrics.getBuilder();
 
-	EquityProcessor(StatisticsProcessor statisticsProcessor,
-			TradingLog tradingLog) {
+	EquityProcessor(StatisticsProcessor statisticsProcessor, TradingLog tradingLog) {
 		this.commision = statisticsProcessor.getCommision();
-		this.longPositions = new Positions(statisticsProcessor);
-		this.shortPositions = new Positions(statisticsProcessor);
+		this.longPositions = new PositionCollection(statisticsProcessor);
+		this.shortPositions = new PositionCollection(statisticsProcessor);
 		this.tradingRecords = tradingLog.getRecords();
 	}
 
@@ -103,8 +98,7 @@ final class EquityProcessor {
 		}
 	}
 
-	private void processSellingLong(String stockName, int shares, double price,
-			double sharesPrice) {
+	private void processSellingLong(String stockName, int shares, double price, double sharesPrice) {
 		final double oldPrice = longPositions.sharePrice(stockName);
 		longPositions.decrement(stockName, shares, sharesPrice);
 		final double priceDiff = sharesPrice - shares * oldPrice;
@@ -112,8 +106,7 @@ final class EquityProcessor {
 		addPositionClose(priceDiff);
 	}
 
-	private void processSellingShort(String stockName, int shares,
-			double price, double sharesPrice) {
+	private void processSellingShort(String stockName, int shares, double price, double sharesPrice) {
 		final double oldPrice = shortPositions.sharePrice(stockName);
 		shortPositions.decrement(stockName, shares, sharesPrice);
 		final double priceDiff = shares * oldPrice - sharesPrice;
@@ -161,9 +154,10 @@ final class EquityProcessor {
 		closeAllPositions();
 		builder.copyMoneyEquityCurve();
 
-		if (DoubleMath.fuzzyEquals(maximumSpentMoney, 0.0,
-				Settings.doubleEpsilon))
+		if (DoubleMath.fuzzyEquals(maximumSpentMoney, 0.0, Settings.doubleEpsilon))
 			return new Metrics(builder);
+
+		builder.setMaximumSpentMoney(maximumSpentMoney);
 		maximumSpentMoney /= PERCENTS;
 		builder.equityCurve.recalculateWithMax(maximumSpentMoney);
 
@@ -173,13 +167,10 @@ final class EquityProcessor {
 
 	private void closeAllPositions() {
 		final int MINIMAL_DAY_IN_PERIOD = 2;
-		if (builder.period > MINIMAL_DAY_IN_PERIOD
-				&& (longPositions.size() > 0 || shortPositions.size() > 0)) {
+		if (builder.period > MINIMAL_DAY_IN_PERIOD && (longPositions.size() > 0 || shortPositions.size() > 0)) {
 			while (longPositions.size() > 0) {
-				final String stockName = longPositions.positions.keySet()
-						.iterator().next();
-				final Positions.Position p = longPositions.positions
-						.get(stockName);
+				final String stockName = longPositions.positions.keySet().iterator().next();
+				final PositionCollection.Position p = longPositions.positions.get(stockName);
 
 				double price = lastPrice.get(stockName);
 				int shares = p.shares;
@@ -188,10 +179,8 @@ final class EquityProcessor {
 				processSellingLong(stockName, shares, price, sharesPrice);
 			}
 			while (shortPositions.size() > 0) {
-				final String stockName = shortPositions.positions.keySet()
-						.iterator().next();
-				final Positions.Position p = shortPositions.positions
-						.get(stockName);
+				final String stockName = shortPositions.positions.keySet().iterator().next();
+				final PositionCollection.Position p = shortPositions.positions.get(stockName);
 
 				double price = lastPrice.get(stockName);
 				int shares = p.shares;
@@ -209,10 +198,9 @@ final class EquityProcessor {
 	private void calculateEquityStatistics() {
 		final int DAYS_PER_YEAR = 250;
 		if (builder.period > DAYS_PER_YEAR) {
-			calculateMonthsStatistics();
-			collectElementsInStartMonths();
-			calculateStartMonthsStatistics();
-			calculate12MonthsStatistics();
+			new MetricsBuilderCalculateMonthsStatistics(builder);
+			new MetricsBuilderPeriodCalculator(builder). //
+					collectAndCalculateMonthsAnd12MonthsStatistics();
 		}
 
 		calculateDrawDownStatistics();
@@ -243,9 +231,7 @@ final class EquityProcessor {
 			} else {
 				if (currentElement.value > lastValue) {
 					if (currentElement.value >= ddStart.value) {
-						final int ddLength = Days.daysBetween(
-								new LocalDate(ddStart.date),
-								new LocalDate(currentElement.date)).getDays();
+						final int ddLength = Days.daysBetween(new LocalDate(ddStart.date), new LocalDate(currentElement.date)).getDays();
 
 						ddCount += 1;
 						ddDurationSum += ddLength;
@@ -258,8 +244,7 @@ final class EquityProcessor {
 						ddSize = 0.0;
 					}
 				} else {
-					final double currentDdSize = ddStart.value
-							- currentElement.value;
+					final double currentDdSize = ddStart.value - currentElement.value;
 					if (ddSize < currentDdSize)
 						ddSize = currentDdSize;
 				}
@@ -267,9 +252,7 @@ final class EquityProcessor {
 			lastValue = currentElement.value;
 		}
 		if (inDrawdown) {
-			final int ddLength = Days.daysBetween(new LocalDate(ddStart.date),
-					new LocalDate(init.equityCurve.getLastElement().date))
-					.getDays();
+			final int ddLength = Days.daysBetween(new LocalDate(ddStart.date), new LocalDate(init.equityCurve.getLastElement().date)).getDays();
 			ddCount += 1;
 			ddValueSum += ddSize;
 			ddDurationSum += ddLength;
@@ -290,133 +273,4 @@ final class EquityProcessor {
 			builder.ddDurationMax = ddLength;
 	}
 
-	private void collectElementsInStartMonths() {
-		final MetricsBuilder init = builder;
-
-		LocalDate nextMonthBegin = new LocalDate(init.equityCurve.get(0).date)
-				.plusMonths(1).withDayOfMonth(1);
-		final int firstMonthIndex = init.equityCurve.find(nextMonthBegin
-				.toDate());
-
-		final int REASONABLE_AMOUNT_OF_DAYS = 15;
-		if (firstMonthIndex >= REASONABLE_AMOUNT_OF_DAYS) {
-			startMonthsIndexes.add(0);
-		}
-
-		final LocalDate endDate = new LocalDate(
-				init.equityCurve.getLastElement().date);
-
-		int nextIndex = init.equityCurve.size();
-		while (nextMonthBegin.isBefore(endDate)) {
-			nextIndex = init.equityCurve.find(nextMonthBegin.toDate());
-			startMonthsIndexes.add(nextIndex);
-			nextMonthBegin = nextMonthBegin.plusMonths(1);
-		}
-		if (init.equityCurve.size() - nextIndex >= REASONABLE_AMOUNT_OF_DAYS) {
-			startMonthsIndexes.add(init.equityCurve.size() - 1);
-		}
-	}
-
-	private void calculate12MonthsStatistics() {
-		final MetricsBuilder init = builder;
-		final int MONTHS_PER_YEAR = 12;
-		final int startMonthsIndexesSize = startMonthsIndexes.size()
-				- MONTHS_PER_YEAR;
-
-		ArrayList<Double> rollingWindow12Month = new ArrayList<>();
-		double rollingWindow12MonthSum = 0.0;
-
-		for (int i = 0; i < startMonthsIndexesSize; ++i) {
-			final double beginPeriodValue = init.equityCurve
-					.get(startMonthsIndexes.get(i)).value;
-			final double endPeriodValue = init.equityCurve
-					.get(startMonthsIndexes.get(i + MONTHS_PER_YEAR)).value;
-			final double diff = endPeriodValue - beginPeriodValue;
-			rollingWindow12Month.add(diff);
-			rollingWindow12MonthSum += diff;
-			if (diff > init.month12Max)
-				init.month12Max = diff;
-			if (diff < init.month12Min)
-				init.month12Min = diff;
-		}
-		init.month12AvGain = rollingWindow12MonthSum
-				/ rollingWindow12Month.size();
-		init.month12StDevGain = StatisticsProcessor.calculateStDev(
-				rollingWindow12MonthSum, rollingWindow12Month);
-	}
-
-	private void calculateStartMonthsStatistics() {
-		final MetricsBuilder init = builder;
-		final int startMonthsIndexesSize = startMonthsIndexes.size();
-
-		double lastValue = init.equityCurve.get(0).value;
-		for (int i = 1; i < startMonthsIndexesSize; ++i) {
-			double nextValue = init.equityCurve.get(startMonthsIndexes.get(i)).value;
-			double differentForMonth = nextValue - lastValue;
-			processMonthInStartMonths(differentForMonth);
-			lastValue = nextValue;
-		}
-		init.startMonthAvGain = sumOfStartMonths / elementsInStartMonths.size();
-		init.startMonthStDevGain = StatisticsProcessor.calculateStDev(
-				sumOfStartMonths, elementsInStartMonths);
-	}
-
-	private void processMonthInStartMonths(double moneyDiff) {
-		elementsInStartMonths.add(moneyDiff);
-		sumOfStartMonths += moneyDiff;
-		if (moneyDiff > builder.startMonthMax)
-			builder.startMonthMax = moneyDiff;
-		if (moneyDiff < builder.startMonthMin)
-			builder.startMonthMin = moneyDiff;
-	}
-
-	private void calculateMonthsStatistics() {
-		final MetricsBuilder init = builder;
-
-		int index = 0;
-
-		LocalDate indexDate = new LocalDate(init.equityCurve.get(index).date);
-		LocalDate monthAgo = indexDate.plusMonths(1);
-
-		double indexValue = init.equityCurve.get(index).value;
-
-		double monthsCapitalsSum = 0.0;
-		final ArrayList<Double> monthsDifferents = new ArrayList<>();
-
-		final LocalDate endDate = new LocalDate(
-				init.equityCurve.getLastElement().date);
-
-		while (monthAgo.isBefore(endDate)) {
-			index = init.equityCurve.find(monthAgo.toDate()) - 1;
-			Element element = init.equityCurve.get(index);
-
-			double lastValue = element.value;
-			double differentForMonth = lastValue - indexValue;
-
-			monthsDifferents.add(differentForMonth);
-			monthsCapitalsSum += differentForMonth;
-
-			indexValue = lastValue;
-			monthAgo = monthAgo.plusMonths(1);
-		}
-
-		final int REASONABLE_AMOUNT_OF_DAYS = 13;
-		if (init.equityCurve.size() - index >= REASONABLE_AMOUNT_OF_DAYS) {
-			double lastValue = init.equityCurve.getLastElement().value;
-			double differentForMonth = lastValue - indexValue;
-
-			monthsDifferents.add(differentForMonth);
-			monthsCapitalsSum += differentForMonth;
-		}
-
-		final double RISK_PERCENTS = 5.0;
-		final double MONTHS_PER_YEAR = 12.0;
-		final double sharpeAnnualReturn = (MONTHS_PER_YEAR / monthsDifferents
-				.size()) * monthsCapitalsSum;
-		final double sharpeStDev = Math.sqrt(MONTHS_PER_YEAR)
-				* StatisticsProcessor.calculateStDev(monthsCapitalsSum,
-						monthsDifferents);
-
-		init.sharpeRatio = (sharpeAnnualReturn - RISK_PERCENTS) / sharpeStDev;
-	}
 }

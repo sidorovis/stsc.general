@@ -49,11 +49,6 @@ public final class TradeProcessor {
 		return startSimulationProcess(period).calculate();
 	}
 
-	public Metrics simulate(final FromToPeriod period) throws BadSignalException {
-		collectStocksFromStorage();
-		return startSimulationProcess(period).calculate();
-	}
-
 	private StatisticsProcessor startSimulationProcess(final FromToPeriod period) throws BadSignalException {
 		final StatisticsProcessor statisticsProcessor = new StatisticsProcessor(broker.getTradingLog());
 		LocalDate dayIterator = new LocalDate(period.getFrom());

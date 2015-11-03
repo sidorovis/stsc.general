@@ -1,13 +1,16 @@
 package stsc.general.statistic;
 
 /**
- * Metric Type
+ * Metric Type.
+ * 
+ * @Remark: equity curve is a value of money during the trading
  */
 public enum MetricType {
-	avGain, // Average Gain
-	period(Integer.class), // Amount of Days
-	freq, // Amount of signals per Day.
-	winProb, //
+
+	avGain, // Average Gain, last value of equity curve*.
+	period(Integer.class), // Amount of time units.
+	freq, // Amount of signals per time unit.
+	winProb, // Percentage of signals that were closed with positive value of trading.
 	avWin, //
 	maxWin, //
 	avLoss, //
@@ -27,6 +30,7 @@ public enum MetricType {
 	ddDurationMax, //
 	ddValueAvGain, //
 	ddValueMax, //
+	maxSpentMoney, // Maximum spent money during trading.
 	; // TODO descriptions
 
 	private final Class<?> metricType;

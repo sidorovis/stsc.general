@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
-public class EquityCurve implements Cloneable {
+public final class EquityCurve implements Cloneable {
 
-	static public class Element implements Cloneable {
+	static final class Element implements Cloneable {
 
 		public Date date;
 		public double value;
@@ -40,7 +40,7 @@ public class EquityCurve implements Cloneable {
 		}
 	};
 
-	static public class ElementComparator implements Comparator<Element> {
+	static final class ElementComparator implements Comparator<Element> {
 
 		@Override
 		public int compare(Element o1, Element o2) {
@@ -91,8 +91,7 @@ public class EquityCurve implements Cloneable {
 	}
 
 	public int find(Date date) {
-		int index = Collections.binarySearch(elements, Element.makeForSearch(date),
-				equityCurveElementComparator);
+		int index = Collections.binarySearch(elements, Element.makeForSearch(date), equityCurveElementComparator);
 		if (index < 0)
 			index = -index - 1;
 		return index;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Optional;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -53,7 +54,7 @@ public final class TradeProcessorTest {
 		final TradeProcessorInit settings = new TradeProcessorInit(ss, period, executionsStorage);
 
 		final TradeProcessor tradeProcessor = new TradeProcessor(settings);
-		tradeProcessor.simulate(period);
+		tradeProcessor.simulate(period, Optional.empty());
 
 		final ExecutionStarter es = tradeProcessor.getExecutionStorage();
 		Assert.assertEquals(1, es.getEodAlgorithmsSize());
@@ -98,6 +99,6 @@ public final class TradeProcessorTest {
 		executionsStorage.addEodExecution(new EodExecution("e1", TestingEodAlgorithm.class.getName(), algoSettings));
 		final TradeProcessorInit init = new TradeProcessorInit(ss, period, executionsStorage);
 		final TradeProcessor marketSimulator = new TradeProcessor(init);
-		marketSimulator.simulate(period);
+		marketSimulator.simulate(period, Optional.empty());
 	}
 }
