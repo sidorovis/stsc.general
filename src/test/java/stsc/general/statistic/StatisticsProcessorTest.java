@@ -250,9 +250,9 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(0.0, stats.getMetric(MetricType.month12Max), Settings.doubleEpsilon);
 		Assert.assertEquals(-34.239761, stats.getMetric(MetricType.month12Min), Settings.doubleEpsilon);
 
-		Assert.assertEquals(145, stats.getMetric(MetricType.ddDurationAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(145, stats.getMetric(MetricType.ddDurationAverage), Settings.doubleEpsilon);
 		Assert.assertEquals(675.0, stats.getMetric(MetricType.ddDurationMax), Settings.doubleEpsilon);
-		Assert.assertEquals(12.568085, stats.getMetric(MetricType.ddValueAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(12.568085, stats.getMetric(MetricType.ddValueAverage), Settings.doubleEpsilon);
 		Assert.assertEquals(48.826069, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 
@@ -278,9 +278,9 @@ public class StatisticsProcessorTest {
 		Assert.assertEquals(0.0, stats.getMetric(MetricType.month12Max), Settings.doubleEpsilon);
 		Assert.assertEquals(-9.350847, stats.getMetric(MetricType.month12Min), Settings.doubleEpsilon);
 
-		Assert.assertEquals(67.2, stats.getMetric(MetricType.ddDurationAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(67.2, stats.getMetric(MetricType.ddDurationAverage), Settings.doubleEpsilon);
 		Assert.assertEquals(286.0, stats.getMetric(MetricType.ddDurationMax), Settings.doubleEpsilon);
-		Assert.assertEquals(10.581057, stats.getMetric(MetricType.ddValueAvGain), Settings.doubleEpsilon);
+		Assert.assertEquals(10.581057, stats.getMetric(MetricType.ddValueAverage), Settings.doubleEpsilon);
 		Assert.assertEquals(36.346692, stats.getMetric(MetricType.ddValueMax), Settings.doubleEpsilon);
 	}
 

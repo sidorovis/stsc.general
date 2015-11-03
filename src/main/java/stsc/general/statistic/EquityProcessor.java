@@ -261,8 +261,8 @@ final class EquityProcessor {
 		}
 
 		if (ddCount != 0) {
-			init.ddDurationAvGain = ddDurationSum / ddCount;
-			init.ddValueAvGain = ddValueSum / ddCount;
+			init.ddDurationAverage = ddDurationSum / ddCount;
+			init.ddValueAverage = ddValueSum / ddCount;
 		}
 	}
 

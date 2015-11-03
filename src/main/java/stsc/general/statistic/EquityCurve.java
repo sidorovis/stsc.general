@@ -7,7 +7,7 @@ import java.util.Date;
 
 public final class EquityCurve implements Cloneable {
 
-	static final class Element implements Cloneable {
+	public static final class Element implements Cloneable {
 
 		public Date date;
 		public double value;

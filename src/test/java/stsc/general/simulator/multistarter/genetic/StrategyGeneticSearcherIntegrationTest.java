@@ -81,7 +81,7 @@ public class StrategyGeneticSearcherIntegrationTest {
 		final CostWeightedSumFunction costFunction = new CostWeightedSumFunction();
 		costFunction.withParameter(MetricType.winProb, 1.2);
 		costFunction.withParameter(MetricType.kelly, 0.6);
-		costFunction.withParameter(MetricType.ddDurationAvGain, 0.4);
+		costFunction.withParameter(MetricType.ddDurationAverage, 0.4);
 		costFunction.withParameter(MetricType.freq, 0.3);
 		costFunction.withParameter(MetricType.sharpeRatio, 0.2);
 		costFunction.withParameter(MetricType.maxLoss, -0.3);

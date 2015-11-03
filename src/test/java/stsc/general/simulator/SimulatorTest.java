@@ -41,7 +41,7 @@ public final class SimulatorTest {
 	public void testOneSideSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
 		SimulatorImpl.fromFile(resourceToPath("simulator_configs/one_side.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv"));
-		Assert.assertEquals(563, testOutputPath.resolve("statistics.csv").toFile().length());
+		Assert.assertEquals(565, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
 
@@ -96,7 +96,7 @@ public final class SimulatorTest {
 		final Metrics metrics = SimulatorImpl.fromFile(resourceToPath("simulator_configs/simple.ini")).getMetrics();
 		metrics.print(testOutputPath.resolve("statistics.csv"));
 		Assert.assertEquals(2096, metrics.getEquityCurveInMoney().size());
-		Assert.assertEquals(46157, testOutputPath.resolve("statistics.csv").toFile().length());
+		Assert.assertEquals(46159, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
 
@@ -111,7 +111,7 @@ public final class SimulatorTest {
 	public void testOpenWhileSignalAlgorithmSimulator() throws Exception {
 		final Path testOutputPath = FileSystems.getDefault().getPath(testFolder.getRoot().getAbsolutePath());
 		SimulatorImpl.fromFile(resourceToPath("simulator_configs/open_while_signal.ini")).getMetrics().print(testOutputPath.resolve("statistics.csv"));
-		Assert.assertEquals(59346, testOutputPath.resolve("statistics.csv").toFile().length());
+		Assert.assertEquals(59348, testOutputPath.resolve("statistics.csv").toFile().length());
 		testOutputPath.resolve("statistics.csv").toFile().deleteOnExit();
 	}
 

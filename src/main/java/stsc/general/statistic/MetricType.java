@@ -3,20 +3,54 @@ package stsc.general.statistic;
 /**
  * Metric Type.
  * 
- * @Remark: equity curve is a value of money during the trading
+ * @Remark: equity curve is a value of money during the trading process.
  */
 public enum MetricType {
 
-	avGain, // Average Gain, last value of equity curve*.
-	period(Integer.class), // Amount of time units.
-	freq, // Amount of signals per time unit.
-	winProb, // Percentage of signals that were closed with positive value of trading.
-	avWin, //
-	maxWin, //
-	avLoss, //
-	maxLoss, //
+	/**
+	 * Average Gain, last value of equity curve.
+	 */
+	avGain,
+	/**
+	 * Amount of time units (days / minutes).
+	 */
+	period(Integer.class),
+	/**
+	 * Amount of signals per time unit.
+	 */
+	freq,
+	/**
+	 * Percentage of signals that were closed with positive value of trading.
+	 */
+	winProb,
+	/**
+	 * Average money value from all positions that was closed with win.
+	 */
+	avWin,
+	/**
+	 * Maximum money value from all positions that was closed with win.
+	 */
+	maxWin,
+	/**
+	 * Average money value from all positions that was closed with loss.
+	 */
+	avLoss,
+	/**
+	 * Maximum money (absolute) value from all positions that was closed with loss.
+	 */
+	maxLoss,
+	/**
+	 * Average win divide to Average loss.
+	 */
 	avWinAvLoss, //
-	kelly, //
+	/**
+	 * Kelly metric: http://www.investopedia.com/articles/trading/04/091504.asp <br/>
+	 * {@link #winProb} - (1.0 - {@link #winProb}) / {@link #avWinAvLoss}.
+	 */
+	kelly,
+	/**
+	 * Sharpe Ratio metric: http://www.investopedia.com/articles/07/sharpe_ratio.asp
+	 */
 	sharpeRatio, //
 	startMonthAvGain, //
 	startMonthStDevGain, //
@@ -26,11 +60,26 @@ public enum MetricType {
 	month12StDevGain, //
 	month12Max, //
 	month12Min, //
-	ddDurationAvGain, //
-	ddDurationMax, //
-	ddValueAvGain, //
-	ddValueMax, //
-	maxSpentMoney, // Maximum spent money during trading.
+	/**
+	 * Average value of drawdown length in time units.
+	 */
+	ddDurationAverage,
+	/**
+	 * Maximum value of drawdown length in time units.
+	 */
+	ddDurationMax,
+	/**
+	 * Average value of drawndown (peak-to-trough decline).
+	 */
+	ddValueAverage,
+	/**
+	 * Maximum value of drawdown (peak-to-trough decline).
+	 */
+	ddValueMax,
+	/**
+	 * Maximum spent money during trading.
+	 */
+	maxSpentMoney, //
 	; // TODO descriptions
 
 	private final Class<?> metricType;

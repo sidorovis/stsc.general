@@ -30,10 +30,10 @@ class MetricsBuilder {
 	public double month12Min = 0.0;
 	public double month12Max = 0.0;
 
-	public double ddDurationAvGain = 0.0;
+	public double ddDurationAverage = 0.0;
 	public double ddDurationMax = 0.0;
 
-	public double ddValueAvGain = 0.0;
+	public double ddValueAverage = 0.0;
 	public double ddValueMax = 0.0;
 
 	private double maximumSpentMoney;

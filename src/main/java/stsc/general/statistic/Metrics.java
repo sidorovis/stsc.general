@@ -47,14 +47,14 @@ public final class Metrics {
 		setDoubleMetric(MetricType.avGain, init.getAvGain());
 		setIntegerMetric(MetricType.period, init.period);
 
-		setDoubleMetric(MetricType.freq, division(init.count, init.period));
-		setDoubleMetric(MetricType.winProb, division(init.winCount, init.count));
+		setDoubleMetric(MetricType.freq, divide(init.count, init.period));
+		setDoubleMetric(MetricType.winProb, divide(init.winCount, init.count));
 
-		setDoubleMetric(MetricType.avWin, division(init.winSum, init.winCount));
+		setDoubleMetric(MetricType.avWin, divide(init.winSum, init.winCount));
 		setDoubleMetric(MetricType.maxWin, init.maxWin);
-		setDoubleMetric(MetricType.avLoss, Math.abs(division(init.lossSum, init.lossCount)));
+		setDoubleMetric(MetricType.avLoss, Math.abs(divide(init.lossSum, init.lossCount)));
 		setDoubleMetric(MetricType.maxLoss, -init.maxLoss);
-		setDoubleMetric(MetricType.avWinAvLoss, division(getDoubleMetric(MetricType.avWin), getDoubleMetric(MetricType.avLoss)));
+		setDoubleMetric(MetricType.avWinAvLoss, divide(getDoubleMetric(MetricType.avWin), getDoubleMetric(MetricType.avLoss)));
 
 		if (getDoubleMetric(MetricType.avWinAvLoss) == 0.0)
 			setDoubleMetric(MetricType.kelly, 0.0);
@@ -76,15 +76,15 @@ public final class Metrics {
 		setDoubleMetric(MetricType.month12Max, init.month12Max);
 		setDoubleMetric(MetricType.month12Min, init.month12Min);
 
-		setDoubleMetric(MetricType.ddDurationAvGain, init.ddDurationAvGain);
+		setDoubleMetric(MetricType.ddDurationAverage, init.ddDurationAverage);
 		setDoubleMetric(MetricType.ddDurationMax, init.ddDurationMax);
-		setDoubleMetric(MetricType.ddValueAvGain, init.ddValueAvGain);
+		setDoubleMetric(MetricType.ddValueAverage, init.ddValueAverage);
 		setDoubleMetric(MetricType.ddValueMax, init.ddValueMax);
 
 		setDoubleMetric(MetricType.maxSpentMoney, init.getMaximumSpentMoney());
 	}
 
-	static private double division(double a, double b) {
+	static private double divide(double a, double b) {
 		if (b == 0.0)
 			return 0.0;
 		else
