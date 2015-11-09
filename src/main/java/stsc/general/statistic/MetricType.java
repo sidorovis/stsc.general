@@ -59,15 +59,41 @@ public enum MetricType {
 	/**
 	 * Maximum money (absolute) value from all positions that was closed with loss.
 	 */
-	maxLoss, //
-	startMonthAvGain, //
-	startMonthStDevGain, //
-	startMonthMax, //
-	startMonthMin, //
-	month12AvGain, //
-	month12StDevGain, //
-	month12Max, //
-	month12Min, //
+	maxLoss,
+	/**
+	 * Start of Month Average Gain deviation equity gain difference. <br/>
+	 * Calculates average value for equity value difference on month distance (calculated by begin date of months).
+	 */
+	startMonthAvGain,
+	/**
+	 * Start of Month Standard deviation equity gain difference. <br/>
+	 * Calculates equity value difference on month distance (calculated by begin date of months).
+	 */
+	startMonthStDevGain,
+	/**
+	 * Maximum months equity difference. (Maximum gain month by month).
+	 */
+	startMonthMax,
+	/**
+	 * Minimum months equity difference. (Minimum gain month by month).
+	 */
+	startMonthMin,
+	/**
+	 * Average value for 12 months windows. This value calculated with 12 months rolling window by equity diff.
+	 */
+	month12AvGain,
+	/**
+	 * Average Standard Deviation for 12 months windows. This value calculated with 12 months rolling window by equity diff.
+	 */
+	month12StDevGain,
+	/**
+	 * Maximum value for equity differences on 12 month rolling window.
+	 */
+	month12Max,
+	/**
+	 * Minimum value for equity differences on 12 month rolling window.
+	 */
+	month12Min,
 	/**
 	 * Maximum value of drawdown length in time units.
 	 */
@@ -81,7 +107,7 @@ public enum MetricType {
 	 */
 	period(Integer.class),
 	//
-	; // TODO descriptions
+	;
 
 	private final Class<?> metricType;
 
