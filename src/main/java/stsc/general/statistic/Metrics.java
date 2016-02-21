@@ -38,9 +38,13 @@ public final class Metrics {
 	}
 
 	public Metrics(Map<MetricType, Double> doubleList, Map<MetricType, Integer> integerList) {
+		this(doubleList, integerList, new EquityCurve());
+	}
+
+	public Metrics(Map<MetricType, Double> doubleList, Map<MetricType, Integer> integerList, EquityCurve equityCurve) {
 		this.getDoubleMetrics().putAll(doubleList);
 		this.getIntegerMetrics().putAll(integerList);
-		this.equityCurveInMoney = new EquityCurve();
+		this.equityCurveInMoney = equityCurve;
 	}
 
 	private void calculateProbabilityStatistics(MetricsBuilder init) {
