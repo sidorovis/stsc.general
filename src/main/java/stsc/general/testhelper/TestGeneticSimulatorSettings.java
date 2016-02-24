@@ -14,7 +14,6 @@ import stsc.general.simulator.multistarter.MpDouble;
 import stsc.general.simulator.multistarter.MpInteger;
 import stsc.general.simulator.multistarter.MpSubExecution;
 import stsc.general.simulator.multistarter.genetic.SimulatorSettingsGeneticFactory;
-import stsc.general.simulator.multistarter.genetic.GeneticList;
 import stsc.general.simulator.multistarter.genetic.SimulatorSettingsGeneticListImpl;
 import stsc.storage.AlgorithmsStorage;
 import stsc.storage.mocks.StockStorageMock;
@@ -23,11 +22,14 @@ public final class TestGeneticSimulatorSettings {
 
 	private static final StockStorage stockStorage = StockStorageMock.getStockStorage();
 
+	private TestGeneticSimulatorSettings() {
+	}
+	
 	public static SimulatorSettingsGeneticListImpl getGeneticList() {
 		return getGeneticList(Arrays.asList(new String[] { "open", "high", "low", "close", "value" }), "31-12-2009");
 	}
 
-	public static GeneticList getBigGeneticList() {
+	public static SimulatorSettingsGeneticListImpl getBigGeneticList() {
 		return getBigGeneticList(Arrays.asList(new String[] { "open", "high", "low", "close", "value" }), "31-12-2009");
 	}
 
@@ -54,7 +56,7 @@ public final class TestGeneticSimulatorSettings {
 		return new SimulatorSettingsGeneticFactory(stockStorage, new FromToPeriod(new Date(), new Date()));
 	}
 
-	private static GeneticList getBigGeneticList(final List<String> openTypes, final String periodTo) {
+	private static SimulatorSettingsGeneticListImpl getBigGeneticList(final List<String> openTypes, final String periodTo) {
 		return getBigGeneticFactory(openTypes, periodTo).getList();
 	}
 
