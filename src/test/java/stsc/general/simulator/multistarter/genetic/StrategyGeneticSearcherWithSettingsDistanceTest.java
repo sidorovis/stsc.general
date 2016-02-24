@@ -16,8 +16,8 @@ import stsc.general.testhelper.TestGeneticSimulatorSettings;
 
 public class StrategyGeneticSearcherWithSettingsDistanceTest {
 
-	private static final int maxGeneticStepsAmount = 50;
-	private static final int populationSize = 10;
+	private static final int maxGeneticStepsAmount = 100;
+	private static final int populationSize = 25;
 
 	@Test
 	public void testStrategyGeneticSearcherWithDistance() throws InterruptedException, StrategySearcherException {
