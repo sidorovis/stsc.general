@@ -1,8 +1,8 @@
 package stsc.general.simulator.multistarter.genetic;
 
-import stsc.common.algorithms.EodExecution;
+import stsc.common.algorithms.EodExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
-import stsc.common.algorithms.StockExecution;
+import stsc.common.algorithms.StockExecutionInstance;
 import stsc.general.simulator.SimulatorConfiguration;
 
 public final class GeneticExecutionInitializer {
@@ -36,13 +36,13 @@ public final class GeneticExecutionInitializer {
 	}
 
 	public void mutateStock(int mutateSettingIndex, SimulatorConfiguration copy) {
-		final StockExecution execution = copy.getInit().getExecutionsStorage().getStockExecutions().get(mutateSettingIndex);
+		final StockExecutionInstance execution = copy.getInit().getExecutionsStorage().getStockExecutions().get(mutateSettingIndex);
 		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
 
 	public void mutateEod(int eodIndex, SimulatorConfiguration copy) {
-		final EodExecution execution = copy.getInit().getExecutionsStorage().getEodExecutions().get(eodIndex);
+		final EodExecutionInstance execution = copy.getInit().getExecutionsStorage().getEodExecutions().get(eodIndex);
 		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
@@ -51,11 +51,11 @@ public final class GeneticExecutionInitializer {
 		geneticAlgorithmSettings.mutate(algorithmSettings);
 	}
 
-	public MutableAlgorithmConfiguration mergeStock(StockExecution leftSe, StockExecution rightSe) {
+	public MutableAlgorithmConfiguration mergeStock(StockExecutionInstance leftSe, StockExecutionInstance rightSe) {
 		return geneticAlgorithmSettings.merge(leftSe.getSettings(), rightSe.getSettings());
 	}
 
-	public MutableAlgorithmConfiguration mergeEod(EodExecution leftSe, EodExecution rightSe) {
+	public MutableAlgorithmConfiguration mergeEod(EodExecutionInstance leftSe, EodExecutionInstance rightSe) {
 		return geneticAlgorithmSettings.merge(leftSe.getSettings(), rightSe.getSettings());
 	}
 

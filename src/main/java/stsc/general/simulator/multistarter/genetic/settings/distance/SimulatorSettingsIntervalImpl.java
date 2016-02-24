@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import stsc.common.algorithms.EodExecution;
-import stsc.common.algorithms.Execution;
+import stsc.common.algorithms.EodExecutionInstance;
+import stsc.common.algorithms.ExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.general.simulator.SimulatorConfiguration;
 
@@ -18,15 +18,15 @@ public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInt
 
 	@Override
 	public double calculateInterval(final SimulatorConfiguration left, final SimulatorConfiguration right) {
-		final List<EodExecution> leftEods = left.getInit().getExecutionsStorage().getEodExecutions();
-		final List<EodExecution> rightEods = right.getInit().getExecutionsStorage().getEodExecutions();
+		final List<EodExecutionInstance> leftEods = left.getInit().getExecutionsStorage().getEodExecutions();
+		final List<EodExecutionInstance> rightEods = right.getInit().getExecutionsStorage().getEodExecutions();
 		if (leftEods.size() != rightEods.size()) {
 			return MAX_INTERVAL_VALUE;
 		}
 		double result = 0.0;
 		for (int i = 0; i < leftEods.size(); ++i) {
-			final EodExecution leftEod = leftEods.get(i);
-			final EodExecution rightEod = rightEods.get(i);
+			final EodExecutionInstance leftEod = leftEods.get(i);
+			final EodExecutionInstance rightEod = rightEods.get(i);
 			if (compareNonSettingsFields(leftEod, rightEod)) {
 				return MAX_INTERVAL_VALUE;
 			}
@@ -55,7 +55,7 @@ public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInt
 		return interval;
 	}
 
-	private boolean compareNonSettingsFields(Execution<?> left, Execution<?> right) {
+	private boolean compareNonSettingsFields(ExecutionInstance<?> left, ExecutionInstance<?> right) {
 		return !left.getAlgorithmType().equals(right.getAlgorithmType()) || //
 				!left.getAlgorithmName().equals(right.getAlgorithmName()) || //
 				!left.getExecutionName().equals(right.getExecutionName());

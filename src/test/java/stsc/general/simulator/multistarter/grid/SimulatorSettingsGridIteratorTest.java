@@ -21,8 +21,8 @@ import stsc.general.simulator.multistarter.MpString;
 import stsc.general.testhelper.TestGridSimulatorSettings;
 import stsc.general.testhelper.TestMetricsHelper;
 import stsc.general.trading.BrokerImpl;
-import stsc.storage.ExecutionStarter;
-import stsc.storage.ExecutionsStorage;
+import stsc.storage.ExecutionInstanceProcessor;
+import stsc.storage.ExecutionInstancesStorage;
 import stsc.storage.mocks.StockStorageMock;
 
 public class SimulatorSettingsGridIteratorTest {
@@ -49,8 +49,8 @@ public class SimulatorSettingsGridIteratorTest {
 		int count = 0;
 		for (SimulatorConfiguration simulatorSettings : settings) {
 			count += 1;
-			final ExecutionsStorage executionsStorage = simulatorSettings.getInit().getExecutionsStorage();
-			final ExecutionStarter executionStarter = executionsStorage.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
+			final ExecutionInstancesStorage executionsStorage = simulatorSettings.getInit().getExecutionsStorage();
+			final ExecutionInstanceProcessor executionStarter = executionsStorage.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 			final StockAlgorithm sain = executionStarter.getStockAlgorithm("in", "aapl").get();
 			final StockAlgorithm saema = executionStarter.getStockAlgorithm("ema", "aapl").get();
 			final StockAlgorithm salevel = executionStarter.getStockAlgorithm("level", "aapl").get();

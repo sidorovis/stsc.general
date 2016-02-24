@@ -20,10 +20,10 @@ import stsc.common.storage.StockStorage;
 import stsc.common.trading.Broker;
 import stsc.general.statistic.Metrics;
 import stsc.general.statistic.StatisticsProcessor;
-import stsc.storage.ExecutionStarter;
+import stsc.storage.ExecutionInstanceProcessor;
 
 /**
- * {@link TradeProcessor} is a container for {@link Broker}, {@link ExecutionStarter}, {@link DayIteratorStorage} and algorithm of simulation.
+ * {@link TradeProcessor} is a container for {@link Broker}, {@link ExecutionInstanceProcessor}, {@link DayIteratorStorage} and algorithm of simulation.
  */
 public final class TradeProcessor {
 
@@ -34,7 +34,7 @@ public final class TradeProcessor {
 	static Logger logger = LogManager.getLogger(TradeProcessor.class.getSimpleName());
 
 	private final BrokerImpl broker;
-	private final ExecutionStarter executionsStarter;
+	private final ExecutionInstanceProcessor executionsStarter;
 
 	private DayIteratorStorage stocks;
 
@@ -111,7 +111,7 @@ public final class TradeProcessor {
 		}
 	}
 
-	public ExecutionStarter getExecutionStorage() {
+	public ExecutionInstanceProcessor getExecutionStorage() {
 		return executionsStarter;
 	}
 }

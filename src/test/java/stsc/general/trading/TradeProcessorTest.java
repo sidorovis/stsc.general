@@ -13,15 +13,15 @@ import org.junit.Test;
 import stsc.algorithms.primitive.eod.TestingEodAlgorithm;
 import stsc.algorithms.primitive.eod.TestingEodAlgorithmSignal;
 import stsc.common.FromToPeriod;
-import stsc.common.algorithms.EodExecution;
+import stsc.common.algorithms.EodExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.signals.SerieSignal;
 import stsc.common.stocks.united.format.UnitedFormatStock;
 import stsc.common.storage.SignalsStorage;
 import stsc.common.storage.StockStorage;
 import stsc.general.algorithm.AlgorithmConfigurationImpl;
-import stsc.storage.ExecutionStarter;
-import stsc.storage.ExecutionsStorage;
+import stsc.storage.ExecutionInstanceProcessor;
+import stsc.storage.ExecutionInstancesStorage;
 import stsc.storage.ThreadSafeStockStorage;
 import stsc.storage.mocks.StockStorageMock;
 
@@ -48,15 +48,15 @@ public final class TradeProcessorTest {
 		final AlgorithmConfigurationImpl algoSettings = new AlgorithmConfigurationImpl();
 		algoSettings.setInteger("size", 10000);
 
-		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
-		executionsStorage.addEodExecution(new EodExecution("e1", TestingEodAlgorithm.class.getName(), algoSettings));
+		final ExecutionInstancesStorage executionsStorage = new ExecutionInstancesStorage();
+		executionsStorage.addEodExecution(new EodExecutionInstance("e1", TestingEodAlgorithm.class.getName(), algoSettings));
 
 		final TradeProcessorInit settings = new TradeProcessorInit(ss, period, executionsStorage);
 
 		final TradeProcessor tradeProcessor = new TradeProcessor(settings);
 		tradeProcessor.simulate(period, Optional.empty());
 
-		final ExecutionStarter es = tradeProcessor.getExecutionStorage();
+		final ExecutionInstanceProcessor es = tradeProcessor.getExecutionStorage();
 		Assert.assertEquals(1, es.getEodAlgorithmsSize());
 
 		final TestingEodAlgorithm ta = (TestingEodAlgorithm) es.getEodAlgorithm("e1");
@@ -93,10 +93,10 @@ public final class TradeProcessorTest {
 	public void testTradeProcessorWithStatistics() throws Exception {
 		final StockStorage ss = StockStorageMock.getStockStorage();
 		final FromToPeriod period = new FromToPeriod("02-09-2013", "06-11-2013");
-		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
+		final ExecutionInstancesStorage executionsStorage = new ExecutionInstancesStorage();
 		final MutableAlgorithmConfiguration algoSettings = new AlgorithmConfigurationImpl();
 
-		executionsStorage.addEodExecution(new EodExecution("e1", TestingEodAlgorithm.class.getName(), algoSettings));
+		executionsStorage.addEodExecution(new EodExecutionInstance("e1", TestingEodAlgorithm.class.getName(), algoSettings));
 		final TradeProcessorInit init = new TradeProcessorInit(ss, period, executionsStorage);
 		final TradeProcessor marketSimulator = new TradeProcessor(init);
 		marketSimulator.simulate(period, Optional.empty());

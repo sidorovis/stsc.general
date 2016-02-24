@@ -17,22 +17,22 @@ import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.stocks.united.format.UnitedFormatHelper;
 import stsc.common.stocks.united.format.UnitedFormatStock;
 import stsc.common.storage.StockStorage;
-import stsc.storage.ExecutionsStorage;
+import stsc.storage.ExecutionInstancesStorage;
 import stsc.storage.ThreadSafeStockStorage;
 
 public final class TradeProcessorInit implements Cloneable {
 
 	private final BrokerImpl broker;
 	private final FromToPeriod period;
-	private final ExecutionsStorage executionsStorage;
+	private final ExecutionInstancesStorage executionsStorage;
 
 	public TradeProcessorInit(final StockStorage stockStorage, final FromToPeriod period) {
 		this.broker = new BrokerImpl(stockStorage);
 		this.period = period;
-		this.executionsStorage = new ExecutionsStorage();
+		this.executionsStorage = new ExecutionInstancesStorage();
 	}
 
-	public TradeProcessorInit(final StockStorage stockStorage, final FromToPeriod period, final ExecutionsStorage executionsStorage) {
+	public TradeProcessorInit(final StockStorage stockStorage, final FromToPeriod period, final ExecutionInstancesStorage executionsStorage) {
 		this.broker = new BrokerImpl(stockStorage);
 		this.period = period;
 		this.executionsStorage = executionsStorage;
@@ -64,7 +64,7 @@ public final class TradeProcessorInit implements Cloneable {
 			final Path algsConfig = resolveAbsoluteDataPath(configPath.toPath().getParent(), p.getProperty("Executions.path", "./algs.ini"));
 			final FromToPeriod period = new FromToPeriod(p);
 			final ExecutionsLoader executionsLoader = new ExecutionsLoader(algsConfig.toFile());
-			final ExecutionsStorage executionsStorage = executionsLoader.getExecutionsStorage();
+			final ExecutionInstancesStorage executionsStorage = executionsLoader.getExecutionsStorage();
 
 			this.broker = new BrokerImpl(stockStorage);
 			this.period = period;
@@ -92,7 +92,7 @@ public final class TradeProcessorInit implements Cloneable {
 		return absolutePath;
 	}
 
-	private TradeProcessorInit(final BrokerImpl broker, final FromToPeriod period, final ExecutionsStorage executionsStorage) {
+	private TradeProcessorInit(final BrokerImpl broker, final FromToPeriod period, final ExecutionInstancesStorage executionsStorage) {
 		this.broker = new BrokerImpl(broker.getStockStorage());
 		this.period = period;
 		this.executionsStorage = executionsStorage;
@@ -123,7 +123,7 @@ public final class TradeProcessorInit implements Cloneable {
 		return period;
 	}
 
-	public ExecutionsStorage getExecutionsStorage() {
+	public ExecutionInstancesStorage getExecutionsStorage() {
 		return executionsStorage;
 	}
 

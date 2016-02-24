@@ -23,13 +23,13 @@ import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.EodAlgorithm;
-import stsc.common.algorithms.EodExecution;
+import stsc.common.algorithms.EodExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.algorithms.StockAlgorithm;
-import stsc.common.algorithms.StockExecution;
+import stsc.common.algorithms.StockExecutionInstance;
 import stsc.general.algorithm.AlgorithmConfigurationImpl;
 import stsc.storage.AlgorithmsStorage;
-import stsc.storage.ExecutionsStorage;
+import stsc.storage.ExecutionInstancesStorage;
 
 /**
  * Executions Loader - load (create set of instances for algorithms) executions settings from text file / string.
@@ -61,7 +61,7 @@ final class ExecutionsLoader {
 	private String configFileFolder;
 	final private AlgorithmConfigurationImpl settings;
 	final private AlgorithmsStorage algorithmsStorage;
-	final private ExecutionsStorage executionsStorage = new ExecutionsStorage();
+	final private ExecutionInstancesStorage executionsStorage = new ExecutionInstancesStorage();
 
 	final private Set<String> openedPropertyFileNames = new HashSet<>();
 
@@ -191,7 +191,7 @@ final class ExecutionsLoader {
 		final String oldRealExecutionName = registeredStockExecutions.get(executionName);
 		if (oldRealExecutionName != null)
 			return oldRealExecutionName;
-		final StockExecution execution = new StockExecution(realExecutionName, stockAlgorithm, algorithmSettings);
+		final StockExecutionInstance execution = new StockExecutionInstance(realExecutionName, stockAlgorithm, algorithmSettings);
 		executionsStorage.addStockExecution(execution);
 		return executionName;
 	}
@@ -205,7 +205,7 @@ final class ExecutionsLoader {
 		final String oldRealExecutionName = registeredStockExecutions.get(executionName);
 		if (oldRealExecutionName != null)
 			return oldRealExecutionName;
-		final StockExecution execution = new StockExecution(executionName, stockAlgorithm, algorithmSettings);
+		final StockExecutionInstance execution = new StockExecutionInstance(executionName, stockAlgorithm, algorithmSettings);
 		executionsStorage.addStockExecution(execution);
 		return executionName;
 	}
@@ -258,7 +258,7 @@ final class ExecutionsLoader {
 		final String oldRealExecutionName = registeredEodExecutions.get(executionName);
 		if (oldRealExecutionName != null)
 			return oldRealExecutionName;
-		final EodExecution execution = new EodExecution(realExecutionName, eodAlgorithm, algorithmSettings);
+		final EodExecutionInstance execution = new EodExecutionInstance(realExecutionName, eodAlgorithm, algorithmSettings);
 		executionsStorage.addEodExecution(execution);
 		return executionName;
 	}
@@ -272,7 +272,7 @@ final class ExecutionsLoader {
 		final String oldRealExecutionName = registeredEodExecutions.get(executionName);
 		if (oldRealExecutionName != null)
 			return Optional.of(oldRealExecutionName);
-		final EodExecution execution = new EodExecution(executionName, eodAlgorithm, algorithmSettings);
+		final EodExecutionInstance execution = new EodExecutionInstance(executionName, eodAlgorithm, algorithmSettings);
 		executionsStorage.addEodExecution(execution);
 		return Optional.of(executionName);
 	}
@@ -379,7 +379,7 @@ final class ExecutionsLoader {
 		return params;
 	}
 
-	public ExecutionsStorage getExecutionsStorage() {
+	public ExecutionInstancesStorage getExecutionsStorage() {
 		return executionsStorage;
 	}
 

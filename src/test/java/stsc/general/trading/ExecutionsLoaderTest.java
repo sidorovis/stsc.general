@@ -9,18 +9,18 @@ import org.junit.Test;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.storage.StockStorage;
 import stsc.general.testhelper.TestMetricsHelper;
-import stsc.storage.ExecutionStarter;
-import stsc.storage.ExecutionsStorage;
+import stsc.storage.ExecutionInstanceProcessor;
+import stsc.storage.ExecutionInstancesStorage;
 import stsc.storage.mocks.StockStorageMock;
 
 public class ExecutionsLoaderTest {
 
 	private final static StockStorage stockStorage = StockStorageMock.getStockStorage();
 
-	private ExecutionsStorage helperForSuccessLoadTests(File filename) throws Exception {
+	private ExecutionInstancesStorage helperForSuccessLoadTests(File filename) throws Exception {
 		final ExecutionsLoader el = new ExecutionsLoader(filename);
 		Assert.assertNotNull(el.getExecutionsStorage());
-		final ExecutionsStorage executions = el.getExecutionsStorage();
+		final ExecutionInstancesStorage executions = el.getExecutionsStorage();
 		executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 		return executions;
 	}
@@ -31,16 +31,16 @@ public class ExecutionsLoaderTest {
 
 	@Test
 	public void testAlgorithmLoader() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/algs_t1.ini"));
-		final ExecutionStarter starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
+		final ExecutionInstancesStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/algs_t1.ini"));
+		final ExecutionInstanceProcessor starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 		Assert.assertEquals(3, starter.getStockAlgorithmsSize());
 		Assert.assertEquals(0, starter.getEodAlgorithmsSize());
 	}
 
 	@Test
 	public void testSeveralAlgorithmLoader() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/algs_t2.ini"));
-		final ExecutionStarter starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
+		final ExecutionInstancesStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/algs_t2.ini"));
+		final ExecutionInstanceProcessor starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 		Assert.assertEquals(5, starter.getStockAlgorithmsSize());
 		Assert.assertEquals(0, starter.getEodAlgorithmsSize());
 	}
@@ -95,16 +95,16 @@ public class ExecutionsLoaderTest {
 
 	@Test
 	public void testAlgorithmLoaderWithEod() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/trade_algs.ini"));
-		final ExecutionStarter starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
+		final ExecutionInstancesStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/trade_algs.ini"));
+		final ExecutionInstanceProcessor starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 		Assert.assertEquals(4, starter.getStockAlgorithmsSize());
 		Assert.assertNotNull(starter.getEodAlgorithm("a1"));
 	}
 
 	@Test
 	public void testAlgorithmLoaderWithEodOnEod() throws Exception {
-		final ExecutionsStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/eod_on_eod_dependency.ini"));
-		final ExecutionStarter starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
+		final ExecutionInstancesStorage executions = helperForSuccessLoadTests(resourceToPath("executions_loader_tests/eod_on_eod_dependency.ini"));
+		final ExecutionInstanceProcessor starter = executions.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
 		Assert.assertEquals(2, starter.getEodAlgorithmsSize());
 		Assert.assertNotNull(starter.getEodAlgorithm("a1"));
 		Assert.assertEquals(2, starter.getStockAlgorithmsSize());

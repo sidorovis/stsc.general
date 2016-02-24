@@ -11,15 +11,15 @@ import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
 
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.common.algorithms.EodExecution;
+import stsc.common.algorithms.EodExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
-import stsc.common.algorithms.StockExecution;
+import stsc.common.algorithms.StockExecutionInstance;
 import stsc.common.storage.StockStorage;
 import stsc.general.simulator.SimulatorConfiguration;
 import stsc.general.simulator.SimulatorConfigurationImpl;
 import stsc.general.strategy.TradingStrategy;
 import stsc.general.trading.TradeProcessorInit;
-import stsc.storage.ExecutionsStorage;
+import stsc.storage.ExecutionInstancesStorage;
 
 /**
  * Stores all possible values from {@link SimulatorConfigurationImpl} for Genetic {@link TradingStrategy} Search.<br/>
@@ -54,14 +54,14 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 
 	@Override
 	public synchronized SimulatorConfigurationImpl generateRandom() throws BadAlgorithmException {
-		final ExecutionsStorage executionsStorage = new ExecutionsStorage();
+		final ExecutionInstancesStorage executionsStorage = new ExecutionInstancesStorage();
 
 		for (GeneticExecutionInitializer i : stockInitializers) {
-			final StockExecution e = new StockExecution(i.getExecutionName(), i.algorithmName, i.generateRandom());
+			final StockExecutionInstance e = new StockExecutionInstance(i.getExecutionName(), i.algorithmName, i.generateRandom());
 			executionsStorage.addStockExecution(e);
 		}
 		for (GeneticExecutionInitializer i : eodInitializers) {
-			final EodExecution e = new EodExecution(i.getExecutionName(), i.algorithmName, i.generateRandom());
+			final EodExecutionInstance e = new EodExecutionInstance(i.getExecutionName(), i.algorithmName, i.generateRandom());
 			executionsStorage.addEodExecution(e);
 		}
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period, executionsStorage);
@@ -88,7 +88,7 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 	@Override
 	public SimulatorConfiguration merge(SimulatorConfiguration left, SimulatorConfiguration right) {
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period);
-		final ExecutionsStorage resultEs = init.getExecutionsStorage();
+		final ExecutionInstancesStorage resultEs = init.getExecutionsStorage();
 
 		mergeStocks(resultEs, left, right);
 		mergeEods(resultEs, left, right);
@@ -96,9 +96,9 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 		return new SimulatorConfigurationImpl(id.getAndIncrement(), init);
 	}
 
-	private ExecutionsStorage mergeStocks(ExecutionsStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
-		final List<StockExecution> leftList = left.getInit().getExecutionsStorage().getStockExecutions();
-		final List<StockExecution> rightList = right.getInit().getExecutionsStorage().getStockExecutions();
+	private ExecutionInstancesStorage mergeStocks(ExecutionInstancesStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
+		final List<StockExecutionInstance> leftList = left.getInit().getExecutionsStorage().getStockExecutions();
+		final List<StockExecutionInstance> rightList = right.getInit().getExecutionsStorage().getStockExecutions();
 
 		if (leftList.size() != stockInitializers.size()) {
 			logger.error(id + " merge Stock SimulatorSettings have different amount of StockExecutions from stockInitializers");
@@ -109,23 +109,23 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 		}
 
 		final Iterator<GeneticExecutionInitializer> initializer = stockInitializers.iterator();
-		final Iterator<StockExecution> leftIterator = leftList.iterator();
-		final Iterator<StockExecution> rightIterator = rightList.iterator();
+		final Iterator<StockExecutionInstance> leftIterator = leftList.iterator();
+		final Iterator<StockExecutionInstance> rightIterator = rightList.iterator();
 
 		while (initializer.hasNext() && leftIterator.hasNext() && rightIterator.hasNext()) {
 			final GeneticExecutionInitializer geneticInitializer = initializer.next();
-			final StockExecution leftSe = leftIterator.next();
-			final StockExecution rightSe = rightIterator.next();
+			final StockExecutionInstance leftSe = leftIterator.next();
+			final StockExecutionInstance rightSe = rightIterator.next();
 
 			final MutableAlgorithmConfiguration settings = geneticInitializer.mergeStock(leftSe, rightSe);
-			result.addStockExecution(new StockExecution(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
+			result.addStockExecution(new StockExecutionInstance(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
 		}
 		return result;
 	}
 
-	private ExecutionsStorage mergeEods(ExecutionsStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
-		final List<EodExecution> leftList = left.getInit().getExecutionsStorage().getEodExecutions();
-		final List<EodExecution> rightList = right.getInit().getExecutionsStorage().getEodExecutions();
+	private ExecutionInstancesStorage mergeEods(ExecutionInstancesStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
+		final List<EodExecutionInstance> leftList = left.getInit().getExecutionsStorage().getEodExecutions();
+		final List<EodExecutionInstance> rightList = right.getInit().getExecutionsStorage().getEodExecutions();
 
 		if (leftList.size() != eodInitializers.size()) {
 			logger.error(id + " merge Eod SimulatorSettings have different amount of StockExecutions from eodInitializers");
@@ -136,16 +136,16 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 		}
 
 		final Iterator<GeneticExecutionInitializer> initializer = eodInitializers.iterator();
-		final Iterator<EodExecution> leftIterator = leftList.iterator();
-		final Iterator<EodExecution> rightIterator = rightList.iterator();
+		final Iterator<EodExecutionInstance> leftIterator = leftList.iterator();
+		final Iterator<EodExecutionInstance> rightIterator = rightList.iterator();
 
 		while (initializer.hasNext() && leftIterator.hasNext() && rightIterator.hasNext()) {
 			final GeneticExecutionInitializer geneticInitializer = initializer.next();
-			final EodExecution leftSe = leftIterator.next();
-			final EodExecution rightSe = rightIterator.next();
+			final EodExecutionInstance leftSe = leftIterator.next();
+			final EodExecutionInstance rightSe = rightIterator.next();
 
 			final MutableAlgorithmConfiguration settings = geneticInitializer.mergeEod(leftSe, rightSe);
-			result.addEodExecution(new EodExecution(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
+			result.addEodExecution(new EodExecutionInstance(geneticInitializer.getExecutionName(), leftSe.getAlgorithmType(), settings));
 		}
 		return result;
 	}

@@ -10,12 +10,12 @@ import org.apache.logging.log4j.core.config.XMLConfigurationFactory;
 
 import stsc.common.FromToPeriod;
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.common.algorithms.EodExecution;
-import stsc.common.algorithms.StockExecution;
+import stsc.common.algorithms.EodExecutionInstance;
+import stsc.common.algorithms.StockExecutionInstance;
 import stsc.common.storage.StockStorage;
 import stsc.general.simulator.SimulatorConfigurationImpl;
 import stsc.general.trading.TradeProcessorInit;
-import stsc.storage.ExecutionsStorage;
+import stsc.storage.ExecutionInstancesStorage;
 
 /**
  * This iterator could be created only one for each list, so all iterators will
@@ -108,13 +108,13 @@ public class SimulatorSettingsGridIterator implements Iterator<SimulatorConfigur
 	}
 
 	private SimulatorConfigurationImpl generateSimulatorSettings() throws BadAlgorithmException {
-		ExecutionsStorage executionsStorage = new ExecutionsStorage();
+		ExecutionInstancesStorage executionsStorage = new ExecutionInstancesStorage();
 		for (GridExecutionInitializer i : stockInitializers) {
-			final StockExecution e = new StockExecution(i.executionName, i.algorithmName, i.current());
+			final StockExecutionInstance e = new StockExecutionInstance(i.executionName, i.algorithmName, i.current());
 			executionsStorage.addStockExecution(e);
 		}
 		for (GridExecutionInitializer i : eodInitializers) {
-			final EodExecution e = new EodExecution(i.executionName, i.algorithmName, i.current());
+			final EodExecutionInstance e = new EodExecutionInstance(i.executionName, i.algorithmName, i.current());
 			executionsStorage.addEodExecution(e);
 		}
 
