@@ -33,10 +33,14 @@ public class StrategyGeneticSearcherWithSettingsDistanceTest {
 
 		final SimulatorSettingsGeneticListImpl geneticList = TestGeneticSimulatorSettings.getGeneticList();
 
-		final StrategySelector selector = new StatisticsWithSettingsDistanceSelector(populationSize, new SimulatorSettingsIntervalImpl(), costFunction). //
-				setEpsilon(100.0);
+		final StrategySelector selector = new StatisticsWithSettingsDistanceSelector( //
+				populationSize, //
+				new SimulatorSettingsIntervalImpl(), //
+				costFunction). //
+						setEpsilon(50010.0);
 
-		final StrategyGeneticSearcherBuilder builder = StrategyGeneticSearcher.getBuilder(). //
+		final StrategyGeneticSearcherBuilder builder = StrategyGeneticSearcher. //
+				getBuilder(). //
 				withPopulationCostFunction(costFunction). //
 				withStrategySelector(selector). //
 				withGeneticList(geneticList). //
