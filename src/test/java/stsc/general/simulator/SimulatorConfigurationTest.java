@@ -20,10 +20,10 @@ public class SimulatorConfigurationTest {
 	@Test
 	public void testSimulatorConfiguration() throws BadAlgorithmException, URISyntaxException {
 		final TradeProcessorInit init = new TradeProcessorInit(new File(resourceToPath("simulator_configs/ndays.ini")));
-		final SimulatorConfiguration ss = new SimulatorConfigurationImpl(0, init);
+		final Execution ss = new ExecutionImpl(0, init);
 
 		final TradeProcessorInit initToEqual = new TradeProcessorInit(new File(resourceToPath("simulator_configs/ndays.ini")));
-		final SimulatorConfiguration ssToEqual = new SimulatorConfigurationImpl(0, initToEqual);
+		final Execution ssToEqual = new ExecutionImpl(0, initToEqual);
 
 		Assert.assertEquals(ss.stringHashCode().hashCode(), ssToEqual.stringHashCode().hashCode());
 		Assert.assertTrue(ss.stringHashCode().equals(ssToEqual.stringHashCode()));
@@ -37,7 +37,7 @@ public class SimulatorConfigurationTest {
 	@Test
 	public void testSimulatorConfigurationToString() throws BadAlgorithmException, URISyntaxException {
 		final TradeProcessorInit init = new TradeProcessorInit(new File(resourceToPath("simulator_configs/ndays.ini")));
-		final SimulatorConfiguration ss = new SimulatorConfigurationImpl(0, init);
+		final Execution ss = new ExecutionImpl(0, init);
 		Assert.assertEquals(10, ss.toString().split("\n").length);
 	}
 }

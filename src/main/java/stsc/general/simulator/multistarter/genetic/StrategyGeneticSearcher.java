@@ -20,7 +20,7 @@ import com.google.common.math.DoubleMath;
 
 import stsc.common.Settings;
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.general.simulator.SimulatorConfiguration;
+import stsc.general.simulator.Execution;
 import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.simulator.multistarter.genetic.tasks.GenerateRandomPopulationsTask;
@@ -224,10 +224,10 @@ public final class StrategyGeneticSearcher implements StrategySearcher {
 			final int leftIndex = indexRandomizator.nextInt(size);
 			final int rightIndex = indexRandomizator.nextInt(size);
 
-			final SimulatorConfiguration left = currentPopulation.get(leftIndex).getSettings();
-			final SimulatorConfiguration right = currentPopulation.get(rightIndex).getSettings();
+			final Execution left = currentPopulation.get(leftIndex).getSettings();
+			final Execution right = currentPopulation.get(rightIndex).getSettings();
 
-			final SimulatorConfiguration mergedStatistics = simulatorSettingsGeneticList.merge(left, right);
+			final Execution mergedStatistics = simulatorSettingsGeneticList.merge(left, right);
 			simulatorCalculatingTasks.add(new SimulatorCalculatingTask(geneticTaskController, mergedStatistics));
 		}
 	}
@@ -239,8 +239,8 @@ public final class StrategyGeneticSearcher implements StrategySearcher {
 		}
 		for (int i = 0; i < settings.getMutationSize(); ++i) {
 			final int index = indexRandomizator.nextInt(size);
-			final SimulatorConfiguration settings = currentPopulation.get(index).getSettings();
-			final SimulatorConfiguration mutatedSettings = simulatorSettingsGeneticList.mutate(settings);
+			final Execution settings = currentPopulation.get(index).getSettings();
+			final Execution mutatedSettings = simulatorSettingsGeneticList.mutate(settings);
 			simulatorCalculatingTasks.add(new SimulatorCalculatingTask(geneticTaskController, mutatedSettings));
 		}
 	}

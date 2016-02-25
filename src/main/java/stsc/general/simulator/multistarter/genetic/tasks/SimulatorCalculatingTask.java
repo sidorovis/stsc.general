@@ -4,16 +4,16 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import stsc.general.simulator.Simulator;
-import stsc.general.simulator.SimulatorConfiguration;
+import stsc.general.simulator.Execution;
 import stsc.general.statistic.Metrics;
 import stsc.general.strategy.TradingStrategy;
 
 public final class SimulatorCalculatingTask implements Callable<Boolean> {
 
 	private final GeneticTaskController controller;
-	private final SimulatorConfiguration simulatorSettings;
+	private final Execution simulatorSettings;
 
-	public SimulatorCalculatingTask(GeneticTaskController controller, SimulatorConfiguration settings) {
+	public SimulatorCalculatingTask(GeneticTaskController controller, Execution settings) {
 		this.controller = controller;
 		this.simulatorSettings = settings;
 	}

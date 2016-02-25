@@ -2,18 +2,18 @@ package stsc.general.strategy;
 
 import org.apache.commons.lang3.Validate;
 
-import stsc.general.simulator.SimulatorConfiguration;
-import stsc.general.simulator.SimulatorConfigurationImpl;
+import stsc.general.simulator.Execution;
+import stsc.general.simulator.ExecutionImpl;
 import stsc.general.statistic.MetricType;
 import stsc.general.statistic.Metrics;
 
 /**
- * Represents pair {@link SimulatorConfigurationImpl} -> {@link Metrics}. {@link SimulatorConfigurationImpl} could be null Only for Tests. Please call
+ * Represents pair {@link ExecutionImpl} -> {@link Metrics}. {@link ExecutionImpl} could be null Only for Tests. Please call
  * {@link #createTest(Metrics)} only for tests.
  */
 public final class TradingStrategy {
 
-	private final SimulatorConfiguration simulatorSettings;
+	private final Execution simulatorSettings;
 	private final Metrics metrics;
 
 	public static TradingStrategy createTest(final Metrics metrics) {
@@ -25,13 +25,13 @@ public final class TradingStrategy {
 		this.metrics = metrics;
 	}
 
-	public TradingStrategy(final SimulatorConfiguration simulatorSettings, final Metrics metrics) {
+	public TradingStrategy(final Execution simulatorSettings, final Metrics metrics) {
 		Validate.notNull(simulatorSettings);
 		this.simulatorSettings = simulatorSettings;
 		this.metrics = metrics;
 	}
 
-	public SimulatorConfiguration getSettings() {
+	public Execution getSettings() {
 		return simulatorSettings;
 	}
 

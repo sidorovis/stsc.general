@@ -5,9 +5,9 @@ import java.util.List;
 
 import stsc.common.FromToPeriod;
 import stsc.common.storage.StockStorage;
-import stsc.general.simulator.SimulatorConfigurationImpl;
+import stsc.general.simulator.ExecutionImpl;
 
-public final class SimulatorSettingsGridList implements Iterable<SimulatorConfigurationImpl> {
+public final class SimulatorSettingsGridList implements Iterable<ExecutionImpl> {
 
 	protected final List<GridExecutionInitializer> stockInitializers;
 	protected final List<GridExecutionInitializer> eodInitializers;
@@ -25,7 +25,7 @@ public final class SimulatorSettingsGridList implements Iterable<SimulatorConfig
 	}
 
 	@Override
-	public Iterator<SimulatorConfigurationImpl> iterator() {
+	public Iterator<ExecutionImpl> iterator() {
 		return new SimulatorSettingsGridIterator(stockStorage, period, stockInitializers, eodInitializers, finished);
 	}
 

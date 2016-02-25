@@ -1,12 +1,12 @@
 package stsc.general.simulator.multistarter.genetic.tasks;
 
 import stsc.common.algorithms.BadAlgorithmException;
-import stsc.general.simulator.SimulatorConfiguration;
-import stsc.general.simulator.SimulatorConfigurationImpl;
+import stsc.general.simulator.Execution;
+import stsc.general.simulator.ExecutionImpl;
 import stsc.general.statistic.Metrics;
 
 /**
- * This class generate initial genetic population of {@link SimulatorConfigurationImpl}. Also it creates and starts {@link SimulatorCalculatingTask} (Trading Strategies
+ * This class generate initial genetic population of {@link ExecutionImpl}. Also it creates and starts {@link SimulatorCalculatingTask} (Trading Strategies
  * {@link Metrics} calculation procedures).
  */
 public final class GenerateRandomPopulationsTask implements Runnable {
@@ -24,7 +24,7 @@ public final class GenerateRandomPopulationsTask implements Runnable {
 		for (int i = 0; i < amountOfRandomElementsOfPopulation; ++i) {
 			boolean taskWasAdded = false;
 			try {
-				final SimulatorConfiguration simulatorSettings = controller.getRandomSimulatorSettings();
+				final Execution simulatorSettings = controller.getRandomSimulatorSettings();
 				final SimulatorCalculatingTask task = new SimulatorCalculatingTask(controller, simulatorSettings);
 				controller.addTaskToExecutor(task);
 				taskWasAdded = true;

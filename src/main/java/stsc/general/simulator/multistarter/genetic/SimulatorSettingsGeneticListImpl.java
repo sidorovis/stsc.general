@@ -15,14 +15,14 @@ import stsc.common.algorithms.EodExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.algorithms.StockExecutionInstance;
 import stsc.common.storage.StockStorage;
-import stsc.general.simulator.SimulatorConfiguration;
-import stsc.general.simulator.SimulatorConfigurationImpl;
+import stsc.general.simulator.Execution;
+import stsc.general.simulator.ExecutionImpl;
 import stsc.general.strategy.TradingStrategy;
 import stsc.general.trading.TradeProcessorInit;
 import stsc.storage.ExecutionInstancesStorage;
 
 /**
- * Stores all possible values from {@link SimulatorConfigurationImpl} for Genetic {@link TradingStrategy} Search.<br/>
+ * Stores all possible values from {@link ExecutionImpl} for Genetic {@link TradingStrategy} Search.<br/>
  * 
  */
 public final class SimulatorSettingsGeneticListImpl implements ExternalizableGeneticList {
@@ -53,7 +53,7 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 	}
 
 	@Override
-	public synchronized SimulatorConfigurationImpl generateRandom() throws BadAlgorithmException {
+	public synchronized ExecutionImpl generateRandom() throws BadAlgorithmException {
 		final ExecutionInstancesStorage executionsStorage = new ExecutionInstancesStorage();
 
 		for (GeneticExecutionInitializer i : stockInitializers) {
@@ -65,15 +65,15 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 			executionsStorage.addEodExecution(e);
 		}
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period, executionsStorage);
-		final SimulatorConfigurationImpl ss = new SimulatorConfigurationImpl(id.getAndIncrement(), init);
+		final ExecutionImpl ss = new ExecutionImpl(id.getAndIncrement(), init);
 		return ss;
 	}
 
 	@Override
-	public SimulatorConfiguration mutate(SimulatorConfiguration settings) {
+	public Execution mutate(Execution settings) {
 		final int initializersAmount = stockInitializers.size() + eodInitializers.size();
 		final int mutateSettingIndex = randomizer.nextInt(initializersAmount);
-		final SimulatorConfiguration copy = settings.clone();
+		final Execution copy = settings.clone();
 		if (stockInitializers.size() > mutateSettingIndex) {
 			final GeneticExecutionInitializer init = stockInitializers.get(mutateSettingIndex);
 			init.mutateStock(mutateSettingIndex, copy);
@@ -86,17 +86,17 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 	}
 
 	@Override
-	public SimulatorConfiguration merge(SimulatorConfiguration left, SimulatorConfiguration right) {
+	public Execution merge(Execution left, Execution right) {
 		final TradeProcessorInit init = new TradeProcessorInit(stockStorage, period);
 		final ExecutionInstancesStorage resultEs = init.getExecutionsStorage();
 
 		mergeStocks(resultEs, left, right);
 		mergeEods(resultEs, left, right);
 
-		return new SimulatorConfigurationImpl(id.getAndIncrement(), init);
+		return new ExecutionImpl(id.getAndIncrement(), init);
 	}
 
-	private ExecutionInstancesStorage mergeStocks(ExecutionInstancesStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
+	private ExecutionInstancesStorage mergeStocks(ExecutionInstancesStorage result, Execution left, Execution right) {
 		final List<StockExecutionInstance> leftList = left.getInit().getExecutionsStorage().getStockExecutions();
 		final List<StockExecutionInstance> rightList = right.getInit().getExecutionsStorage().getStockExecutions();
 
@@ -123,7 +123,7 @@ public final class SimulatorSettingsGeneticListImpl implements ExternalizableGen
 		return result;
 	}
 
-	private ExecutionInstancesStorage mergeEods(ExecutionInstancesStorage result, SimulatorConfiguration left, SimulatorConfiguration right) {
+	private ExecutionInstancesStorage mergeEods(ExecutionInstancesStorage result, Execution left, Execution right) {
 		final List<EodExecutionInstance> leftList = left.getInit().getExecutionsStorage().getEodExecutions();
 		final List<EodExecutionInstance> rightList = right.getInit().getExecutionsStorage().getEodExecutions();
 

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import stsc.general.trading.TradeProcessorInit;
 
-public interface SimulatorConfiguration extends Cloneable {
+public interface Execution extends Cloneable {
 
 	long getId();
 
@@ -13,7 +13,7 @@ public interface SimulatorConfiguration extends Cloneable {
 
 	String stringHashCode();
 
-	SimulatorConfiguration clone();
+	Execution clone();
 
 	Optional<Set<String>> getStockNames();
 

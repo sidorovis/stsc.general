@@ -11,23 +11,23 @@ import stsc.general.trading.TradeProcessorInit;
 
 /**
  * All necessary values to simulate one trading strategy.<br/>
- * If we will think about {@link TradeProcessor} as about function f, then {@link Metrics} => f( {@link SimulatorConfigurationImpl} ).
+ * If we will think about {@link TradeProcessor} as about function f, then {@link Metrics} => f( {@link ExecutionImpl} ).
  */
-public final class SimulatorConfigurationImpl implements SimulatorConfiguration {
+public final class ExecutionImpl implements Execution {
 
 	private long id;
 	private final TradeProcessorInit tradeProcessorInit;
 	private final Optional<Set<String>> stockNames;
 
-	public SimulatorConfigurationImpl(final long id, TradeProcessorInit tradeProcessorInit) {
+	public ExecutionImpl(final long id, TradeProcessorInit tradeProcessorInit) {
 		this(id, tradeProcessorInit, Optional.empty());
 	}
 
-	public SimulatorConfigurationImpl(final long id, TradeProcessorInit tradeProcessorInit, final Set<String> stockNames) {
+	public ExecutionImpl(final long id, TradeProcessorInit tradeProcessorInit, final Set<String> stockNames) {
 		this(id, tradeProcessorInit, Optional.of(stockNames));
 	}
 
-	private SimulatorConfigurationImpl(long id, TradeProcessorInit tradeProcessorInit, Optional<Set<String>> stockNames) {
+	private ExecutionImpl(long id, TradeProcessorInit tradeProcessorInit, Optional<Set<String>> stockNames) {
 		Validate.notNull(tradeProcessorInit);
 		Validate.isTrue(id >= 0);
 		Validate.notNull(stockNames);
@@ -57,8 +57,8 @@ public final class SimulatorConfigurationImpl implements SimulatorConfiguration 
 	}
 
 	@Override
-	public SimulatorConfigurationImpl clone() {
-		return new SimulatorConfigurationImpl(id, tradeProcessorInit.clone(), stockNames);
+	public ExecutionImpl clone() {
+		return new ExecutionImpl(id, tradeProcessorInit.clone(), stockNames);
 	}
 
 	@Override

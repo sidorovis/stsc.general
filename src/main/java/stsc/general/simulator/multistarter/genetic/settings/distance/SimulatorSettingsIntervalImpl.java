@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import stsc.common.algorithms.EodExecutionInstance;
 import stsc.common.algorithms.ExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
-import stsc.general.simulator.SimulatorConfiguration;
+import stsc.general.simulator.Execution;
 
 public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInterval {
 
@@ -17,7 +17,7 @@ public final class SimulatorSettingsIntervalImpl implements SimulatorSettingsInt
 	}
 
 	@Override
-	public double calculateInterval(final SimulatorConfiguration left, final SimulatorConfiguration right) {
+	public double calculateInterval(final Execution left, final Execution right) {
 		final List<EodExecutionInstance> leftEods = left.getInit().getExecutionsStorage().getEodExecutions();
 		final List<EodExecutionInstance> rightEods = right.getInit().getExecutionsStorage().getEodExecutions();
 		if (leftEods.size() != rightEods.size()) {

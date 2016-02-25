@@ -18,7 +18,7 @@ import stsc.common.BadSignalException;
 import stsc.common.algorithms.BadAlgorithmException;
 import stsc.general.simulator.Simulator;
 import stsc.general.simulator.SimulatorImpl;
-import stsc.general.simulator.SimulatorConfigurationImpl;
+import stsc.general.simulator.ExecutionImpl;
 import stsc.general.simulator.multistarter.StrategySearcher;
 import stsc.general.simulator.multistarter.StrategySearcherException;
 import stsc.general.strategy.TradingStrategy;
@@ -33,10 +33,10 @@ public final class StrategyGridSearcher implements StrategySearcher {
 		System.setProperty(XMLConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "./config/mt_strategy_grid_searcher_log4j2.xml");
 	}
 
-	private static class IteratorProxy implements Iterator<SimulatorConfigurationImpl> {
-		private final Iterator<SimulatorConfigurationImpl> value;
+	private static class IteratorProxy implements Iterator<ExecutionImpl> {
+		private final Iterator<ExecutionImpl> value;
 
-		IteratorProxy(Iterator<SimulatorConfigurationImpl> value) {
+		IteratorProxy(Iterator<ExecutionImpl> value) {
 			this.value = value;
 		}
 
@@ -46,7 +46,7 @@ public final class StrategyGridSearcher implements StrategySearcher {
 		}
 
 		@Override
-		public synchronized SimulatorConfigurationImpl next() {
+		public synchronized ExecutionImpl next() {
 			return value.next();
 		}
 	}
@@ -79,7 +79,7 @@ public final class StrategyGridSearcher implements StrategySearcher {
 
 		@Override
 		public void run() {
-			Optional<SimulatorConfigurationImpl> settings = getNextSimulatorSettings();
+			Optional<ExecutionImpl> settings = getNextSimulatorSettings();
 
 			while (settings.isPresent()) {
 				try {
@@ -94,10 +94,10 @@ public final class StrategyGridSearcher implements StrategySearcher {
 			}
 		}
 
-		private Optional<SimulatorConfigurationImpl> getNextSimulatorSettings() {
+		private Optional<ExecutionImpl> getNextSimulatorSettings() {
 			synchronized (iterator) {
 				while (!stoppedByRequest && iterator.hasNext()) {
-					final SimulatorConfigurationImpl nextValue = iterator.next();
+					final ExecutionImpl nextValue = iterator.next();
 					if (nextValue == null)
 						return Optional.empty();
 					final String hashCode = nextValue.stringHashCode();

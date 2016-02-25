@@ -12,7 +12,7 @@ import stsc.common.algorithms.BadAlgorithmException;
 import stsc.common.algorithms.EodAlgorithm;
 import stsc.common.algorithms.StockAlgorithm;
 import stsc.common.storage.StockStorage;
-import stsc.general.simulator.SimulatorConfiguration;
+import stsc.general.simulator.Execution;
 import stsc.general.simulator.multistarter.AlgorithmSettingsIteratorFactory;
 import stsc.general.simulator.multistarter.BadParameterException;
 import stsc.general.simulator.multistarter.MpDouble;
@@ -36,7 +36,7 @@ public class SimulatorSettingsGridIteratorTest {
 		final SimulatorSettingsGridFactory ssFactory = new SimulatorSettingsGridFactory(stockStorage, period);
 
 		int count = 0;
-		for (SimulatorConfiguration simulatorSettings : ssFactory.getList()) {
+		for (Execution simulatorSettings : ssFactory.getList()) {
 			count += 1;
 			Assert.assertNotNull(simulatorSettings);
 		}
@@ -47,7 +47,7 @@ public class SimulatorSettingsGridIteratorTest {
 	public void testSimulatorSettingsGridIterator() throws BadAlgorithmException, BadParameterException {
 		final SimulatorSettingsGridList settings = TestGridSimulatorSettings.getGridList();
 		int count = 0;
-		for (SimulatorConfiguration simulatorSettings : settings) {
+		for (Execution simulatorSettings : settings) {
 			count += 1;
 			final ExecutionInstancesStorage executionsStorage = simulatorSettings.getInit().getExecutionsStorage();
 			final ExecutionInstanceProcessor executionStarter = executionsStorage.initialize(new BrokerImpl(stockStorage), stockStorage.getStockNames());
@@ -80,7 +80,7 @@ public class SimulatorSettingsGridIteratorTest {
 
 		final Set<String> hashes = new HashSet<>();
 		int allSize = 0;
-		for (SimulatorConfiguration simulatorSettings : ssFactory.getList()) {
+		for (Execution simulatorSettings : ssFactory.getList()) {
 			hashes.add(simulatorSettings.stringHashCode());
 			allSize += 1;
 		}

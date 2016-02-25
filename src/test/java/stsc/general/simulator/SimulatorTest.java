@@ -54,7 +54,7 @@ public final class SimulatorTest {
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		final Simulator simulator = new SimulatorImpl();
-		simulator.simulateMarketTrading(new SimulatorConfigurationImpl(0, tpi));
+		simulator.simulateMarketTrading(new ExecutionImpl(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(18, metrics.getIntegerMetric(MetricType.period).intValue());
 		Assert.assertEquals(6.125517, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
@@ -69,7 +69,7 @@ public final class SimulatorTest {
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		final Simulator simulator = new SimulatorImpl();
-		simulator.simulateMarketTrading(new SimulatorConfigurationImpl(0, tpi));
+		simulator.simulateMarketTrading(new ExecutionImpl(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(39, metrics.getIntegerMetric(MetricType.period).intValue());
 		Assert.assertEquals(3.243971, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
@@ -84,7 +84,7 @@ public final class SimulatorTest {
 
 		final TradeProcessorInit tpi = new TradeProcessorInit(stockStorageForAapl, period, executionsStorage);
 		final Simulator simulator = new SimulatorImpl();
-		simulator.simulateMarketTrading(new SimulatorConfigurationImpl(0, tpi));
+		simulator.simulateMarketTrading(new ExecutionImpl(0, tpi));
 		final Metrics metrics = simulator.getMetrics();
 		Assert.assertEquals(18, metrics.getIntegerMetric(MetricType.period).intValue());
 		Assert.assertEquals(-6.125517, metrics.getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
@@ -125,7 +125,7 @@ public final class SimulatorTest {
 		Assert.assertEquals(2, stockExecutions.size());
 		Assert.assertEquals("Alg1", stockExecutions.get(1));
 		final Simulator simulator = new SimulatorImpl();
-		simulator.simulateMarketTrading(new SimulatorConfigurationImpl(0, init));
+		simulator.simulateMarketTrading(new ExecutionImpl(0, init));
 		Assert.assertEquals(0.0, simulator.getMetrics().getDoubleMetric(MetricType.avGain), Settings.doubleEpsilon);
 		final SignalsStorage ss = simulator.getSignalsStorage();
 		final String en = AlgorithmNameGenerator.generateOutAlgorithmName("Alg1");

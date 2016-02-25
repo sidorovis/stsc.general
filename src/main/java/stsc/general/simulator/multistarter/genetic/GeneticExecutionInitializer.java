@@ -3,7 +3,7 @@ package stsc.general.simulator.multistarter.genetic;
 import stsc.common.algorithms.EodExecutionInstance;
 import stsc.common.algorithms.MutableAlgorithmConfiguration;
 import stsc.common.algorithms.StockExecutionInstance;
-import stsc.general.simulator.SimulatorConfiguration;
+import stsc.general.simulator.Execution;
 
 public final class GeneticExecutionInitializer {
 
@@ -35,13 +35,13 @@ public final class GeneticExecutionInitializer {
 		return geneticAlgorithmSettings.generateRandom();
 	}
 
-	public void mutateStock(int mutateSettingIndex, SimulatorConfiguration copy) {
+	public void mutateStock(int mutateSettingIndex, Execution copy) {
 		final StockExecutionInstance execution = copy.getInit().getExecutionsStorage().getStockExecutions().get(mutateSettingIndex);
 		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
 	}
 
-	public void mutateEod(int eodIndex, SimulatorConfiguration copy) {
+	public void mutateEod(int eodIndex, Execution copy) {
 		final EodExecutionInstance execution = copy.getInit().getExecutionsStorage().getEodExecutions().get(eodIndex);
 		final MutableAlgorithmConfiguration algorithmSettings = execution.getSettings();
 		mutateAlgorithmSettings(algorithmSettings);
